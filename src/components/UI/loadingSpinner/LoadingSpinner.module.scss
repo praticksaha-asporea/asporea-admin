@@ -1,0 +1,38 @@
+/* LoadingSpinner.module.scss */
+
+// Agar ye file nahi hai toh is line ko hata dena
+// @use "../../../scss/abstracts/index" as *; 
+
+.spinner__wrapper {
+  display: block;
+  text-align: center;
+}
+
+.spinner {
+  display: inline-block;
+  width: 130px;
+  height: 130px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+}
+
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 110px;
+  height: 110px;
+  margin: 8px;
+  border-radius: 50%;
+  /* Agar CSS variable kaam na kare, toh var(--primaryColor) ki jagah #0D80F2 likh dena */
+  border: 10px solid var(--primaryColor, #0D80F2); 
+  border-color: var(--primaryColor, #0D80F2) transparent var(--primaryColor, #0D80F2) transparent;
+  animation: spinner 1.2s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
