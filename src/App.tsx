@@ -9,6 +9,7 @@ import BranchForm from "./pages/Branches/BranchForm";
 import AdminLayout from "./layout/AdminLayout";
 import UserList from "./pages/UserManagement/UserList";
 import UserForm from "./pages/UserManagement/UserForm";
+import EmployeeAssignment from "./pages/Employees/EmployeeAssignment";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
              />
              <Route path="/branches/add" element={<BranchForm />} />
             <Route path="/shifts" element={<ShiftList />} />
+            <Route path="/employees" element={<EmployeeAssignment />} />
             
 <Route path="/shifts/add" element={<ShiftForm />} />
           </Route>

@@ -3,7 +3,7 @@ import { Search, Filter, Plus, MoreVertical, Edit2, Trash2 } from "lucide-react"
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-// Updated Default Data matching Schema structure
+ 
 const defaultUsers = [
   { id: 1, firstName: "Anil", lastName: "Yadav", email: "anil@asporea.com", role: "admin", status: "active", joinDate: "12 Jan 2026" },
   { id: 2, firstName: "Rameshwar", lastName: "", email: "ramesh@asporea.com", role: "branch_head", status: "active", joinDate: "15 Feb 2026" },
@@ -25,8 +25,7 @@ const UserList = () => {
   useEffect(() => {
     localStorage.setItem("asporea_users", JSON.stringify(users));
   }, [users]);
-
-  // 👇 SEARCH FILTER LOGIC UPDATED FOR FIRST & LAST NAME 👇
+ 
   const filteredUsers = users.filter((user: any) => {
     const fullName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
     const matchesSearch = fullName.includes(searchTerm.toLowerCase()) || 
@@ -42,7 +41,7 @@ const UserList = () => {
     }
   };
 
-  // Helper to make roles look pretty in UI (e.g. "branch_head" -> "Branch Head")
+   
   const formatRole = (role: string) => {
     return role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
@@ -79,7 +78,7 @@ const UserList = () => {
           <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all">
             <Filter className="w-4 h-4" /> Filters
           </button>
-          {/* UPDATED ROLE DROPDOWN WITH BACKEND ENUMS */}
+       
           <select 
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}  

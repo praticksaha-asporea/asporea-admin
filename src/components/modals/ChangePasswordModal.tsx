@@ -110,7 +110,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                     {showPass.old ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {formik.touched.oldPassword && formik.errors.oldPassword && <p className="text-[#0D80F2] text-xs font-bold pl-1">{formik.errors.oldPassword}</p>}
+                {formik.touched.oldPassword && formik.errors.oldPassword && <p className="text-red-600 text-xs font-medium pl-1">{formik.errors.oldPassword}</p>}
               </div>
 
               {/* New Password */}
@@ -125,7 +125,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                     {showPass.new ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {formik.touched.newPassword && formik.errors.newPassword && <p className="text-[#0D80F2] text-xs font-bold pl-1">{formik.errors.newPassword}</p>}
+                {formik.touched.newPassword && formik.errors.newPassword && <p className="text-red-600 text-xs font-medium pl-1">{formik.errors.newPassword}</p>}
               </div>
 
               {/* Confirm Password */}
@@ -140,7 +140,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                     {showPass.confirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {formik.touched.confirmPassword && formik.errors.confirmPassword && <p className="text-[#0D80F2] text-xs font-bold pl-1">{formik.errors.confirmPassword}</p>}
+                {formik.touched.confirmPassword && formik.errors.confirmPassword && <p className="text-red-600 text-xs font-medium pl-1">{formik.errors.confirmPassword}</p>}
               </div>
 
               {/* Action Button */}

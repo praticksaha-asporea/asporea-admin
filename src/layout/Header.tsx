@@ -118,8 +118,8 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
                  <button 
                       type="button"
                       onClick={() => {
-                        setIsDropdownOpen(false); // Dropdown band karo
-                        setIsPasswordModalOpen(true); // Modal khol do
+                        setIsDropdownOpen(false);  
+                        setIsPasswordModalOpen(true); 
                       }}
                       className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-gray-600 hover:text-[#fc7728] hover:bg-orange-50 rounded-xl transition-all cursor-pointer w-full text-left"
                     >

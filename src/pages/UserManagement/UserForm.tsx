@@ -3,7 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { 
   UserPlus, Mail,   ArrowLeft, 
-  Phone, MessageCircle, MapPin, FileText, Save
+  Phone, MessageCircle, MapPin, FileText, Save,
+  Briefcase,
+  Lock
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -56,7 +58,7 @@ const UserForm = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="max-w-6xl mx-auto pb-20">
       
-      {/* 🌟 PREMIUM TOP ACTION BAR 🌟 */}
+     
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 bg-white p-4 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-50 gap-4">
         <div className="flex items-center gap-4">
           <button 
@@ -79,7 +81,7 @@ const UserForm = () => {
         
        
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+          <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]"></div>
             
             <div className="flex items-center gap-3 mb-8">
@@ -191,7 +193,8 @@ const UserForm = () => {
     </label>
   </div>
   <div className=" mt-3 -translate-x-55 "> <button 
-          onClick={() => formik.handleSubmit()} 
+           
+          type="submit"
           disabled={formik.isSubmitting} 
           className="w-full sm:w-auto flex items-center translate-x-25 justify-center gap-2 px-8 py-3.5 bg-[#0D80F2] text-white font-bold rounded-2xl hover:bg-[#0D80F2] transform  duration-300 hover:rotate-3 hover:scale-105 hover:shadow-lg disabled:opacity-70 transition-all"
         >
@@ -205,8 +208,8 @@ const UserForm = () => {
           </div>
         </div>
  
-        <div className="space-y-8">
-          {/* <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+ <div className="space-y-8">
+           <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]"></div>
             
             <div className="flex items-center gap-3 mb-8">
@@ -217,7 +220,7 @@ const UserForm = () => {
             <div className="space-y-6">
               
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">System Role <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Role <span className="text-red-500">*</span></label>
                 <div className="relative group">
                   <Briefcase className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
                   <select {...formik.getFieldProps('role')}
@@ -242,7 +245,7 @@ const UserForm = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Initial Password <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Password <span className="text-red-500">*</span></label>
                 <div className="relative group">
                   <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
                   <input type="password" placeholder="••••••••" {...formik.getFieldProps('password')}
@@ -255,10 +258,10 @@ const UserForm = () => {
            
 
             </div>
-          </div> */}
+          </div> 
           
 
-          <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">'
+          <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
                
             
              
