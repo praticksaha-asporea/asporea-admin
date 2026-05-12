@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Building,  BookOpen,  ChevronDown } from "lucide-react";
+import { LayoutDashboard, Users, Building,  ChevronDown } from "lucide-react";
 import logo from "../assets/asporeaLogo.png";
 
 type SidebarProps = {

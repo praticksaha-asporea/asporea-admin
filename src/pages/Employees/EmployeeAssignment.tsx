@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { 
   Briefcase, UserPlus, Building, Clock, Calendar, 
-  Hash, Timer, ShieldCheck, Trash2, User
+  Hash, Timer, Trash2, User
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // 👇 Interfaces (Taaki TypeScript rote na)
 interface User { id: number; firstName: string; lastName: string; role: string; }
@@ -255,7 +255,7 @@ const EmployeeAssignment = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {assignments.length > 0 ? assignments.map((assign, i) => (
+              {assignments.length > 0 ? assignments.map((assign) => (
                 <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }} key={assign.id} className="hover:bg-blue-50/30 transition-colors group">
                   <td className="px-6 py-4">
                     <p className="text-sm font-bold text-gray-800">{getEmployeeName(assign.employeeId)}</p>

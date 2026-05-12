@@ -7,6 +7,6 @@ type LoginData = {
   password: string;
 };
 export const loginApi = catchAsync(async (data:LoginData) => {
-  const res = await httpsCall.post(`/auth/login`, data);
-  return res.data;
+  const res = await httpsCall.post(`/admin/auth/login`, data);
+  return res;
 });

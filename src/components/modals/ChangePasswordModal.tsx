@@ -32,7 +32,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
   const formik = useFormik({
     initialValues: { oldPassword: "", newPassword: "", confirmPassword: "" },
     validationSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    onSubmit: async (_values, { setSubmitting, resetForm }) => {
       setSuccessMessage("");
        
       await new Promise(resolve => setTimeout(resolve, 1500));

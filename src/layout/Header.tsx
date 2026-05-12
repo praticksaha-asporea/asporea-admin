@@ -11,12 +11,15 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import ChangePasswordModal from "../components/modals/ChangePasswordModal";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const user = useSelector((state: RootState) => state.authSlice.user);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,10 +80,10 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-bold text-gray-700 group-hover:text-[#0054a6] transition-colors">
-                Anil Yadav
+                {user?.firstName} {user?.lastName}
               </p>
               <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-                Super Admin
+                {user?.role}
               </p>
             </div>
             <ChevronDown
@@ -100,9 +103,9 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
               >
                 {/* Dropdown Header */}
                 <div className="p-4 border-b border-gray-50 bg-gray-50/50">
-                  <p className="text-sm font-black text-gray-800">Anil Yadav</p>
+                  <p className="text-sm font-black text-gray-800">{user?.firstName} {user?.lastName}</p>
                   <p className="text-xs font-medium text-gray-500 mt-0.5">
-                    anil@asporea.com
+                    {user?.email}
                   </p>
                 </div>
 

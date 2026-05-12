@@ -2,7 +2,7 @@ import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ArrowLeft, CheckCircle2, Clock, CalendarDays, Briefcase, Plus, Edit3, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, CalendarDays, Plus, Edit3, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ScheduleObj {

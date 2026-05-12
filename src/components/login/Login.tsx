@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLogin } from "./useLogin";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,22 +26,9 @@ const LottiePlayer = ({ animationData }: { animationData: any }) => {
 };
 
 const Login = () => {
+  const { loginFormik, loading} = useLogin();//, rememberMe, setRememberMe 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" });
-
-  const { handleSubmit, loading } = useLogin();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    handleSubmit(formData);
-  };
-
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-slate-100 p-4 overflow-hidden">
        {/* BACKGROUND IMAGE */}
@@ -179,7 +166,7 @@ const Login = () => {
                 />
               </div>
 
-              <form onSubmit={onSubmit} noValidate className="space-y-5">
+              <form onSubmit={loginFormik.handleSubmit} noValidate className="space-y-5">
                 {/* Email Input */}
                 <div className="group relative">
                   <Mail className="absolute left-5 top-5 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
@@ -188,8 +175,8 @@ const Login = () => {
                     name="email"
                     placeholder="Admin Email"
                     required
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={loginFormik.values.email}
+                    onChange={loginFormik.handleChange}
                     className="w-full pl-14 pr-6 py-5 bg-gray-50 border-2 border-transparent focus:border-[#0D80F2]/30 focus:bg-white outline-none rounded-3xl transition-all font-bold text-sm"
                   />
                 </div>
@@ -202,8 +189,8 @@ const Login = () => {
                     name="password"
                     placeholder="Password"
                     required
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={loginFormik.values.password}
+                    onChange={loginFormik.handleChange}
                   className="w-full pl-14 pr-14 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0D80F2]/30 focus:bg-white outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
                   />
                   <button

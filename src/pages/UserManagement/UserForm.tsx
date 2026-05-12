@@ -105,7 +105,7 @@ const UserForm = () => {
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Last Name</label>
                 <div className="relative group">
                   <UserPlus className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                  <input type="text" placeholder="Doe" {...formik.getFieldProps('lastName')}
+                  <input type="text" placeholder="Singh" {...formik.getFieldProps('lastName')}
                     className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
                   />
                 </div>
@@ -115,7 +115,7 @@ const UserForm = () => {
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Email Address <span className="text-red-500">*</span></label>
                 <div className="relative group">
                   <Mail className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                  <input type="email" placeholder="john@asporea.com" {...formik.getFieldProps('email')}
+                  <input type="email" placeholder="john.singh@asporea.com" {...formik.getFieldProps('email')}
                     className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.email && formik.errors.email ? 'border-red-400 focus:bg-white' : 'border-transparent focus:border-[#0054a6]/30 focus:bg-white'}`}
                   />
                 </div>
@@ -146,7 +146,7 @@ const UserForm = () => {
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Full Address</label>
                 <div className="relative group">
                   <MapPin className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                  <input type="text" placeholder="123 Street, City, Country" {...formik.getFieldProps('address')}
+                  <input type="text" placeholder="123 Street, Darjeeling, West Bengal" {...formik.getFieldProps('address')}
                     className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
                   />
                 </div>

@@ -6,6 +6,7 @@ import Header from "./Header";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
 
   return (
     <div className="flex h-screen bg-[#f3f6fc] overflow-hidden font-sans text-slate-800">
