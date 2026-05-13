@@ -21,7 +21,7 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.authSlice.user);
 
-  useEffect(() => {
+  useEffect(() => {    
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -132,7 +132,9 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
 
                 <div className="p-2 border-t border-gray-50">
                   <button
-                    onClick={() => handleNavigation("/login")}
+                    onClick={() => {
+                      localStorage.clear();
+                      handleNavigation("/login")}}
                     className="flex items-center gap-3 px-3 py-2.5 w-full text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
                   >
                     <LogOut className="w-4 h-4" /> Logout

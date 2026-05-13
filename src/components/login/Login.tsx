@@ -26,12 +26,13 @@ const LottiePlayer = ({ animationData }: { animationData: any }) => {
 };
 
 const Login = () => {
-  const { loginFormik, loading} = useLogin();//, rememberMe, setRememberMe 
+  const { loginFormik, loading } = useLogin();//, rememberMe, setRememberMe 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-slate-100 p-4 overflow-hidden">
-       {/* BACKGROUND IMAGE */}
+      {/* BACKGROUND IMAGE */}
       {/* <div 
         className="absolute inset-0   bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url( 'https://images.unsplash.com/photo-1651527567593-32c04202ed85?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8d2hpdGUlMjBpbGx1c3RyYXRpb25iJTIwZ3xlbnwwfHwwfHx8MA%3D%3D')" }} //  
@@ -152,7 +153,6 @@ const Login = () => {
             >
               {loading && (
                 <div className="absolute inset-0 z-100 bg-white/60 backdrop-blur-sm rounded-l-none">
-                  {/* Tumhara spinner absolute hai, toh wo is container ke theek beech (center) me aayega */}
                   <LoadingSpinner />
                 </div>
               )}
@@ -161,12 +161,12 @@ const Login = () => {
                 <img
                   src={asporeaLogo}
                   alt="Asporea Logo"
-                   
+
                   className="w-55 h-auto mx-auto object-contain"
                 />
               </div>
 
-              <form onSubmit={loginFormik.handleSubmit} noValidate className="space-y-5">
+              <form onSubmit={loginFormik.handleSubmit} className="space-y-5">
                 {/* Email Input */}
                 <div className="group relative">
                   <Mail className="absolute left-5 top-5 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
@@ -174,10 +174,9 @@ const Login = () => {
                     type="email"
                     name="email"
                     placeholder="Admin Email"
-                    required
                     value={loginFormik.values.email}
                     onChange={loginFormik.handleChange}
-                    className="w-full pl-14 pr-6 py-5 bg-gray-50 border-2 border-transparent focus:border-[#0D80F2]/30 focus:bg-white outline-none rounded-3xl transition-all font-bold text-sm"
+                    className={`w-full pl-14 pr-6 py-4 bg-gray-50 border-2 outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm ${loginFormik.touched.email && loginFormik.errors.email ? 'border-red-500 bg-white' : 'border-transparent focus:border-[#0D80F2]/30 focus:bg-white'}`}
                   />
                 </div>
 
@@ -188,10 +187,9 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    required
                     value={loginFormik.values.password}
                     onChange={loginFormik.handleChange}
-                  className="w-full pl-14 pr-14 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0D80F2]/30 focus:bg-white outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                    className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${loginFormik.touched.password && loginFormik.errors.password ? 'border-red-500 bg-white' : 'border-transparent focus:border-[#0D80F2]/30 focus:bg-white'}`}
                   />
                   <button
                     type="button"
@@ -202,17 +200,17 @@ const Login = () => {
                   </button>
                 </div>
                 <div className="flex justify-end px-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                       
-                        console.log("Forgot password clicked");
-                      }}
-                      className="text-[13px] font-bold text-gray-500 hover:text-[#0D80F2] transition-colors cursor-pointer"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+
+                      console.log("Forgot password clicked");
+                    }}
+                    className="text-[13px] font-bold text-gray-500 hover:text-[#0D80F2] transition-colors cursor-pointer"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
 
                 {/* Submit Button */}
                 <motion.button
@@ -234,4 +232,3 @@ const Login = () => {
 };
 
 export default Login;
- 

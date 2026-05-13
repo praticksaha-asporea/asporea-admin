@@ -30,7 +30,7 @@ export type RowAction<T> = {
   colorClass?: string; // e.g. "hover:text-red-500 hover:bg-red-50"
 };
 
-interface CustomTableProps<T extends { id: number | string }> {
+interface CustomTableProps<T extends { _id: number | string }> {
   /** Page / section title */
   title: string;
   /** Subtitle below the title */
@@ -60,14 +60,14 @@ interface CustomTableProps<T extends { id: number | string }> {
 function getCellValue<T>(row: T, accessor: ColumnDef<T>["accessor"]): React.ReactNode {
   if (typeof accessor === "function") return accessor(row);
   const val = row[accessor as keyof T];
-  console.log(val,251);
+  // console.log(val,251);
   
   return val as React.ReactNode;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-function CustomTable<T extends { id: number | string }>({
+function CustomTable<T extends { _id: number | string }>({
   title,
   subtitle,
   addLabel = "Add New",
@@ -339,7 +339,7 @@ export function StatusBadge({ status }: { status: string }) {
 /** Standard edit / delete / more action set */
 export function defaultRowActions<T>(
   onEdit: (row: T) => void,
-  onDelete: (row: T) => void
+  // onDelete: (row: T) => void
 ): RowAction<T>[] {
   return [
     {
@@ -348,17 +348,17 @@ export function defaultRowActions<T>(
       onClick: onEdit,
       colorClass: "hover:text-[#0D80F2] hover:bg-blue-50",
     },
-    {
-      icon: <Trash2 className="w-4 h-4" />,
-      label: "Delete",
-      onClick: onDelete,
-      colorClass: "hover:text-red-500 hover:bg-red-50",
-    },
-    {
-      icon: <MoreVertical className="w-4 h-4" />,
-      label: "More",
-      onClick: () => {},
-      colorClass: "hover:bg-gray-100",
-    },
+    // {
+    //   icon: <Trash2 className="w-4 h-4" />,
+    //   label: "Delete",
+    //   onClick: onDelete,
+    //   colorClass: "hover:text-red-500 hover:bg-red-50",
+    // },
+    // {
+    //   icon: <MoreVertical className="w-4 h-4" />,
+    //   label: "More",
+    //   onClick: () => {},
+    //   colorClass: "hover:bg-gray-100",
+    // },
   ];
 }

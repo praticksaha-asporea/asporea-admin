@@ -1,117 +1,196 @@
-import { useState, useEffect } from "react";
-import { Search, Plus, MapPin, Building2, Edit3, Trash2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { Building2, MapPin } from "lucide-react";
+import CustomTable, {
+  StatusBadge,
+  defaultRowActions,
+  type ColumnDef,
+  type FilterConfig,
+} from "../../components/UI/customTable/CustomTable";
+import { getBranchesApi } from "../../service/apis/branch.api";
 
- 
-interface Branch {
-  id: number;
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type Branch = {
+  _id: string;
   title: string;
   location: string;
   timeZone: string;
   counters: number;
   workDays: string[];
   status?: string;
+};
+
+// ─── Cell renderers ───────────────────────────────────────────────────────────
+
+function BranchCell({ title }: { title: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-[#0054a6] border border-blue-100/50 shrink-0">
+        <Building2 className="w-5 h-5" />
+      </div>
+      <p className="text-sm font-bold text-gray-800">{title}</p>
+    </div>
+  );
 }
+
+function LocationCell({ location, timeZone }: { location: string; timeZone: string }) {
+  return (
+    <div>
+      <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600">
+        <MapPin className="w-4 h-4 text-orange-400 shrink-0" />
+        <span className="truncate max-w-[160px]">{location}</span>
+      </div>
+      <p className="text-xs text-gray-400 font-medium mt-1 pl-5">{timeZone}</p>
+    </div>
+  );
+}
+
+function WorkDaysCell({ workDays }: { workDays: string[] }) {
+  return (
+    <div className="flex items-center gap-1 flex-wrap">
+      {workDays.slice(0, 3).map((day) => (
+        <span key={day} className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md uppercase">
+          {day}
+        </span>
+      ))}
+      {workDays.length > 3 && (
+        <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md">
+          +{workDays.length - 3}
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ─── Column definitions ───────────────────────────────────────────────────────
+
+const columns: ColumnDef<Branch>[] = [
+  {
+    header: "Branch",
+    accessor: (row) => <BranchCell title={row.title} />,
+  },
+  {
+    header: "Location & Timezone",
+    accessor: (row) => <LocationCell location={row.location} timeZone={row.timeZone} />,
+  },
+  {
+    header: "Counters",
+    accessor: (row) => (
+      <span className="text-lg font-black text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">
+        {row.counters ?? 0}
+      </span>
+    ),
+  },
+  {
+    header: "Work Days",
+    accessor: (row) => <WorkDaysCell workDays={row.workDays ?? []} />,
+  },
+  {
+    header: "Status",
+    accessor: (row) => <StatusBadge status={row.status ?? "active"} />,
+  },
+];
+
+// ─── Filter config ────────────────────────────────────────────────────────────
+
+const filters: FilterConfig[] = [
+  {
+    key: "timeZone",
+    placeholder: "All Timezones",
+    options: [
+      { label: "Asia / Kolkata",   value: "Asia/Kolkata" },
+      { label: "Asia / Kathmandu", value: "Asia/Kathmandu" },
+      { label: "Asia / Dubai",     value: "Asia/Dubai" },
+    ],
+  }
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const BranchList = () => {
   const navigate = useNavigate();
- 
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const saved = localStorage.getItem("asporea_branches");
-    if (saved) setBranches(JSON.parse(saved));
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState<string | null>(null);
+
+  // ── Fetch ──────────────────────────────────────────────────────────────────
+  const fetchBranches = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getBranchesApi();
+      setBranches(res?.data?.data ?? []);
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? "Failed to load branches.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const filtered = branches.filter((b) => 
-    b.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    fetchBranches();
+  }, [fetchBranches]);
 
+  // ── Actions ────────────────────────────────────────────────────────────────
+  const handleEdit = (branch: Branch) => {
+    navigate(`/branches/edit/${branch._id}`);
+  };
+
+  // ── Loading skeleton ───────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-64 bg-gray-200 rounded-xl" />
+        <div className="h-14 bg-gray-100 rounded-2xl" />
+        <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex gap-4 px-6 py-4 border-b border-gray-50">
+              <div className="w-10 h-10 rounded-xl bg-gray-200 shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 w-40 bg-gray-200 rounded" />
+                <div className="h-3 w-56 bg-gray-100 rounded" />
+              </div>
+              <div className="h-3 w-20 bg-gray-200 rounded self-center" />
+              <div className="h-3 w-16 bg-gray-200 rounded self-center" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error state ────────────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-red-500 font-bold text-sm">{error}</p>
+        <button
+          onClick={fetchBranches}
+          className="px-5 py-2.5 bg-[#0D80F2] text-white text-sm font-bold rounded-xl hover:scale-[1.02] transition-all"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // ── Table ──────────────────────────────────────────────────────────────────
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 max-w-7xl mx-auto">
-      
-      {/* HEADER ROW */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-50">
-        <div>
-          <h1 className="text-3xl font-mono text-gray-800 tracking-wider">Branches</h1>
-          <p className="text-sm text-gray-500 tracking-wider font-medium mt-3">Manage physical locations and operations.</p>
-        </div>
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          <div className="relative flex-1 md:w-64">
-            <Search className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
-            <input 
-              type="text" placeholder="Search branches..." 
-              value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-gray-50/50 hover:bg-gray-50 focus:bg-white border-2 border-transparent focus:border-[#0D80F2]/30 rounded-2xl outline-none transition-all text-sm font-bold"
-            />
-          </div>
-          <button onClick={() => navigate("/branches/add")} className="px-6 py-3 bg-[#0D80F2] text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap">
-            <Plus className="w-5 h-5" /> <span className="hidden sm:block">Add Branch</span>
-          </button>
-        </div>
-      </div>
-
-      {/* MODERN DETACHED TABLE */}
-      <div className="space-y-3">
-        {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-3 text-[11px] font-black text-gray-400 uppercase tracking-widest">
-          <div className="col-span-4">Branch Details</div>
-          <div className="col-span-3">Location & TimeZone</div>
-          <div className="col-span-2">Counters</div>
-          <div className="col-span-2">Work Days</div>
-          <div className="col-span-1 text-right">Action</div>
-        </div>
-
-        {/* Table Rows */}
-        {filtered.length > 0 ? filtered.map((branch, i) => (
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-            key={branch.id} 
-            className="grid grid-cols-12 gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-100 transition-all group"
-          >
-            <div className="col-span-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-linear-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-[#0054a6] border border-blue-100/50 group-hover:scale-110 transition-transform">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="font-bold text-gray-800 text-base">{branch.title}</p>
-                <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md uppercase tracking-wider">Active</span>
-              </div>
-            </div>
-            
-            <div className="col-span-3">
-              <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600">
-                <MapPin className="w-4 h-4 text-orange-400" /> {branch.location}
-              </div>
-              <p className="text-xs text-gray-400 font-medium mt-1">{branch.timeZone}</p>
-            </div>
-
-            <div className="col-span-2">
-              <span className="text-lg font-black text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">{branch.counters || 0}</span>
-            </div>
-
-            <div className="col-span-2 flex items-center gap-1 flex-wrap">
-              {branch.workDays?.slice(0,3).map((day: string) => (
-                <span key={day} className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md uppercase">{day}</span>
-              ))}
-              {(branch.workDays?.length || 0) > 3 && <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md">+{branch.workDays.length - 3}</span>}
-            </div>
-
-            <div className="col-span-1 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button className="p-2 text-gray-400 hover:text-[#0D80F2] bg-gray-50 hover:bg-blue-50 rounded-xl transition-all"><Edit3 className="w-4 h-4" /></button>
-              <button className="p-2 text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
-            </div>
-          </motion.div>
-        )) : (
-          <div className="bg-white p-12 rounded-3xl border border-dashed border-gray-200 text-center">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4"><Building2 className="w-8 h-8 text-gray-300" /></div>
-            <h3 className="text-gray-500 font-bold">No branches found.</h3>
-          </div>
-        )}
-      </div>
-    </motion.div>
+    <CustomTable<Branch>
+      title="Branches"
+      subtitle="Manage physical locations and operations."
+      addLabel="Add Branch"
+      onAdd={() => navigate("/branches/add")}
+      columns={columns}
+      data={branches}
+      searchKeys={["title", "location"]}
+      filters={filters}
+      rowActions={defaultRowActions(handleEdit)}
+      pageSize={10}
+      emptyMessage="No branches found matching your search / filter."
+    />
   );
 };
 

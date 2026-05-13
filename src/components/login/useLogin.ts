@@ -6,6 +6,7 @@ import { setUser } from "../../store/auth.store";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 
 // export const useLogin = () => {
 //   const [loading, setLoading] = useState(false);
@@ -65,6 +66,7 @@ export const useLogin = () => {
         .matches(/\w/, "Please enter valid password"),
     }),
     onSubmit: async (values) => {
+     
       setLoading(true);
       try {
         const bodyData = {
@@ -93,8 +95,11 @@ export const useLogin = () => {
           }
         } else {
           setLoading(false);
+          toast.error(res?.message)
         }
       } catch (error) {
+        toast.error(error?.response?.data?.message);
+        
         setLoading(false);
       }
     },

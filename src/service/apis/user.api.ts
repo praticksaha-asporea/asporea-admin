@@ -15,13 +15,18 @@ export const getUsersApi = catchAsync(async (params?: Record<string, string>) =>
   return res;
 });
 
+export const getUserByIdApi = catchAsync(async (id: string) => {
+  const res = await httpsCall.get(`/user/details?id=${id}`);
+  return res;
+});
+
 export const createUserApi = catchAsync(async (data: UserPayload) => {
-  const res = await httpsCall.post("/users", data);
+  const res = await httpsCall.post("/admin/user/create", data);
   return res;
 });
 
 export const updateUserApi = catchAsync(async (id: number | string, data: Partial<UserPayload>) => {
-  const res = await httpsCall.put(`/users/${id}`, data);
+  const res = await httpsCall.patch(`/admin/user/update`, {id,...data});
   return res;
 });
 

@@ -8,18 +8,18 @@ import CustomTable, {
   type ColumnDef,
   type FilterConfig,
 } from "../../components/UI/customTable/CustomTable";
-import { getUsersApi, deleteUserApi } from "../../service/apis/user.api";
+import { getUsersApi } from "../../service/apis/user.api";//,deleteUserApi
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type User = {
-  id: number;
+  _id: number;
   firstName: string;
   lastName: string;
   email: string;
   role: string;
   status: string;
-  joinDate: string;
+  createdAt: Date;
 };
 
 // ─── Column definitions ───────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ const columns: ColumnDef<User>[] = [
   {
     header: "Joined Date",
     accessor: (row) => (
-      <span className="text-sm text-gray-500 font-medium">{row.joinDate}</span>
+      <span className="text-sm text-gray-500 font-medium">{new Date(row.createdAt).toLocaleTimeString() }<br/>{new Date(row.createdAt).toLocaleDateString() }</span>
     ),
   },
 ];
@@ -111,18 +111,18 @@ const UserList = () => {
   }, [fetchUsers]);
 
   // ── Actions ────────────────────────────────────────────────────────────────
-  const handleDelete = async (user: User) => {
-    if (!window.confirm(`Delete ${user.firstName} ${user.lastName}?`)) return;
-    try {
-      await deleteUserApi(user.id);
-      setUsers((prev) => prev.filter((u) => u.id !== user.id));
-    } catch (err: any) {
-      alert(err?.response?.data?.message ?? "Failed to delete user.");
-    }
-  };
+  // const handleDelete = async (user: User) => {
+  //   if (!window.confirm(`Delete ${user.firstName} ${user.lastName}?`)) return;
+  //   try {
+  //     await deleteUserApi(user.id);
+  //     setUsers((prev) => prev.filter((u) => u.id !== user.id));
+  //   } catch (err: any) {
+  //     alert(err?.response?.data?.message ?? "Failed to delete user.");
+  //   }
+  // };
 
   const handleEdit = (user: User) => {
-    navigate(`/users/edit/${user.id}`);
+    navigate(`/users/edit/${user._id}`);
   };
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
@@ -174,7 +174,7 @@ const UserList = () => {
       data={users}
       searchKeys={["firstName", "lastName", "email"]}
       filters={filters}
-      rowActions={defaultRowActions(handleEdit, handleDelete)}
+      rowActions={defaultRowActions(handleEdit)}//, handleDelete
       pageSize={2}
       emptyMessage="No users found matching your search / filter."
     />
