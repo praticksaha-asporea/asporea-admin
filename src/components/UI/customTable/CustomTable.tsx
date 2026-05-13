@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Plus, Edit2, Trash2, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -336,29 +336,26 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-/** Standard edit / delete / more action set */
+/** Standard edit / delete action set — delete is optional */
 export function defaultRowActions<T>(
   onEdit: (row: T) => void,
-  // onDelete: (row: T) => void
+  onDelete?: (row: T) => void,
 ): RowAction<T>[] {
-  return [
+  const actions: RowAction<T>[] = [
     {
       icon: <Edit2 className="w-4 h-4" />,
       label: "Edit",
       onClick: onEdit,
       colorClass: "hover:text-[#0D80F2] hover:bg-blue-50",
     },
-    // {
-    //   icon: <Trash2 className="w-4 h-4" />,
-    //   label: "Delete",
-    //   onClick: onDelete,
-    //   colorClass: "hover:text-red-500 hover:bg-red-50",
-    // },
-    // {
-    //   icon: <MoreVertical className="w-4 h-4" />,
-    //   label: "More",
-    //   onClick: () => {},
-    //   colorClass: "hover:bg-gray-100",
-    // },
   ];
+  if (onDelete) {
+    actions.push({
+      icon: <Trash2 className="w-4 h-4" />,
+      label: "Delete",
+      onClick: onDelete,
+      colorClass: "hover:text-red-500 hover:bg-red-50",
+    });
+  }
+  return actions;
 }

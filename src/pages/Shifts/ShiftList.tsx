@@ -1,122 +1,186 @@
-import { useState, useEffect } from "react";
-import { Plus, Clock, Sun, Moon, Edit3, Trash2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { Clock, Sun, Moon } from "lucide-react";
+import CustomTable, {
+  defaultRowActions,
+  type ColumnDef,
+} from "../../components/UI/customTable/CustomTable";
+import { getShiftsApi, deleteShiftApi, type ScheduleObj } from "../../service/apis/shift.api";
 
- 
-interface ScheduleObj {
-  days: string[];
-  startTime: string;
-  endTime: string;
-  breakTime: string;
-}
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-interface Shift {
-  id: number;
+type Shift = {
+  _id: string;
   shiftName: string;
   schedules: ScheduleObj[];
+};
+
+// ─── Cell renderers ───────────────────────────────────────────────────────────
+
+function ShiftNameCell({ shiftName, schedules }: { shiftName: string; schedules: ScheduleObj[] }) {
+  const firstTime = schedules?.[0]?.startTime ?? "";
+  const isNight = Number(firstTime.split(":")[0]) >= 17;
+  return (
+    <div className="flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+        isNight ? "bg-indigo-50 text-indigo-500" : "bg-[#0D80F2] text-white"
+      }`}>
+        {isNight ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+      </div>
+      <div>
+        <p className="text-sm font-bold text-gray-800">{shiftName}</p>
+        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5">
+          {schedules?.length ?? 0} rule(s)
+        </p>
+      </div>
+    </div>
+  );
 }
+
+function SchedulesCell({ schedules }: { schedules: ScheduleObj[] }) {
+  if (!schedules?.length) {
+    return <span className="text-xs font-bold text-red-400 uppercase tracking-widest">Incomplete</span>;
+  }
+  return (
+    <div className="space-y-1.5">
+      {schedules.map((sch, i) => (
+        <div key={i} className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl w-fit">
+          <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+          <span className="text-xs font-black text-gray-700">
+            {sch.startTime} → {sch.endTime}
+          </span>
+          <span className="text-[10px] font-bold text-[#fc7728] bg-orange-50 px-2 py-0.5 rounded-md">
+            {sch.days.slice(0, 3).join(", ")}{sch.days.length > 3 ? ` +${sch.days.length - 3}` : ""}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BreakCell({ schedules }: { schedules: ScheduleObj[] }) {
+  const breaks = [...new Set(schedules?.map((s) => s.breakTime || "None"))];
+  return (
+    <div className="flex flex-wrap gap-1">
+      {breaks.map((b) => (
+        <span key={b} className="text-xs font-bold text-[#0D80F2] bg-blue-50 px-2 py-1 rounded-md">
+          {b}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ─── Column definitions ───────────────────────────────────────────────────────
+
+const columns: ColumnDef<Shift>[] = [
+  {
+    header: "Shift",
+    accessor: (row) => <ShiftNameCell shiftName={row.shiftName} schedules={row.schedules} />,
+  },
+  {
+    header: "Schedules",
+    accessor: (row) => <SchedulesCell schedules={row.schedules} />,
+  },
+  {
+    header: "Break",
+    accessor: (row) => <BreakCell schedules={row.schedules} />,
+  },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const ShiftList = () => {
   const navigate = useNavigate();
-  const [shifts, setShifts] = useState<Shift[]>([]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("asporea_shifts");
-    if (saved) setShifts(JSON.parse(saved));
+  const [shifts, setShifts]   = useState<Shift[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState<string | null>(null);
+
+  // ── Fetch ──────────────────────────────────────────────────────────────────
+  const fetchShifts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getShiftsApi();
+      setShifts(res?.data?.data ?? []);
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? "Failed to load shifts.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-   
-  const handleDelete = (id: number) => {
-    if (window.confirm("Are you sure you want to delete this shift?")) {
-      const updatedShifts = shifts.filter(shift => shift.id !== id);
-      setShifts(updatedShifts);
-      localStorage.setItem("asporea_shifts", JSON.stringify(updatedShifts));
+  useEffect(() => {
+    fetchShifts();
+  }, [fetchShifts]);
+
+  // ── Actions ────────────────────────────────────────────────────────────────
+  const handleEdit = (shift: Shift) => {
+    navigate(`/shifts/edit/${shift._id}`);
+  };
+
+  const handleDelete = async (shift: Shift) => {
+    if (!window.confirm(`Delete shift "${shift.shiftName}"?`)) return;
+    try {
+      await deleteShiftApi(shift._id);
+      setShifts((prev) => prev.filter((s) => s._id !== shift._id));
+    } catch (err: any) {
+      alert(err?.response?.data?.message ?? "Failed to delete shift.");
     }
   };
 
-  return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 max-w-7xl mx-auto">
-      
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-50">
-        <div>
-          <h1 className="text-2xl font-medium tracking-wider text-gray-700">Shift Schedules</h1>
-          <p className="text-sm text-gray-500 font-medium mt-1">Configure multi-day working hours and breaks.</p>
+  // ── Loading skeleton ───────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-64 bg-gray-200 rounded-xl" />
+        <div className="h-14 bg-gray-100 rounded-2xl" />
+        <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex gap-4 px-6 py-4 border-b border-gray-50">
+              <div className="w-10 h-10 rounded-full bg-gray-200 shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 w-40 bg-gray-200 rounded" />
+                <div className="h-3 w-56 bg-gray-100 rounded" />
+              </div>
+              <div className="h-3 w-20 bg-gray-200 rounded self-center" />
+            </div>
+          ))}
         </div>
-        <button onClick={() => navigate("/shifts/add")} className="px-6 py-3 bg-[#0D80F2] text-white rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 cursor-pointer">
-          <Plus className="w-5 h-5" /> Add Shift
+      </div>
+    );
+  }
+
+  // ── Error state ────────────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-red-500 font-bold text-sm">{error}</p>
+        <button
+          onClick={fetchShifts}
+          className="px-5 py-2.5 bg-[#0D80F2] text-white text-sm font-bold rounded-xl hover:scale-[1.02] transition-all"
+        >
+          Retry
         </button>
       </div>
+    );
+  }
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {shifts.length > 0 ? shifts.map((shift, i) => {
-          
-          const firstSchTime = shift.schedules && shift.schedules[0] ? shift.schedules[0].startTime : "";
-          const isNight = firstSchTime.includes("PM") || Number(firstSchTime.split(":")[0]) >= 17;
-
-          return (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }}
-              key={shift.id} 
-              className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:border-[#0D80F2]/30 transition-all relative overflow-hidden group flex flex-col"
-            >
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#0D80F2] to-[#0D80F2] opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="flex justify-between items-start mb-6 mt-2">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isNight ? 'bg-indigo-50 text-indigo-500' : 'bg-[#0D80F2] text-white'}`}>
-                    {isNight ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-gray-800">{shift.shiftName}</h3>
-                    <p className="text-xs text-gray-400 font-bold mt-1 uppercase tracking-widest">{shift.schedules?.length || 0} Rule(s) Applied</p>
-                  </div>
-                </div>
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="p-2 text-gray-400 hover:text-[#0D80F2] hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"><Edit3 className="w-4 h-4" /></button>
-                  
-                  <button onClick={() => handleDelete(shift.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"><Trash2 className="w-4 h-4" /></button>
-                </div>
-              </div>
-
-       
-              {shift.schedules && shift.schedules.length > 0 ? (
-                <div className="flex-1 space-y-2 bg-gray-50/50 p-2 rounded-2xl border border-gray-100">
-                  {shift.schedules.map((sch, idx) => (
-                    <div key={idx} className="bg-white p-3 rounded-xl shadow-sm border border-gray-50 flex items-center justify-between">
-                      <div>
-                        <div className="text-[10px] font-bold text-[#fc7728] uppercase tracking-wider mb-1">
-                          {sch.days.join(", ")}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm font-black text-gray-700">
-                          <Clock className="w-3.5 h-3.5 text-gray-400" />
-                          {sch.startTime} <span className="text-gray-300 font-normal">→</span> {sch.endTime}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Break</span>
-                        <span className="text-xs font-bold text-[#0D80F2] bg-blue-50 px-2 py-0.5 rounded-md">{sch.breakTime || "None"}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                
-                <div className="flex-1 flex items-center justify-center bg-gray-50/50 p-4 rounded-2xl border border-gray-100 border-dashed">
-                  <p className="text-xs text-red-400 font-bold uppercase tracking-widest">Incomplete Setup</p>
-                </div>
-              )}
-
-            </motion.div>
-          )
-        }) : (
-           <div className="col-span-2 bg-white p-12 rounded-3xl border border-dashed border-gray-200 text-center">
-            <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-gray-500 font-bold">No shift configurations yet.</h3>
-          </div>
-        )}
-      </div>
-    </motion.div>
+  // ── Table ──────────────────────────────────────────────────────────────────
+  return (
+    <CustomTable<Shift>
+      title="Shift Schedules"
+      subtitle="Configure multi-day working hours and breaks."
+      addLabel="Add Shift"
+      onAdd={() => navigate("/shifts/add")}
+      columns={columns}
+      data={shifts}
+      searchKeys={["shiftName"]}
+      rowActions={defaultRowActions(handleEdit, handleDelete)}
+      pageSize={10}
+      emptyMessage="No shift configurations found."
+    />
   );
 };
 

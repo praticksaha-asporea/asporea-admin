@@ -28,9 +28,9 @@ function App() {
             <Route path="/branches/add" element={<BranchForm />} />
             <Route path="/branches/edit/:id" element={<BranchForm />} />
             <Route path="/shifts" element={<ShiftList />} />
-            <Route path="/employees" element={<EmployeeAssignment />} />
-
             <Route path="/shifts/add" element={<ShiftForm />} />
+            <Route path="/shifts/edit/:id" element={<ShiftForm />} />
+            <Route path="/employees" element={<EmployeeAssignment />} />
           </Route>
         </Route>
       </Routes>
