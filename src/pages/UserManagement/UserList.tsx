@@ -175,7 +175,7 @@ const UserList = () => {
       searchKeys={["firstName", "lastName", "email"]}
       filters={filters}
       rowActions={defaultRowActions(handleEdit)}//, handleDelete
-      pageSize={2}
+      pageSize={10}
       emptyMessage="No users found matching your search / filter."
     />
   );

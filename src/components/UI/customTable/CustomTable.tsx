@@ -312,7 +312,7 @@ export function UserCell({ firstName, lastName, email }: { firstName: string; la
 
 /** Role badge */
 export function RoleBadge({ role }: { role: string }) {
-  const label = role.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const label = role?.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   return (
     <span className="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full uppercase tracking-tighter">
       {label}

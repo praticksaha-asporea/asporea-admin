@@ -10,6 +10,8 @@ import AdminLayout from "./layout/AdminLayout";
 import UserList from "./pages/UserManagement/UserList";
 import UserForm from "./pages/UserManagement/UserForm";
 import EmployeeAssignment from "./pages/Employees/EmployeeAssignment";
+import AssignmentForm from "./pages/Employees/AssignmentForm";
+import ProfileForm from "./pages/Profile/ProfileForm";
 import { Bounce, ToastContainer } from 'react-toastify';
 
 function App() {
@@ -31,6 +33,9 @@ function App() {
             <Route path="/shifts/add" element={<ShiftForm />} />
             <Route path="/shifts/edit/:id" element={<ShiftForm />} />
             <Route path="/employees" element={<EmployeeAssignment />} />
+            <Route path="/employees/add" element={<AssignmentForm />} />
+            <Route path="/employees/edit/:id" element={<AssignmentForm />} />
+            <Route path="/profile" element={<ProfileForm />} />
           </Route>
         </Route>
       </Routes>

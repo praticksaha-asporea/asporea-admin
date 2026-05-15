@@ -20,6 +20,29 @@ export const getUserByIdApi = catchAsync(async (id: string) => {
   return res;
 });
 
+export const updateProfileApi = catchAsync(async (data: Partial<ProfilePayload>) => {
+  const res = await httpsCall.patch("/user/profile-update", data);
+  return res;
+});
+
+export type ProfilePayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  whatsappNumber: string;
+  address: string;
+  passportStatus: string;
+  passportNo: string;
+  enquired: string;
+  notificationPreference: {
+    sms: boolean;
+    whatsapp: boolean;
+    email: boolean;
+  };
+  id:string;
+};
+
 export const createUserApi = catchAsync(async (data: UserPayload) => {
   const res = await httpsCall.post("/admin/user/create", data);
   return res;
