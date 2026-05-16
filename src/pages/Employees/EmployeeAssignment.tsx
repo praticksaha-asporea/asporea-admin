@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Building, Clock, Timer, Hash, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 import CustomTable, {
   RoleBadge,
   type ColumnDef, type FilterConfig, type RowAction,
 } from "../../components/UI/customTable/CustomTable";
 import { getAssignmentsApi, deleteAssignmentApi } from "../../service/apis/assignment.api";
+import { confirmToast } from "../../utils/confirmToast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -149,13 +151,15 @@ const EmployeeAssignment = () => {
   }, [fetchAssignments, search]);
 
   const handleDelete = async (assignment: Assignment) => {
-    if (!window.confirm("Remove this assignment?")) return;
+    const confirmed = await confirmToast("Remove this assignment?");
+    if (!confirmed) return;
     try {
       await deleteAssignmentApi(assignment._id);
       setAssignments((prev) => prev.filter((a) => a._id !== assignment._id));
       setTotalCount((c) => c - 1);
+      toast.success("Assignment removed.");
     } catch (err: any) {
-      alert(err?.response?.data?.message ?? "Failed to delete assignment.");
+      toast.error(err?.response?.data?.message ?? "Failed to delete assignment.");
     }
   };
 
@@ -173,26 +177,28 @@ const EmployeeAssignment = () => {
   }
 
   return (
-    <CustomTable<Assignment>
-      title="Employee Assignment"
-      subtitle="Assign employees to branches and shifts."
-      addLabel="New Assignment"
-      onAdd={() => navigate("/employees/add")}
-      columns={columns}
-      data={assignments}
-      totalCount={totalCount}
-      currentPage={page}
-      pageSize={PAGE_SIZE}
-      onPageChange={setPage}
-      searchValue={search}
-      onSearchChange={handleSearch}
-      filterValues={filters}
-      onFilterChange={handleFilterChange}
-      filters={filterConfigs}
-      rowActions={rowActions}
-      loading={loading}
-      emptyMessage="No assignments found. Add one to get started."
-    />
+    <>
+      <CustomTable<Assignment>
+        title="Employee Assignment"
+        subtitle="Assign employees to branches and shifts."
+        addLabel="New Assignment"
+        onAdd={() => navigate("/employees/add")}
+        columns={columns}
+        data={assignments}
+        totalCount={totalCount}
+        currentPage={page}
+        pageSize={PAGE_SIZE}
+        onPageChange={setPage}
+        searchValue={search}
+        onSearchChange={handleSearch}
+        filterValues={filters}
+        onFilterChange={handleFilterChange}
+        filters={filterConfigs}
+        rowActions={rowActions}
+        loading={loading}
+        emptyMessage="No assignments found. Add one to get started."
+      />
+    </>
   );
 };
 

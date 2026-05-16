@@ -34,6 +34,6 @@ export const updateShiftApi = catchAsync(async (id: string, data: Partial<ShiftP
 });
 
 export const deleteShiftApi = catchAsync(async (id: string) => {
-  const res = await httpsCall.delete(`/admin/shift/${id}`);
+  const res = await httpsCall.delete(`/admin/shift/delete?id=${id}`);
   return res;
 });

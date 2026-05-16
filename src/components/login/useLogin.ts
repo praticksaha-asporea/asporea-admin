@@ -6,7 +6,7 @@ import { setUser } from "../../store/auth.store";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 // export const useLogin = () => {
 //   const [loading, setLoading] = useState(false);
@@ -97,9 +97,7 @@ export const useLogin = () => {
           setLoading(false);
           toast.error(res?.message)
         }
-      } catch (error) {
-        toast.error(error?.response?.data?.message);
-        
+      } catch (error) {        
         setLoading(false);
       }
     },

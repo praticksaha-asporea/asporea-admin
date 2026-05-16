@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { changePasswordApi } from "../../service/apis/auth.api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

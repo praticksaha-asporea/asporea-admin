@@ -7,6 +7,8 @@ import CustomTable, {
 } from "../../components/UI/customTable/CustomTable";
 import { getShiftsApi, deleteShiftApi, type ScheduleObj } from "../../service/apis/shift.api";
 import useDebounce from "../../utils/useDebounce";
+import { toast } from "react-hot-toast";
+import { confirmToast } from "../../utils/confirmToast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -111,13 +113,19 @@ const ShiftList = () => {
 
   const handleEdit   = (shift: Shift) => navigate(`/shifts/edit/${shift._id}`);
   const handleDelete = async (shift: Shift) => {
-    if (!window.confirm(`Delete shift "${shift.shiftName}"?`)) return;
+    const confirmed = await confirmToast(`Delete shift "${shift.shiftName}"?`);
+    if (!confirmed) return;
+    console.log(confirmed,555);
+    
     try {
-      await deleteShiftApi(shift._id);
+      const res=await deleteShiftApi(shift._id);
       setShifts((prev) => prev.filter((s) => s._id !== shift._id));
       setTotalCount((c) => c - 1);
+      // console.log(res,58);
+      
+      toast.success(res?.message);
     } catch (err: any) {
-      alert(err?.response?.data?.message ?? "Failed to delete shift.");
+      toast.error(err?.response?.data?.message ?? "Failed to delete shift.");
     }
   };
 

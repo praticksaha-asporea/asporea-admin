@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { createShiftApi, updateShiftApi, getShiftByIdApi, type ScheduleObj } from "../../service/apis/shift.api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

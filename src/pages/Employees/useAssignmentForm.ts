@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import {
   createAssignmentApi
   // getAssignmentByIdApi,
@@ -63,7 +63,7 @@ export const useAssignmentForm = () => {
   const isEdit = Boolean(id);
 
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(isEdit);
+  const [fetching] = useState(isEdit);
   const [apiError, setApiError] = useState<string | null>(null);
 
   // ── Dropdown data ──────────────────────────────────────────────────────────
@@ -124,7 +124,7 @@ export const useAssignmentForm = () => {
         // setApiError(
         //   err?.response?.data?.message ?? "Something went wrong. Please try again."
         // );
-        toast.error(err?.response?.data?.message ?? "Something went wrong. Please try again.");
+        // toast.error(err?.response?.data?.message ?? "Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }

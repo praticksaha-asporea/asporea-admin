@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Menu,
-  Search,
   Bell,
   User,
   LogOut,
@@ -13,13 +12,14 @@ import ChangePasswordModal from "../components/modals/ChangePasswordModal";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
+import type { IUser } from "../interfaces/itable";
 
 const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const user = useSelector((state: RootState) => state.authSlice.user);
+  const user : IUser | null = useSelector((state: RootState) => state.authSlice.user);
 
   useEffect(() => {    
     const handleClickOutside = (event: MouseEvent) => {

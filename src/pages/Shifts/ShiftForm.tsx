@@ -5,13 +5,14 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShiftForm } from "./useShiftForm";
+import { toast } from "react-hot-toast";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const ShiftForm = () => {
   const navigate = useNavigate();
   const {
-    formik, loading, fetching, apiError, isEdit,
+    formik, loading, fetching, isEdit,
     currentSchedule, setCurrentSchedule, editingIndex,
     toggleScheduleDay, addOrUpdateSchedule,
     editSchedule, removeSchedule, cancelEditSchedule,
@@ -30,7 +31,7 @@ const ShiftForm = () => {
 
   const handleAddSchedule = () => {
     const ok = addOrUpdateSchedule();
-    if (!ok) alert("Please select at least one day and fill Start / End time.");
+    if (!ok) toast.error("Please select at least one day and fill Start / End time.");
   };
 
   return (
@@ -65,11 +66,11 @@ const ShiftForm = () => {
       </div>
 
       {/* ── API error banner ── */}
-      {apiError && (
+      {/* {apiError && (
         <div className="mb-6 px-5 py-4 bg-red-50 border border-red-200 rounded-2xl text-sm font-bold text-red-600">
           {apiError}
         </div>
-      )}
+      )} */}
 
       <div className="space-y-8">
 

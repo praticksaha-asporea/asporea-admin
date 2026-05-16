@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { createUserApi, updateUserApi, getUserByIdApi } from "../../service/apis/user.api";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -136,9 +136,9 @@ export const useUserForm = () => {
                     }
                 }
             } catch (err: any) {
-                toast.error(
-                    err?.response?.data?.message ?? "Something went wrong. Please try again."
-                );
+                // toast.error(
+                //     err?.response?.data?.message ?? "Something went wrong. Please try again."
+                // );
             } finally {
                 setLoading(false);
             }
