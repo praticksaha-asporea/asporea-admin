@@ -50,14 +50,14 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           <Menu className="w-6 h-6" />
         </button>
 
-        <div className="hidden md:flex items-center relative">
+        {/* <div className="hidden md:flex items-center relative">
           <Search className="w-4 h-4 text-gray-400 absolute left-4" />
           <input
             type="text"
             placeholder="Search records..."
             className="pl-10 pr-4 py-2 bg-gray-50 border-transparent focus:bg-white focus:border-[#0D80F2]/30 border-2 rounded-xl outline-none transition-all text-sm w-64"
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-center gap-4">

@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import { Search, Plus, Edit2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -10,7 +9,6 @@ export type FilterOption = {
 };
 
 export type FilterConfig = {
-  /** key in the row data to filter against */
   key: string;
   placeholder: string;
   options: FilterOption[];
@@ -18,7 +16,6 @@ export type FilterConfig = {
 
 export type ColumnDef<T> = {
   header: string;
-  /** key of T or a render function */
   accessor: keyof T | ((row: T) => React.ReactNode);
   className?: string;
 };
@@ -27,42 +24,45 @@ export type RowAction<T> = {
   icon: React.ReactNode;
   label: string;
   onClick: (row: T) => void;
-  colorClass?: string; // e.g. "hover:text-red-500 hover:bg-red-50"
+  colorClass?: string;
 };
 
 interface CustomTableProps<T extends { _id: number | string }> {
-  /** Page / section title */
   title: string;
-  /** Subtitle below the title */
   subtitle?: string;
-  /** Label for the primary CTA button */
   addLabel?: string;
-  /** Called when the CTA button is clicked */
   onAdd?: () => void;
-  /** Column definitions */
   columns: ColumnDef<T>[];
-  /** Full data array */
+  /** Current page's data — already sliced by the server */
   data: T[];
-  /** Keys of T to include in the text search */
-  searchKeys?: (keyof T)[];
-  /** Filter dropdowns to render */
+  /** Total records across all pages (from API response) */
+  totalCount: number;
+  /** Current page number (1-indexed) */
+  currentPage: number;
+  /** Records per page */
+  pageSize: number;
+  /** Called when user changes page */
+  onPageChange: (page: number) => void;
+  /** Current search string (controlled) */
+  searchValue?: string;
+  /** Called when user types in search — debounce in the parent */
+  onSearchChange?: (value: string) => void;
+  /** Current filter values map (controlled) */
+  filterValues?: Record<string, string>;
+  /** Called when a filter dropdown changes */
+  onFilterChange?: (key: string, value: string) => void;
   filters?: FilterConfig[];
-  /** Row-level action buttons (edit, delete, etc.) */
   rowActions?: RowAction<T>[];
-  /** Rows per page (default 10) */
-  pageSize?: number;
-  /** Empty state message */
   emptyMessage?: string;
+  /** Show inline row loading overlay while fetching */
+  loading?: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getCellValue<T>(row: T, accessor: ColumnDef<T>["accessor"]): React.ReactNode {
   if (typeof accessor === "function") return accessor(row);
-  const val = row[accessor as keyof T];
-  // console.log(val,251);
-  
-  return val as React.ReactNode;
+  return row[accessor as keyof T] as React.ReactNode;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -74,59 +74,33 @@ function CustomTable<T extends { _id: number | string }>({
   onAdd,
   columns,
   data,
-  searchKeys = [],
+  totalCount,
+  currentPage,
+  pageSize,
+  onPageChange,
+  searchValue = "",
+  onSearchChange,
+  filterValues = {},
+  onFilterChange,
   filters = [],
   rowActions = [],
-  pageSize = 10,
-  emptyMessage = "No records found matching your search / filter.",
+  emptyMessage = "No records found.",
+  loading = false,
 }: CustomTableProps<T>) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterValues, setFilterValues] = useState<Record<string, string>>(() =>
-    Object.fromEntries(filters.map((f) => [f.key, "all"]))
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
-  // ── Filtering ──────────────────────────────────────────────────────────────
-  const filtered = useMemo(() => {
-    // console.log(data);
-    
-    return data.filter((row) => {
-      // text search
-      const matchesSearch =
-        searchKeys.length === 0 ||
-        searchKeys.some((key) => {
-          const val = row[key];
-          return String(val ?? "").toLowerCase().includes(searchTerm.toLowerCase());
-        });
+  // page window: show at most 5 page buttons
+  const pageWindow = (() => {
+    const half = 2;
+    let start = Math.max(1, currentPage - half);
+    let end   = Math.min(totalPages, currentPage + half);
+    if (end - start < 4) {
+      if (start === 1) end = Math.min(totalPages, start + 4);
+      else start = Math.max(1, end - 4);
+    }
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  })();
 
-      // dropdown filters
-      const matchesFilters = filters.every((f) => {
-        const selected = filterValues[f.key];
-        if (!selected || selected === "all") return true;
-        return String((row as any)[f.key] ?? "") === selected;
-      });
-
-      return matchesSearch && matchesFilters;
-    });
-    
-  }, [data, searchTerm, filterValues, searchKeys, filters]);
-
-  // ── Pagination ─────────────────────────────────────────────────────────────
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage = Math.min(currentPage, totalPages);
-  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilterValues((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1);
-  };
-
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  };
-
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
 
@@ -134,70 +108,71 @@ function CustomTable<T extends { _id: number | string }>({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-medium tracking-widest text-gray-700">{title}</h1>
-          {subtitle && (
-            <p className="text-sm text-gray-500 mt-3 font-medium">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-sm text-gray-500 mt-3 font-medium">{subtitle}</p>}
         </div>
         {onAdd && (
           <button
             onClick={onAdd}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-[#0D80F2] text-white rounded-xl font-bold shadow-lg shadow-blue-100 hover:scale-[1.02] transition-all whitespace-nowrap"
           >
-            <Plus className="w-5 h-5" />
-            {addLabel}
+            <Plus className="w-5 h-5" /> {addLabel}
           </button>
         )}
       </div>
 
       {/* Search + Filters bar */}
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between">
-        {/* Search */}
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-3 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-transparent focus:bg-white focus:border-[#0D80F2]/30 border-2 rounded-xl outline-none text-sm transition-all"
-          />
-        </div>
+        {onSearchChange && (
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-4 top-3 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-transparent focus:bg-white focus:border-[#0D80F2]/30 border-2 rounded-xl outline-none text-sm transition-all"
+            />
+          </div>
+        )}
 
-        {/* Filter dropdowns */}
-        <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
-          {/* <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all">
-            <Filter className="w-4 h-4" /> Filters
-          </button> */}
-
-          {filters.map((f) => (
-            <select
-              key={f.key}
-              value={filterValues[f.key] ?? "all"}
-              onChange={(e) => handleFilterChange(f.key, e.target.value)}
-              className="flex-1 md:flex-none px-4 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-xl font-bold text-sm outline-none cursor-pointer"
-            >
-              <option value="all">{f.placeholder}</option>
-              {f.options.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          ))}
-        </div>
+        {filters.length > 0 && onFilterChange && (
+          <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
+            {filters.map((f) => (
+              <select
+                key={f.key}
+                value={filterValues[f.key] ?? "all"}
+                onChange={(e) => {
+                  onFilterChange(f.key, e.target.value);
+                  onPageChange(1); // reset to page 1 on filter change
+                }}
+                className="flex-1 md:flex-none px-4 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-xl font-bold text-sm outline-none cursor-pointer"
+              >
+                <option value="all">{f.placeholder}</option>
+                {f.options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden relative">
+
+        {/* Loading overlay — keeps layout stable */}
+        {loading && (
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-3xl">
+            <div className="w-6 h-6 border-2 border-[#0D80F2] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 border-b border-gray-100">
                 {columns.map((col, i) => (
-                  <th
-                    key={i}
-                    className={`px-6 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest ${col.className ?? ""}`}
-                  >
+                  <th key={i} className={`px-6 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest ${col.className ?? ""}`}>
                     {col.header}
                   </th>
                 ))}
@@ -209,8 +184,8 @@ function CustomTable<T extends { _id: number | string }>({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {paginated.length > 0 ? (
-                paginated.map((row, index) => (
+              {data.length > 0 ? (
+                data.map((row, index) => (
                   <tr key={index} className="hover:bg-blue-50/30 transition-colors group">
                     {columns.map((col, i) => (
                       <td key={i} className={`px-6 py-4 ${col.className ?? ""}`}>
@@ -249,36 +224,34 @@ function CustomTable<T extends { _id: number | string }>({
           </table>
         </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
+        {/* Pagination — always show when totalCount > pageSize */}
+        {totalCount > pageSize && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
             <p className="text-xs text-gray-400 font-medium">
-              Showing {(safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, filtered.length)} of {filtered.length}
+              Showing {totalCount === 0 ? 0 : Math.min((currentPage - 1) * pageSize + 1, totalCount)}–{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
             </p>
             <div className="flex items-center gap-1">
               <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={safePage === 1}
+                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
                 className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              {pageWindow.map((page) => (
                 <button
                   key={page}
-                  onClick={() => setCurrentPage(page)}
+                  onClick={() => onPageChange(page)}
                   className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                    page === safePage
-                      ? "bg-[#0D80F2] text-white"
-                      : "text-gray-500 hover:bg-gray-100"
+                    page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
                   }`}
                 >
                   {page}
                 </button>
               ))}
               <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={safePage === totalPages}
+                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
                 className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -293,9 +266,8 @@ function CustomTable<T extends { _id: number | string }>({
 
 export default CustomTable;
 
-// ─── Pre-built cell renderers (optional helpers) ──────────────────────────────
+// ─── Pre-built cell renderers ─────────────────────────────────────────────────
 
-/** Avatar + name + email cell */
 export function UserCell({ firstName, lastName, email }: { firstName: string; lastName?: string; email: string }) {
   return (
     <div className="flex items-center gap-3">
@@ -310,7 +282,6 @@ export function UserCell({ firstName, lastName, email }: { firstName: string; la
   );
 }
 
-/** Role badge */
 export function RoleBadge({ role }: { role: string }) {
   const label = role?.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   return (
@@ -320,7 +291,6 @@ export function RoleBadge({ role }: { role: string }) {
   );
 }
 
-/** Active / inactive / deleted status dot */
 export function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, { dot: string; text: string }> = {
     active:   { dot: "bg-green-500",  text: "text-green-600" },
@@ -336,7 +306,6 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-/** Standard edit / delete action set — delete is optional */
 export function defaultRowActions<T>(
   onEdit: (row: T) => void,
   onDelete?: (row: T) => void,
