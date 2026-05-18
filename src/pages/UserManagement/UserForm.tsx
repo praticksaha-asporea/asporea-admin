@@ -209,7 +209,7 @@ const UserForm = () => {
         </div>
  
  <div className="space-y-8">
-           <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+           <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]"></div>
             
             <div className="flex items-center gap-3 mb-8">
@@ -261,7 +261,7 @@ const UserForm = () => {
           </div> 
           
 
-          <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
+          <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
                
             
              
