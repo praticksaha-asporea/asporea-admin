@@ -2,7 +2,7 @@ import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ArrowLeft, CheckCircle2, Clock, CalendarDays, Briefcase, Plus, Edit3, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, CalendarDays, Plus, Edit3, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ScheduleObj {
@@ -84,7 +84,7 @@ const ShiftForm = () => {
       <div className="space-y-8">
         
         
-        <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+        <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]"></div>
          
 
@@ -97,7 +97,7 @@ const ShiftForm = () => {
           </div>
         </div>
  
-        <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+        <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]"></div>
           
           <div className="flex items-center justify-between mb-8">
@@ -151,7 +151,7 @@ const ShiftForm = () => {
                         const next = isSelected ? currentSchedule.days.filter(day => day !== d) : [...currentSchedule.days, d];
                         setCurrentSchedule({...currentSchedule, days: next});
                       }}
-                      className={`flex-1 min-w-[70px] py-3.5 rounded-2xl text-sm font-bold transition-all flex flex-col items-center gap-1 ${isSelected ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 border border-transparent'}`}
+                      className={`flex-1 min-w-17.5 py-3.5 rounded-2xl text-sm font-bold transition-all flex flex-col items-center gap-1 ${isSelected ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 border border-transparent'}`}
                     >
                       {isSelected && <CheckCircle2 className="w-4 h-4 text-[#fc7728]" />}
                       {d}
