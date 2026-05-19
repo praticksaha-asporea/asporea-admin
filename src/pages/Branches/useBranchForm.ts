@@ -93,12 +93,12 @@ export const useBranchForm = () => {
       try {
         const res = await getBranchByIdApi(id);
         const b = res?.data ?? res;
-        if (b) {
+        if (b) {          
           formik.setValues({
             title:     b.title     ?? "",
             location:  b.location  ?? "",
-            latitude:  b.latitude  ?? "",
-            longitude: b.longitude ?? "",
+            latitude:  b.coordinates.coordinates?.[1]  ?? "",
+            longitude: b.coordinates.coordinates?.[0] ?? "",
             counters:  b.counters  ?? 0,
             timeZone:  b.timeZone  ?? "Asia/Kolkata",
             workDays:  b.workDays  ?? [],
