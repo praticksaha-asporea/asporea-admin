@@ -23,7 +23,8 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       subItems: [
         { name: "Branches", path: "/branches" },
         { name: "Shifts", path: "/shifts" },
-        { name: "Employees", path: "/employees" }
+        { name: "Employees", path: "/employees" },
+        { name: "Document Type", path: "/document-types" }
       ],
     },
 

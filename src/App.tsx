@@ -13,6 +13,8 @@ import EmployeeAssignment from "./pages/Employees/EmployeeAssignment";
 import AssignmentForm from "./pages/Employees/AssignmentForm";
 import ProfileForm from "./pages/Profile/ProfileForm";
 import { Toaster } from 'react-hot-toast';
+import TypesList from "./pages/Document/Types/TypesList";
+import TypeForm from "./pages/Document/Types/TypeForm";
 
 function App() {
   return (
@@ -35,6 +37,10 @@ function App() {
             <Route path="/employees" element={<EmployeeAssignment />} />
             <Route path="/employees/add" element={<AssignmentForm />} />
             <Route path="/employees/edit/:id" element={<AssignmentForm />} />
+            <Route path="/document-types" element={<TypesList />} />
+            <Route path="/document-types/add" element={<TypeForm />} />
+            <Route path="/document-types/edit/:id" element={<TypeForm />} />
+            
             <Route path="/profile" element={<ProfileForm />} />
           </Route>
         </Route>
