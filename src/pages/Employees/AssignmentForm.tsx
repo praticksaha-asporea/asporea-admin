@@ -10,9 +10,9 @@ const AssignmentForm = () => {
   const navigate = useNavigate();
   const {
     formik, loading, fetching, apiError, isEdit,
-    branches, shifts, filteredUsers, uniqueRoles,
+    branches, shifts, filteredUsers, usersLoading, uniqueRoles, fetchUsersByRole,
   } = useAssignmentForm();
-
+  
   // ── Fetch skeleton ─────────────────────────────────────────────────────────
   if (fetching) {
     return (
@@ -81,6 +81,7 @@ const AssignmentForm = () => {
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue("employeeId", "");
+                    fetchUsersByRole(e.target.value);
                   }}
                   className={`w-full pl-12 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 appearance-none transition-all ${
                     formik.touched.role && formik.errors.role
@@ -108,7 +109,7 @@ const AssignmentForm = () => {
                 <UserPlus className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
                 <select
                   {...formik.getFieldProps("employeeId")}
-                  disabled={!formik.values.role}
+                  disabled={!formik.values.role || usersLoading}
                   className={`w-full pl-12 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 appearance-none transition-all disabled:opacity-50 ${
                     formik.touched.employeeId && formik.errors.employeeId
                       ? "border-red-400 focus:bg-white"
@@ -116,7 +117,13 @@ const AssignmentForm = () => {
                   }`}
                 >
                   <option value="" disabled>
-                    {formik.values.role ? "Select Employee..." : "Select role first"}
+                    {usersLoading
+                      ? "Loading..."
+                      : formik.values.role
+                      ? filteredUsers.length === 0
+                        ? "No employees found"
+                        : "Select Employee..."
+                      : "Select role first"}
                   </option>
                   {filteredUsers.map((u) => (
                     <option key={u._id} value={u._id}>

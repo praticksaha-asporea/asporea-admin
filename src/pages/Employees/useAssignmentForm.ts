@@ -7,7 +7,7 @@ import {
   createAssignmentApi
   // getAssignmentByIdApi,
 } from "../../service/apis/assignment.api";
-import { getUsersApi } from "../../service/apis/user.api";
+import { getUniqueRolesApi, getUsersByRoleApi } from "../../service/apis/user.api";
 import { getBranchesApi } from "../../service/apis/branch.api";
 import { getShiftsApi } from "../../service/apis/shift.api";
 
@@ -24,6 +24,7 @@ export type AssignmentFormValues = {
 };
 
 export type DropdownUser = { _id: string; firstName: string; lastName: string; role: string };
+export type DropdownRole = string;
 export type DropdownBranch = { _id: string; title: string };
 export type DropdownShift = { _id: string; shiftName: string };
 
@@ -67,28 +68,49 @@ export const useAssignmentForm = () => {
   const [apiError, setApiError] = useState<string | null>(null);
 
   // ── Dropdown data ──────────────────────────────────────────────────────────
-  const [users, setUsers] = useState<DropdownUser[]>([]);
-  const [branches, setBranches] = useState<DropdownBranch[]>([]);
-  const [shifts, setShifts] = useState<DropdownShift[]>([]);
+  const [filteredUsers, setFilteredUsers]   = useState<DropdownUser[]>([]);
+  const [usersLoading, setUsersLoading]     = useState(false);
+  const [uniqueRoles, setUniqueRoles]       = useState<DropdownRole[]>([]);
+  const [branches, setBranches]             = useState<DropdownBranch[]>([]);
+  const [shifts, setShifts]                 = useState<DropdownShift[]>([]);
 
-  // Load dropdown data on mount
+  // Load roles, branches, shifts on mount (not users — those load on role change)
   useEffect(() => {
     const loadDropdowns = async () => {
       try {
-        const [uRes, bRes, sRes] = await Promise.all([
-          getUsersApi(),
+        const [rRes, bRes, sRes] = await Promise.all([
+          getUniqueRolesApi(),
           getBranchesApi(),
           getShiftsApi(),
         ]);
-        setUsers(uRes?.data?.data ?? []);
+
+        const BLOCKED_ROLES = new Set(["user", "admin", "pca", "pcra", "institute", "sub_pca"]);
+        const uniqueRolesFiltered: DropdownRole[] =
+          rRes?.data.filter((role: string) => !BLOCKED_ROLES.has(role));
+
+        setUniqueRoles(uniqueRolesFiltered || []);
         setBranches(bRes?.data?.data ?? []);
         setShifts(sRes?.data?.data ?? []);
       } catch {
-        // non-fatal — dropdowns will be empty
+        // non-fatal
       }
     };
     loadDropdowns();
   }, []);
+
+  // ── Fetch users when role changes ──────────────────────────────────────────
+  const fetchUsersByRole = async (role: string) => {
+    if (!role) { setFilteredUsers([]); return; }
+    setUsersLoading(true);
+    try {
+      const res = await getUsersByRoleApi(role);
+      setFilteredUsers(res?.data?.data ?? []);
+    } catch {
+      setFilteredUsers([]);
+    } finally {
+      setUsersLoading(false);
+    }
+  };
 
   const formik = useFormik<AssignmentFormValues>({
     initialValues: emptyValues,
@@ -109,10 +131,10 @@ export const useAssignmentForm = () => {
           // }
         } else {
           // const removeEmptyCounter = values.counterNo != "" ? 0 : 1;
-          const { counterNo, ...removeCounter } = values;
+          // const { counterNo, ...removeCounter } = values;
           // const { role, ...removeRole } = removeEmptyCounter ? removeCounter : values;
 
-          const res = await createAssignmentApi(removeCounter);
+          const res = await createAssignmentApi(values);
           if (res?.success !== false) {
             toast.success("Employee assigned successfully.");
             navigate("/employees");
@@ -166,13 +188,7 @@ export const useAssignmentForm = () => {
   // }, [id]);
 
   // ── Derived: users filtered by selected role ───────────────────────────────
-  const filteredUsers = users.filter((u) => u.role === formik.values.role);
-
-  // ── Unique roles from loaded users — blocked roles excluded ───────────────
-  const BLOCKED_ROLES = new Set(["user", "admin", "pca", "pcra", "institute", "sub_pca"]);
-  const uniqueRoles = [...new Set(users.map((u) => u.role))].filter(
-    (r) => !BLOCKED_ROLES.has(r)
-  );
+ 
 
   return {
     formik,
@@ -180,11 +196,11 @@ export const useAssignmentForm = () => {
     fetching,
     apiError,
     isEdit,
-    // dropdown data
-    users,
     branches,
     shifts,
     filteredUsers,
+    usersLoading,
     uniqueRoles,
+    fetchUsersByRole,
   };
 };

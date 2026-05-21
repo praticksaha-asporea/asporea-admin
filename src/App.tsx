@@ -17,6 +17,7 @@ import TypesList from "./pages/Document/Types/TypesList";
 import TypeForm from "./pages/Document/Types/TypeForm";
 import PositionsList from "./pages/Positions/PositionsList";
 import PositionForm from "./pages/Positions/PositionForm";
+import GeneralSettings from "./pages/GeneralSettings/GeneralSettings";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="/positions/edit/:id" element={<PositionForm />} />
                         
             <Route path="/profile" element={<ProfileForm />} />
+            <Route path="/general-settings" element={<GeneralSettings />} />
           </Route>
         </Route>
       </Routes>

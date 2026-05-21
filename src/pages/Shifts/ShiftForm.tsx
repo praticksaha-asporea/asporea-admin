@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft, Save, CheckCircle2, Clock,
+  ArrowLeft, Save, CheckCircle2,
   CalendarDays, Plus, Edit3, Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShiftForm } from "./useShiftForm";
+import TimePicker from "../../components/UI/timePicker/TimePicker";
 import { toast } from "react-hot-toast";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -126,31 +127,19 @@ const ShiftForm = () => {
 
             {/* Time + Break */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Start Time <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <Clock className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
-                  <input
-                    type="time"
-                    value={currentSchedule.startTime}
-                    onChange={(e) => setCurrentSchedule((p) => ({ ...p, startTime: e.target.value }))}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-gray-200 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
-                  />
-                </div>
-              </div>
+              <TimePicker
+                label="Start Time"
+                required
+                value={currentSchedule.startTime}
+                onChange={(val) => setCurrentSchedule((p) => ({ ...p, startTime: val }))}
+              />
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">End Time <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <Clock className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
-                  <input
-                    type="time"
-                    value={currentSchedule.endTime}
-                    onChange={(e) => setCurrentSchedule((p) => ({ ...p, endTime: e.target.value }))}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-gray-200 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
-                  />
-                </div>
-              </div>
+              <TimePicker
+                label="End Time"
+                required
+                value={currentSchedule.endTime}
+                onChange={(val) => setCurrentSchedule((p) => ({ ...p, endTime: val }))}
+              />
 
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Break</label>

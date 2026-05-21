@@ -10,8 +10,21 @@ export type UserPayload = {
   password?: string;
 };
 
-export const getUsersApi = catchAsync(async (params?: Record<string, string>) => {
+export const getUsersApi = catchAsync(async (params?: Record<string, string>) => {  
   const res = await httpsCall.get("/admin/user/get-list", { params });
+  return res;
+});
+
+export const getUsersByRoleApi = catchAsync(async (role: string) => {
+  const res = await httpsCall.get("/admin/user/get-list", {
+    params: { role, limit: "100", page: "1" },
+  });
+  return res;
+});
+
+
+export const getUniqueRolesApi = catchAsync(async () => {  
+  const res = await httpsCall.get("/admin/user/get-roles");
   return res;
 });
 
