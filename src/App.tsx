@@ -15,6 +15,8 @@ import ProfileForm from "./pages/Profile/ProfileForm";
 import { Toaster } from 'react-hot-toast';
 import TypesList from "./pages/Document/Types/TypesList";
 import TypeForm from "./pages/Document/Types/TypeForm";
+import PositionsList from "./pages/Positions/PositionsList";
+import PositionForm from "./pages/Positions/PositionForm";
 
 function App() {
   return (
@@ -40,7 +42,10 @@ function App() {
             <Route path="/document-types" element={<TypesList />} />
             <Route path="/document-types/add" element={<TypeForm />} />
             <Route path="/document-types/edit/:id" element={<TypeForm />} />
-            
+            <Route path="/positions" element={<PositionsList />} />
+            <Route path="/positions/add" element={<PositionForm />} />
+            <Route path="/positions/edit/:id" element={<PositionForm />} />
+                        
             <Route path="/profile" element={<ProfileForm />} />
           </Route>
         </Route>

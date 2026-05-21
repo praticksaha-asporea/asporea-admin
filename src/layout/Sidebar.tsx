@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Building, ChevronDown } from "lucide-react";
+import { LayoutDashboard, Users, Building, ChevronDown, HandCoins } from "lucide-react";
 import logo from "../assets/asporeaLogo.png";
 
 type SidebarProps = {
@@ -18,13 +18,23 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
 
     {
-      name: "Configuration",
+      name: "Branch & Shift",
       icon: Building,
       subItems: [
         { name: "Branches", path: "/branches" },
         { name: "Shifts", path: "/shifts" },
         { name: "Employees", path: "/employees" },
-        { name: "Document Type", path: "/document-types" }
+        { name: "General", path: "/general-settings" }
+      ],
+    },
+
+
+    {
+      name: "Position & Docs",
+      icon: HandCoins,
+      subItems: [
+        { name: "Document Type", path: "/document-types" },
+        { name: "Positions", path: "/positions" }
       ],
     },
 
@@ -64,6 +74,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         {menuItems.map((item) => {
 
           if (item.subItems) {
+            
             const isDropdownOpen = openDropdown === item.name;
             const isChildActive = item.subItems.some((sub) => location.pathname.includes(sub.path));
 
@@ -72,8 +83,8 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                 <button
                   onClick={() => toggleDropdown(item.name)}
                   className={`flex items-center justify-between px-3 py-3 rounded-xl transition-all font-medium cursor-pointer ${isChildActive || isDropdownOpen
-                      ? "bg-blue-50 text-[#0D80F2]"
-                      : "text-gray-500 hover:bg-gray-50 hover:text-[#0D80F2]"
+                    ? "bg-blue-50 text-[#0D80F2]"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-[#0D80F2]"
                     }`}
                 >
                   <div className="flex items-center gap-4">
@@ -95,8 +106,9 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
 
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${isDropdownOpen && isOpen ? "max-h-40 opacity-100 mt-1" : "max-h-0 opacity-0"
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${isDropdownOpen && isOpen ? " opacity-100 mt-1" : "max-h-0 opacity-0"
                     }`}
+                    // max-h-40
                 >
                   <div className="flex flex-col gap-1 pl-11 pr-2">
                     {item.subItems.map((sub) => (
