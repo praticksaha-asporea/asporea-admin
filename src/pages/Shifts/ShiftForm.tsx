@@ -31,8 +31,15 @@ const ShiftForm = () => {
   }
 
   const handleAddSchedule = () => {
-    const ok = addOrUpdateSchedule();
-    if (!ok) toast.error("Please select at least one day and fill Start / End time.");
+    if (!currentSchedule.startTime || !currentSchedule.endTime || currentSchedule.days.length === 0) {
+      toast.error("Please select at least one day and fill Start / End time.");
+      return;
+    }
+    if (currentSchedule.endTime <= currentSchedule.startTime) {
+      toast.error("End time must be after start time. Overnight shifts are not allowed.");
+      return;
+    }
+    addOrUpdateSchedule();
   };
 
   return (

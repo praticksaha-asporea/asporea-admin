@@ -122,6 +122,9 @@ export const useShiftForm = () => {
     if (!currentSchedule.startTime || !currentSchedule.endTime || currentSchedule.days.length === 0) {
       return false; // caller shows the error
     }
+    if (currentSchedule.endTime <= currentSchedule.startTime) {
+      return false; // end must be strictly after start — no overnight crossing
+    }
     const updated = [...formik.values.schedules];
     if (editingIndex !== null) {
       updated[editingIndex] = currentSchedule;
