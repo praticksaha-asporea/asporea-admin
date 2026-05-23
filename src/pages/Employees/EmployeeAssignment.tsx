@@ -91,7 +91,7 @@ const filterConfigs: FilterConfig[] = [
     options: [
       { label: "TAC",         value: "tac" },
       { label: "TAC Head",    value: "tac_head" },
-      { label: "Reception",   value: "reception" },
+      { label: "FOE",   value: "foe" },
       { label: "Finance",     value: "finance" },
       { label: "Coordinator", value: "coordinator" },
       { label: "PCA",         value: "pca" },

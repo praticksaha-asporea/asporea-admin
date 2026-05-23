@@ -8,7 +8,7 @@ export interface IUser {
   address?: string;
 
   password?: string;
-  role?: "admin" | "tac" | "user" | "reception" | "finance" | "coordinator" | "pca" | "pcra" | "institute" | "sub_pca" | "branch_head" | "tac_head",
+  role?: "admin" | "tac" | "user" | "foe" | "finance" | "coordinator" | "pca" | "pcra" | "institute" | "sub_pca" | "branch_head" | "tac_head",
   passportStatus?: "having" | "not" | "applied";
   passportNo: string;
   enquired?: "yes" | "no";

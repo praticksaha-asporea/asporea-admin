@@ -56,7 +56,7 @@ const filterConfigs: FilterConfig[] = [
       { label: "User",        value: "user" },
       { label: "TAC",         value: "tac" },
       { label: "TAC Head",    value: "tac_head" },
-      { label: "Reception",   value: "reception" },
+      { label: "Foe",         value: "foe" },
       { label: "Finance",     value: "finance" },
       { label: "Coordinator", value: "coordinator" },
       { label: "PCA",         value: "pca" },

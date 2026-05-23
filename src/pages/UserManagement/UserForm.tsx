@@ -302,7 +302,7 @@ const UserForm = () => {
                       <option value="user">Regular User</option>
                       <option value="tac">TAC</option>
                       <option value="tac_head">TAC Head</option>
-                      <option value="reception">Reception</option>
+                      <option value="foe">FOE</option>
                       <option value="finance">Finance</option>
                       <option value="coordinator">Coordinator</option>
                       <option value="pca">PCA</option>
