@@ -130,11 +130,11 @@ export const useAssignmentForm = () => {
           //   setApiError(res?.message ?? "Failed to update assignment.");
           // }
         } else {
-          // const removeEmptyCounter = values.counterNo != "" ? 0 : 1;
-          // const { counterNo, ...removeCounter } = values;
+          const removeEmptyCounter = values.counterNo != "" ? 0 : 1;
+          const { counterNo, ...removeCounter } = values;
           // const { role, ...removeRole } = removeEmptyCounter ? removeCounter : values;
 
-          const res = await createAssignmentApi(values);
+          const res = await createAssignmentApi(removeEmptyCounter?removeCounter:values);
           if (res?.success !== false) {
             toast.success("Employee assigned successfully.");
             navigate("/employees");
