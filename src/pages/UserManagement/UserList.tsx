@@ -68,7 +68,7 @@ const filterConfigs: FilterConfig[] = [
   },
   {
     key: "status",
-    placeholder: "All Statuses",
+    placeholder: "All Status",
     options: [
       { label: "Active",   value: "active" },
       { label: "Inactive", value: "inactive" },
