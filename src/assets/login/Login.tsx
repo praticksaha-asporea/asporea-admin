@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 
 import { useLottie } from "lottie-react";
-import loginAnimation from "../../assets/loginAnimation.json";
-import secondAnimation from "../../assets/secondAnimation.json";
+import loginAnimation from "../loginAnimation.json";
+import secondAnimation from "../secondAnimation.json";
 import asporeaLogo from "../../assets/asporeaLogo.png";
-import LoadingSpinner from "../UI/loadingSpinner/LoadingSpinner";
+import LoadingSpinner from "../../components/UI/loadingSpinner/LoadingSpinner";
 
 const LottiePlayer = ({ animationData }: { animationData: any }) => {
   const { View } = useLottie({

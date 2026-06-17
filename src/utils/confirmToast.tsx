@@ -12,7 +12,7 @@ export function confirmToast(message: string): Promise<boolean> {
   return new Promise((resolve) => {
     toast(
       (t) => (
-        <div className="flex flex-col gap-3 min-w-[220px]">
+        <div className="flex flex-col gap-3 min-w-55">
           <p className="text-sm font-bold text-gray-800">{message}</p>
           <div className="flex gap-2 justify-end">
             <button
@@ -31,7 +31,7 @@ export function confirmToast(message: string): Promise<boolean> {
         </div>
       ),
       {
-        duration: Infinity,   // stays until user clicks
+        duration: Infinity,    
         position: "top-center",
         style: {
           padding: "14px 16px",

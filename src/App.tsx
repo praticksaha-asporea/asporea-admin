@@ -12,12 +12,14 @@ import UserForm from "./pages/UserManagement/UserForm";
 import EmployeeAssignment from "./pages/Employees/EmployeeAssignment";
 import AssignmentForm from "./pages/Employees/AssignmentForm";
 import ProfileForm from "./pages/Profile/ProfileForm";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import TypesList from "./pages/Document/Types/TypesList";
 import TypeForm from "./pages/Document/Types/TypeForm";
 import PositionsList from "./pages/Positions/PositionsList";
 import PositionForm from "./pages/Positions/PositionForm";
 import GeneralSettings from "./pages/GeneralSettings/GeneralSettings";
+import QuestionList from "./pages/Assessment/Questions/QuestionList";
+import QuestionForm from "./pages/Assessment/Questions/QuestionForm";
 
 function App() {
   return (
@@ -47,9 +49,12 @@ function App() {
             <Route path="/positions" element={<PositionsList />} />
             <Route path="/positions/add" element={<PositionForm />} />
             <Route path="/positions/edit/:id" element={<PositionForm />} />
-                        
+            <Route path="/questions" element={<QuestionList />} />
             <Route path="/profile" element={<ProfileForm />} />
             <Route path="/general-settings" element={<GeneralSettings />} />
+            <Route path="/questions" element={<QuestionList />} />
+            <Route path="/questions/add" element={<QuestionForm />} />
+            <Route path="/questions/edit/:id" element={<QuestionForm />} />
           </Route>
         </Route>
       </Routes>

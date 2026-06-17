@@ -23,8 +23,8 @@ const UserForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 h-96 bg-white rounded-4xl border border-gray-100" />
           <div className="space-y-8">
-            <div className="h-64 bg-white rounded-[32px] border border-gray-100" />
-            <div className="h-40 bg-white rounded-[32px] border border-gray-100" />
+            <div className="h-64 bg-white rounded-4xl border border-gray-100" />
+            <div className="h-40 bg-white rounded-4xl border border-gray-100" />
           </div>
         </div>
       </div>
@@ -273,7 +273,7 @@ const UserForm = () => {
           <div className="space-y-8">
 
             {/* Account Control */}
-            <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+            <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]" />
 
               <div className="flex items-center gap-3 mb-8">
@@ -401,7 +401,7 @@ const UserForm = () => {
             </div>
 
             {/* Notification Channels */}
-            <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
+            <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
               <p className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest">Notification Channels</p>
               <div className="flex flex-col gap-3">
                 {(["email", "sms", "whatsapp"] as const).map((channel) => (
