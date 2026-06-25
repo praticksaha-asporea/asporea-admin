@@ -116,41 +116,37 @@ export const useAssignmentForm = () => {
     initialValues: emptyValues,
     validationSchema,
     enableReinitialize: true,
-    onSubmit: async (values) => {
-      setLoading(true);
-      setApiError(null);
-      try {
-        if (isEdit && id) {
-          // const { role, ...removeRole } = values;
-          // const res = await updateAssignmentApi(id, removeRole);
-          // if (res?.success !== false) {
-          //   toast.success("Assignment updated successfully.");
-          //   navigate("/employees");
-          // } else {
-          //   setApiError(res?.message ?? "Failed to update assignment.");
-          // }
-        } else {
-          const removeEmptyCounter = values.counterNo != "" ? 0 : 1;
-          const { counterNo, ...removeCounter } = values;
-          // const { role, ...removeRole } = removeEmptyCounter ? removeCounter : values;
+  onSubmit: async (values) => {
+  setLoading(true);
+  setApiError(null);
+  try {
+    if (isEdit && id) {
+      // Edit mode implementation...
+    } else {
+      // Payload normalizer: Agar numeric form numbers string format mein string empty hain, toh clean numerical payloads convert karo
+      const cleanPayload = {
+        ...values,
+        counterNo: values.counterNo ? Number(values.counterNo) : undefined,
+        minuteOfSlots: Number(values.minuteOfSlots)
+      };
 
-          const res = await createAssignmentApi(removeEmptyCounter?removeCounter:values);
-          if (res?.success !== false) {
-            toast.success("Employee assigned successfully.");
-            navigate("/employees");
-          } else {
-            setApiError(res?.message ?? "Failed to create assignment.");
-          }
-        }
-      } catch (err: any) {
-        // setApiError(
-        //   err?.response?.data?.message ?? "Something went wrong. Please try again."
-        // );
-        // toast.error(err?.response?.data?.message ?? "Something went wrong. Please try again.");
-      } finally {
-        setLoading(false);
+      const res = await createAssignmentApi(cleanPayload);
+      if (res?.success !== false) {
+        toast.success("Employee assigned successfully.");
+        navigate("/employees");
+      } else {
+        setApiError(res?.message ?? "Failed to create assignment.");
       }
-    },
+    }
+  } catch (err: any) {
+    setApiError(
+      err?.response?.data?.message ?? "Something went wrong. Please try again."
+    );
+    // toast.error(err?.response?.data?.message ?? "Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+},
   });
 
   // ── Pre-fill on edit ───────────────────────────────────────────────────────

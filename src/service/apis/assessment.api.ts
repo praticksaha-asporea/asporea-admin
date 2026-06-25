@@ -13,7 +13,7 @@ export type QuestionPayload = {
 };
 
 export const getQuestionsApi = catchAsync(async (params?: Record<string, string>) => {
-  const res = await httpsCall.get("admin/assessment/questions/list", { params });
+  const res = await httpsCall.get("assessment/questions/list", { params });
   return res;
 });
 

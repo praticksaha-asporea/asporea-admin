@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
-import { getGeneralSettingsApi, updateGeneralSettingsApi } from "../../service/apis/generalSettings.api";
+import {
+  getGeneralSettingsApi,
+  updateGeneralSettingsApi,
+} from "../../service/apis/generalSettings.api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -13,6 +16,8 @@ export type GeneralSettingsValues = {
   inqResTimelineHours: number | "";
   preCounsellingTimelineHours: number | "";
   assessmentTimelineHours: number | "";
+  assessment: { fullMarks: number | ""; passingMarks: number | "" };
+  technical: { fullMarks: number | ""; passingMarks: number | "" };
 };
 
 // ── Read-only stats (view only, not submitted) ─────────────────────────────
@@ -29,25 +34,37 @@ const emptyValues: GeneralSettingsValues = {
   inqResTimelineHours: "",
   preCounsellingTimelineHours: "",
   assessmentTimelineHours: "",
+  assessment: { fullMarks: "", passingMarks: "" },
+  technical: { fullMarks: "", passingMarks: "" },
 };
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 
 const validationSchema = Yup.object({
-  tacAssignmentType:               Yup.string().oneOf(["random", "counterwise"]).required(),
-  inquiryNumberFormat:         Yup.string().required("Inquiry number format is required"),
-  escalationTimelineHours:     Yup.number().min(0, "Must be ≥ 0").nullable(),
-  inqResTimelineHours:         Yup.number().min(0, "Must be ≥ 0").nullable(),
+  tacAssignmentType: Yup.string().oneOf(["random", "counterwise"]).required(),
+  inquiryNumberFormat: Yup.string().required(
+    "Inquiry number format is required",
+  ),
+  escalationTimelineHours: Yup.number().min(0, "Must be ≥ 0").nullable(),
+  inqResTimelineHours: Yup.number().min(0, "Must be ≥ 0").nullable(),
   preCounsellingTimelineHours: Yup.number().min(0, "Must be ≥ 0").nullable(),
-  assessmentTimelineHours:     Yup.number().min(0, "Must be ≥ 0").nullable(),
+  assessmentTimelineHours: Yup.number().min(0, "Must be ≥ 0").nullable(),
+  assessment: Yup.object({
+    fullMarks: Yup.number().min(0, "Must be ≥ 0").nullable(),
+    passingMarks: Yup.number().min(0, "Must be ≥ 0").nullable(),
+  }),
+  technical: Yup.object({
+    fullMarks: Yup.number().min(0, "Must be ≥ 0").nullable(),
+    passingMarks: Yup.number().min(0, "Must be ≥ 0").nullable(),
+  }),
 });
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export const useGeneralSettings = () => {
-  const [loading, setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [stats, setStats]       = useState<SettingsStats>({});
+  const [stats, setStats] = useState<SettingsStats>({});
 
   const formik = useFormik<GeneralSettingsValues>({
     initialValues: emptyValues,
@@ -79,17 +96,25 @@ export const useGeneralSettings = () => {
         const s = res?.data ?? res;
         if (s) {
           formik.setValues({
-            tacAssignmentType:               s.tacAssignmentType               ?? "random",
-            inquiryNumberFormat:         s.inquiryNumberFormat         ?? "ASP-INQ-0000",
-            escalationTimelineHours:     s.escalationTimelineHours     ?? "",
-            inqResTimelineHours:         s.inqResTimelineHours         ?? "",
+            tacAssignmentType: s.tacAssignmentType ?? "random",
+            inquiryNumberFormat: s.inquiryNumberFormat ?? "ASP-INQ-0000",
+            escalationTimelineHours: s.escalationTimelineHours ?? "",
+            inqResTimelineHours: s.inqResTimelineHours ?? "",
             preCounsellingTimelineHours: s.preCounsellingTimelineHours ?? "",
-            assessmentTimelineHours:     s.assessmentTimelineHours     ?? "",
+            assessmentTimelineHours: s.assessmentTimelineHours ?? "",
+            assessment: {
+              fullMarks: s.assessment?.fullMarks ?? "",
+              passingMarks: s.assessment?.passingMarks ?? "",
+            },
+            technical: {
+              fullMarks: s.technical?.fullMarks ?? "",
+              passingMarks: s.technical?.passingMarks ?? "",
+            }
           });
           // read-only stats
           setStats({
-            lastInq:        s.lastInq,
-            lastFy:         s.lastFy
+            lastInq: s.lastInq,
+            lastFy: s.lastFy,
           });
         }
       } catch {

@@ -8,6 +8,14 @@ export type GeneralSettingsPayload = {
   inqResTimelineHours?: number;
   preCounsellingTimelineHours?: number;
   assessmentTimelineHours?: number;
+  assessment?: {
+    fullMarks?: number | "";
+    passingMarks?: number | "";
+  };
+  technical?: {
+    fullMarks?: number | "";
+    passingMarks?: number | "";
+  };
 };
 
 export const getGeneralSettingsApi = catchAsync(async () => {
@@ -15,7 +23,9 @@ export const getGeneralSettingsApi = catchAsync(async () => {
   return res;
 });
 
-export const updateGeneralSettingsApi = catchAsync(async (data: GeneralSettingsPayload) => {
-  const res = await httpsCall.patch("/general-settings/update", data);
-  return res;
-});
+export const updateGeneralSettingsApi = catchAsync(
+  async (data: GeneralSettingsPayload) => {
+    const res = await httpsCall.patch("/general-settings/update", data);
+    return res;
+  },
+);

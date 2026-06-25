@@ -42,7 +42,7 @@ const GeneralSettings = () => {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 bg-white p-4 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-50 gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-100 to-slate-100 flex items-center justify-center text-gray-600 shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-gray-100 to-slate-100 flex items-center justify-center text-gray-600 shrink-0">
             <Settings className="w-7 h-7" />
           </div>
           <div>
@@ -211,6 +211,65 @@ const GeneralSettings = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-purple-600" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl"><FileText className="w-5 h-5" /></div>
+              <div>
+                <h2 className="text-xl font-medium tracking-wider text-gray-700">Assessment</h2>
+             
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Full Marks</label>
+                <input
+                  type="number" min={0} placeholder="100"
+                  {...formik.getFieldProps("assessment.fullMarks")}
+                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-purple-600/30 rounded-2xl outline-none font-bold text-gray-800 transition-all focus:bg-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Passing Marks</label>
+                <input
+                  type="number" min={0} placeholder="40"
+                  {...formik.getFieldProps("assessment.passingMarks")}
+                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-purple-600/30 rounded-2xl outline-none font-bold text-gray-800 transition-all focus:bg-white"
+                />
+              </div>
+            </div>
+          </div>
+
+        
+          <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-600" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><Settings className="w-5 h-5" /></div>
+              <div>
+                <h2 className="text-xl font-medium tracking-wider text-gray-700">Technical</h2>
+               
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Full Marks</label>
+                <input
+                  type="number" min={0} placeholder="100"
+                  {...formik.getFieldProps("technical.fullMarks")}
+                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-emerald-600/30 rounded-2xl outline-none font-bold text-gray-800 transition-all focus:bg-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Passing Marks</label>
+                <input
+                  type="number" min={0} placeholder="40"
+                  {...formik.getFieldProps("technical.passingMarks")}
+                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-emerald-600/30 rounded-2xl outline-none font-bold text-gray-800 transition-all focus:bg-white"
+                />
+              </div>
             </div>
           </div>
 
