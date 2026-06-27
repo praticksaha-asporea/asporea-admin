@@ -57,7 +57,7 @@ const Login = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => setIsLoginVisible(false)}
-                // Logo ke barabar (top-16) aur opposite side (right-10) rakha hai
+                
                 className="absolute top-24 right-98 z-50 text-gray-400 tracking-wider hover:text-[#0D80F2] font-bold font-mono transition-colors  text-[15px] uppercase  cursor-pointer"
               >
                 ← Back

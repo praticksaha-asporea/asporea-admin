@@ -20,6 +20,7 @@ import PositionForm from "./pages/Positions/PositionForm";
 import GeneralSettings from "./pages/GeneralSettings/GeneralSettings";
 import QuestionList from "./pages/Assessment/Questions/QuestionList";
 import QuestionForm from "./pages/Assessment/Questions/QuestionForm";
+import NotFound from "./pages/NotFound/NotFound"
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
             <Route path="/questions/edit/:id" element={<QuestionForm />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster position="top-center" />
     </BrowserRouter>
