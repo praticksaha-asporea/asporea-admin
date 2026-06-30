@@ -21,6 +21,7 @@ import GeneralSettings from "./pages/GeneralSettings/GeneralSettings";
 import QuestionList from "./pages/Assessment/Questions/QuestionList";
 import QuestionForm from "./pages/Assessment/Questions/QuestionForm";
 import NotFound from "./pages/NotFound/NotFound"
+import Uploads from "./pages/uploads/Uploads";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             <Route path="/questions" element={<QuestionList />} />
             <Route path="/questions/add" element={<QuestionForm />} />
             <Route path="/questions/edit/:id" element={<QuestionForm />} />
+            <Route path="/uploads" element={<Uploads />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

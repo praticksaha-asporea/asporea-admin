@@ -24,8 +24,8 @@ const ShiftForm = () => {
     return (
       <div className="max-w-4xl mx-auto pb-20 animate-pulse space-y-8">
         <div className="h-12 bg-white rounded-2xl border border-gray-100" />
-        <div className="h-28 bg-white rounded-[32px] border border-gray-100" />
-        <div className="h-80 bg-white rounded-[32px] border border-gray-100" />
+        <div className="h-28 bg-white rounded-4xl border border-gray-100" />
+        <div className="h-80 bg-white rounded-4xl border border-gray-100" />
       </div>
     );
   }
@@ -83,7 +83,7 @@ const ShiftForm = () => {
       <div className="space-y-8">
 
         {/* ── Shift Name ── */}
-        <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+        <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
           <div className="space-y-2">
@@ -107,7 +107,7 @@ const ShiftForm = () => {
         </div>
 
         {/* ── Schedule Builder ── */}
-        <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+        <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]" />
 
           <div className="flex items-center justify-between mb-8">
@@ -176,7 +176,7 @@ const ShiftForm = () => {
                       type="button"
                       key={d}
                       onClick={() => toggleScheduleDay(d)}
-                      className={`flex-1 min-w-[70px] py-3.5 rounded-2xl text-sm font-bold transition-all flex flex-col items-center gap-1 ${
+                      className={`flex-1 min-w-17.5 py-3.5 rounded-2xl text-sm font-bold transition-all flex flex-col items-center gap-1 ${
                         isSelected
                           ? "bg-white text-gray-900 shadow-sm border border-gray-200"
                           : "text-gray-400 hover:text-gray-600 hover:bg-gray-100 border border-transparent"

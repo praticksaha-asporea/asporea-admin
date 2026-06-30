@@ -15,7 +15,10 @@ export interface IUser {
 
   status?: "active" | "inactive" | "deleted";
 
-  profilePic?: string;
+ profilePic?: {
+    _id: string;
+    path: string;
+  } | null;
 
   notificationPreference?: {
     sms?: boolean;

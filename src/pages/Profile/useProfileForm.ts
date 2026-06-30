@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import { updateProfileApi } from "../../service/apis/user.api";
-import httpsCall from "../../service/httpCall";
 import { setUser } from "../../store/auth.store";
 import type { RootState } from "../../store/store";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ProfileFormValues = {
   firstName: string;
@@ -40,8 +38,6 @@ const emptyValues: ProfileFormValues = {
   notificationPreference: { sms: false, whatsapp: false, email: true },
 };
 
-// ─── Validation ───────────────────────────────────────────────────────────────
-
 const validationSchema = Yup.object({
   firstName:   Yup.string().required("First name is required"),
   lastName:    Yup.string().required("Last name is required"),
@@ -53,7 +49,11 @@ const validationSchema = Yup.object({
   passportNo:  Yup.string(),
 });
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+ let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+  if (!BACKEND_BASE_URL || BACKEND_BASE_URL === "undefined") {
+    BACKEND_BASE_URL = "http://localhost:3000";
+  }
+
 
 export const useProfileForm = () => {
   const dispatch = useDispatch();
@@ -63,39 +63,104 @@ export const useProfileForm = () => {
   const [fetching, setFetching]     = useState(true);
   const [apiError, setApiError]     = useState<string | null>(null);
 
-  // ── Profile picture ────────────────────────────────────────────────────────
-  const [avatarPreview, setAvatarPreview]   = useState<string | null>(null);
-  const [avatarFile, setAvatarFile]         = useState<File | null>(null);
-  const [avatarUploading, setAvatarUploading] = useState(false);
+  
+  const [fileInput, setFileInput] = useState<string>("");
+  const [imgSrc, setImgSrc] = useState<string>("");
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const [openPreview, setOpenPreview] = useState(false);
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [tempImageSrc, setTempImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+
+  useEffect(() => {
+    if (reduxUser?.profilePic?.path) {
+      const path = reduxUser.profilePic.path;
+
+      
+      if (path.startsWith("data:image")) {
+        setImgSrc(path);
+      } 
+       
+      else if (path.startsWith("/")) {
+        setImgSrc(`${BACKEND_BASE_URL}${path}`);
+      } 
+       
+      else {
+        setImgSrc(path);
+      }
+    } else {
+      setImgSrc("");
+    }
+  }, [reduxUser]);
+
+  
+  const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
+
+    if (file.size > 800 * 1024) {
+      toast.error("File is too large! Please choose an image under 800KB.");
+      return;
+    }
+
+  const reader = new FileReader();
+    reader.onload = () => {
+      setTempImageSrc(reader.result as string);
+      setCropModalOpen(true);  
+    };
+    reader.readAsDataURL(file);
   };
 
-  const uploadAvatar = async (): Promise<void> => {
-    if (!avatarFile) return;
-    setAvatarUploading(true);
+  const getCroppedImg = async () => {
     try {
-      const form = new FormData();
-      form.append("profilePicture", avatarFile);
-      const res = await httpsCall.patch("/admin/auth/update-profile-picture", form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.data?.success !== false) {
-        dispatch(setUser({ ...reduxUser, profilePicture: res.data?.data?.profilePicture }));
-        toast.success("Profile picture updated.");
-        setAvatarFile(null);
-      } else {
-        toast.error(res.data?.message ?? "Failed to upload picture.");
-      }
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Upload failed.");
-    } finally {
-      setAvatarUploading(false);
+      const image = new Image();
+      image.src = tempImageSrc!;
+      await new Promise((resolve) => (image.onload = resolve));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = croppedAreaPixels.width;
+      canvas.height = croppedAreaPixels.height;
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return;
+
+      ctx.drawImage(
+        image,
+        croppedAreaPixels.x,
+        croppedAreaPixels.y,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height,
+        0,
+        0,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height
+      );
+
+      const croppedBase64 = canvas.toDataURL("image/jpeg");
+      setImgSrc(croppedBase64);
+      setFileInput(croppedBase64);
+      setCropModalOpen(false);
+      toast.success("Image cropped successfully!");
+    } catch (err) {
+      toast.error("Failed to crop image.");
     }
+  };
+
+  // 🌟 Skip Cropping Option
+  const useOriginalImg = () => {
+    setImgSrc(tempImageSrc!);
+    setFileInput(tempImageSrc!);
+    setCropModalOpen(false);
+    toast.success("Original image selected!");
+  };
+
+  // 🌟 Permanent removal signal dispatch
+  const handleAvatarReset = () => {
+    setFileInput("REMOVE");
+    setImgSrc("");
+    toast.success("Picture staging area cleared! Click 'Save Changes' to confirm.");
   };
 
   const formik = useFormik<ProfileFormValues>({
@@ -106,12 +171,28 @@ export const useProfileForm = () => {
       setLoading(true);
       setApiError(null);
       try {
-        const addValues={id:reduxUser._id,...values};
+        // 🌟 Seamlessly inject our image payload straight to your /user/profile-update endpoint
+        const addValues = {
+          id: reduxUser._id,
+          ...values,
+          profilePicData: fileInput || "",
+        };
+
         const res = await updateProfileApi(addValues);
         if (res?.success !== false) {
-          // keep Redux store in sync with updated profile
-          dispatch(setUser({ ...reduxUser, ...values }));
-          toast.success(res?.message ?? "Profile updated successfully.");
+          toast.success("Profile updated successfully.");
+
+          // Force local immutable deep updates to sync store variables
+          let syncedReduxUser = { ...reduxUser, ...values };
+          
+          if (fileInput === "REMOVE") {
+            syncedReduxUser.profilePic = null;
+          } else if (res?.data?.profilePic) {
+            syncedReduxUser.profilePic = res.data.profilePic;
+          }
+
+          dispatch(setUser(syncedReduxUser));
+          setFileInput(""); // Resets alerting system flags on success
         } else {
           toast.error(res?.message ?? "Failed to update profile.");
         }
@@ -125,43 +206,29 @@ export const useProfileForm = () => {
     },
   });
 
-  // ── Load profile on mount ──────────────────────────────────────────────────
   useEffect(() => {
-//     const fetchProfile = async () => {
-//       setFetching(true);
-//       setApiError(null);
-//       try {
-//         const res = await getUserByIdApi(reduxUser._id);
-//         const u = res?.data?.user ?? res;
-//         if (u) {
-          formik.setValues({
-            firstName:   reduxUser.firstName   ?? "",
-            lastName:    reduxUser.lastName    ?? "",
-            email:       reduxUser.email       ?? "",
-            phoneNumber: reduxUser.phoneNumber ?? "",
-            whatsappNumber: reduxUser.whatsappNumber ?? "",
-            address:     reduxUser.address     ?? "",
-            passportStatus: reduxUser.passportStatus ?? "not",
-            passportNo:  reduxUser.passportNo  ?? "",
-            enquired:    reduxUser.enquired    ?? "no",
-            notificationPreference: reduxUser.notificationPreference ?? {
-              sms: false, whatsapp: false, email: true,
-            },
-          });
-//         }
-//       } catch (err: any) {
-//         setApiError(
-//           err?.response?.data?.message ?? "Failed to load profile."
-//         );
-//       } finally {
-//         setFetching(false);
-//       }
-//     };
-
-//     fetchProfile();
-        setFetching(false);
+    if (reduxUser) {
+      formik.setValues({
+        firstName:   reduxUser.firstName   ?? "",
+        lastName:    reduxUser.lastName    ?? "",
+        email:       reduxUser.email       ?? "",
+        phoneNumber: reduxUser.phoneNumber ?? "",
+        whatsappNumber: reduxUser.whatsappNumber ?? "",
+        address:     reduxUser.address     ?? "",
+        passportStatus: reduxUser.passportStatus ?? "not",
+        passportNo:  reduxUser.passportNo  ?? "",
+        enquired:    reduxUser.enquired    ?? "no",
+        notificationPreference: reduxUser.notificationPreference ?? {
+          sms: false, whatsapp: false, email: true,
+        },
+      });
+    }
+    setFetching(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reduxUser]);
 
-  return { formik, loading, fetching, apiError, reduxUser, avatarPreview, avatarFile, avatarUploading, handleAvatarChange, uploadAvatar };
+ return { 
+    formik, loading, fetching, apiError, reduxUser, imgSrc, fileInput, handleAvatarChange, handleAvatarReset,
+    openPreview, setOpenPreview, cropModalOpen, setCropModalOpen, tempImageSrc, crop, setCrop, zoom, setZoom, setCroppedAreaPixels, getCroppedImg, useOriginalImg
+  };
 };

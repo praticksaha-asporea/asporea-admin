@@ -7,6 +7,7 @@ import {
   ChevronDown,
   HandCoins,
   ClipboardList,
+  UploadCloud,
 } from "lucide-react";
 import logo from "../assets/asporeaLogo.png";
 
@@ -22,6 +23,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "User Management", icon: Users, path: "/users" },
+    { name: "Uploads", icon: UploadCloud, path: "/uploads" },
 
     {
       name: "Branch & Shift",

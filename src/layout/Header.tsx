@@ -14,6 +14,12 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import type { IUser } from "../interfaces/itable";
 
+ let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+  if (!BACKEND_BASE_URL || BACKEND_BASE_URL === "undefined") {
+    BACKEND_BASE_URL = "http://localhost:3000";
+  }
+
+
 const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -37,6 +43,14 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const handleNavigation = (path: string) => {
     setIsDropdownOpen(false);
     navigate(path);
+  };
+
+  const getProfilePicUrl = (path?: string) => {
+    if (!path) return "";
+    if (path.startsWith("data:image") || path.startsWith("http")) {
+      return path;  
+    }
+    return `${BACKEND_BASE_URL}${path}`;  
   };
 
   return (
@@ -73,10 +87,18 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 cursor-pointer group p-1 pr-2 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#0054a6] to-[#fc7728] p-0.5 shadow-md">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-gray-600" />
-              </div>
+             <div className="w-10 h-10 rounded-full bg-linear-to-r from-[#0054a6] to-[#fc7728] p-0.5 shadow-md shrink-0 overflow-hidden">
+              {user?.profilePic?.path ? (
+                <img
+                 src={getProfilePicUrl(user.profilePic.path)}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-sm font-black text-[#0054a6] uppercase">
+                  {user?.firstName ? user.firstName.charAt(0) : "U"}
+                </div>
+              )}
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-bold text-gray-700 group-hover:text-[#0054a6] transition-colors">
@@ -102,13 +124,29 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
                 className="absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col z-50"
               >
                 {/* Dropdown Header */}
-                <div className="p-4 border-b border-gray-50 bg-gray-50/50">
-                  <p className="text-sm font-black text-gray-800">{user?.firstName} {user?.lastName}</p>
-                  <p className="text-xs font-medium text-gray-500 mt-0.5">
-                    {user?.email}
-                  </p>
+               <div className="p-4 border-b border-gray-50 bg-gray-50/50 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-r from-[#0054a6] to-[#fc7728] p-0.5 shadow-sm shrink-0 overflow-hidden">
+                    {user?.profilePic?.path ? (
+                      <img
+                       src={getProfilePicUrl(user.profilePic.path)}
+                        alt="Profile"
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-sm font-black text-[#0054a6] uppercase">
+                        {user?.firstName ? user.firstName.charAt(0) : "U"}
+                      </div>
+                    )}
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-sm font-black text-gray-800 truncate">
+                      {user?.firstName} {user?.lastName}
+                    </p>
+                    <p className="text-xs font-medium text-gray-500 mt-0.5 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
                 </div>
-
                 {/* Dropdown Links */}
                 <div className="p-2 flex flex-col gap-1">
                   <button
