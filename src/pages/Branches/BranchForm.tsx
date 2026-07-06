@@ -83,11 +83,10 @@ const BranchForm = () => {
                   type="text"
                   placeholder="e.g. South Extension HQ"
                   {...formik.getFieldProps("title")}
-                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${
-                    formik.touched.title && formik.errors.title
-                      ? "border-red-400 focus:bg-white"
-                      : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
-                  }`}
+                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${formik.touched.title && formik.errors.title
+                    ? "border-red-400 focus:bg-white"
+                    : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+                    }`}
                 />
                 {formik.touched.title && formik.errors.title && (
                   <p className="text-red-500 text-xs font-bold pl-2">{formik.errors.title}</p>
@@ -105,11 +104,10 @@ const BranchForm = () => {
                     rows={3}
                     placeholder="Enter complete address..."
                     {...formik.getFieldProps("location")}
-                    className={`w-full pl-14 pr-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all resize-none ${
-                      formik.touched.location && formik.errors.location
-                        ? "border-red-400 focus:bg-white"
-                        : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
-                    }`}
+                    className={`w-full pl-14 pr-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all resize-none ${formik.touched.location && formik.errors.location
+                      ? "border-red-400 focus:bg-white"
+                      : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+                      }`}
                   />
                 </div>
                 {formik.touched.location && formik.errors.location && (
@@ -130,11 +128,10 @@ const BranchForm = () => {
                       type="text"
                       placeholder="27.0360"
                       {...formik.getFieldProps("latitude")}
-                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${
-                        formik.touched.latitude && formik.errors.latitude
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
-                      }`}
+                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${formik.touched.latitude && formik.errors.latitude
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+                        }`}
                     />
                   </div>
                   {formik.touched.latitude && formik.errors.latitude && (
@@ -153,11 +150,10 @@ const BranchForm = () => {
                       type="text"
                       placeholder="88.2627"
                       {...formik.getFieldProps("longitude")}
-                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${
-                        formik.touched.longitude && formik.errors.longitude
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
-                      }`}
+                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${formik.touched.longitude && formik.errors.longitude
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+                        }`}
                     />
                   </div>
                   {formik.touched.longitude && formik.errors.longitude && (
@@ -199,7 +195,7 @@ const BranchForm = () => {
 
               {/* Active Counters */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Active Counters</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Active Counters (TAC)</label>
                 <div className="flex items-center bg-gray-50 rounded-2xl border-2 border-transparent focus-within:border-[#fc7728]/30 transition-all overflow-hidden">
                   <button
                     type="button"
@@ -238,11 +234,10 @@ const BranchForm = () => {
                     type="button"
                     key={day}
                     onClick={() => toggleDay(day)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                      isSelected
-                        ? "bg-[#0D80F2] text-white shadow-md shadow-blue-100"
-                        : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                    }`}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${isSelected
+                      ? "bg-[#0D80F2] text-white shadow-md shadow-blue-100"
+                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                      }`}
                   >
                     {day}
                   </button>
