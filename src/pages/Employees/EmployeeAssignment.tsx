@@ -14,8 +14,8 @@ import { confirmToast } from "../../utils/confirmToast";
 type Assignment = {
   _id: string;
   employeeId: { _id: string; firstName: string; lastName: string; role: string } | string;
-  branchId:   { _id: string; title: string }                                     | string;
-  shiftId:    { _id: string; shiftName: string }                                 | string;
+  branchId: { _id: string; title: string } | string;
+  shiftId: { _id: string; shiftName: string } | string;
   effectiveFrom: string;
   minuteOfSlots: number;
   counterNo?: number;
@@ -25,7 +25,7 @@ type Assignment = {
 // ─── Cell renderers ───────────────────────────────────────────────────────────
 
 function EmployeeCell({ assignment }: { assignment: Assignment }) {
-  const emp  = assignment.employeeId;
+  const emp = assignment.employeeId;
   const name = typeof emp === "object" ? `${emp?.firstName} ${emp?.lastName}` : emp;
   const role = typeof emp === "object" ? emp?.role : assignment.role;
   return (
@@ -37,8 +37,8 @@ function EmployeeCell({ assignment }: { assignment: Assignment }) {
 }
 
 function LocationShiftCell({ assignment }: { assignment: Assignment }) {
-  const branchName = typeof assignment.branchId === "object" ? assignment.branchId.title    : assignment.branchId;
-  const shiftName  = typeof assignment.shiftId  === "object" ? assignment.shiftId.shiftName : assignment.shiftId;
+  const branchName = typeof assignment.branchId === "object" ? assignment.branchId.title : assignment.branchId;
+  const shiftName = typeof assignment.shiftId === "object" ? assignment.shiftId.shiftName : assignment.shiftId;
   return (
     <div className="space-y-1">
       <p className="text-sm font-bold text-gray-700 flex items-center gap-1.5">
@@ -59,7 +59,7 @@ function ConfigCell({ minuteOfSlots, counterNo }: { minuteOfSlots: number; count
       </span>
       {counterNo && (
         <span className="flex items-center gap-1 text-xs font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-lg border border-gray-200">
-          <Hash className="w-3 h-3" /> C-{counterNo}
+          <Hash className="w-3 h-3" /> A-{counterNo}
         </span>
       )}
     </div>
@@ -69,7 +69,7 @@ function ConfigCell({ minuteOfSlots, counterNo }: { minuteOfSlots: number; count
 // ─── Column definitions ───────────────────────────────────────────────────────
 
 const columns: ColumnDef<Assignment>[] = [
-  { header: "Employee",       accessor: (row) => <EmployeeCell assignment={row} /> },
+  { header: "Employee", accessor: (row) => <EmployeeCell assignment={row} /> },
   { header: "Location & Shift", accessor: (row) => <LocationShiftCell assignment={row} /> },
   {
     header: "Effective From",
@@ -89,14 +89,14 @@ const filterConfigs: FilterConfig[] = [
     key: "role",
     placeholder: "All Roles",
     options: [
-      { label: "TAC",         value: "tac" },
-      { label: "TAC Head",    value: "tac_head" },
-      { label: "FOE",   value: "foe" },
-      { label: "Finance",     value: "finance" },
+      { label: "TAC", value: "tac" },
+      { label: "TAC Head", value: "tac_head" },
+      { label: "FOE", value: "foe" },
+      { label: "Finance", value: "finance" },
       { label: "Coordinator", value: "coordinator" },
-      { label: "PCA",         value: "pca" },
-      { label: "Sub PCA",     value: "sub_pca" },
-      { label: "PCRA",        value: "pcra" },
+      { label: "PCA", value: "pca" },
+      { label: "Sub PCA", value: "sub_pca" },
+      { label: "PCRA", value: "pcra" },
       { label: "Branch Head", value: "branch_head" },
     ],
   },
@@ -110,12 +110,12 @@ const EmployeeAssignment = () => {
   const navigate = useNavigate();
 
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [totalCount, setTotalCount]   = useState(0);
-  const [page, setPage]               = useState(1);
-  const [search, setSearch]           = useState("");
-  const [filters, setFilters]         = useState<Record<string, string>>({});
-  const [loading, setLoading]         = useState(true);
-  const [error, setError]             = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearch = (value: string) => { setSearch(value); setPage(1); };
