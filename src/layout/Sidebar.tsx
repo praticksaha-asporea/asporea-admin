@@ -45,10 +45,13 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       ],
     },
 
-    {
+   {
       name: "Assessment",
       icon: ClipboardList,
-      subItems: [{ name: "Questions", path: "/questions" }],
+      subItems: [
+        { name: "Sections", path: "/assessment-sections" },  
+        { name: "Questions", path: "/questions" }
+      ],
     },
   ];
 

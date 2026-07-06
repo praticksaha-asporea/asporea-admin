@@ -38,14 +38,14 @@ const Dashboard = () => {
       {/* 1. WELCOME HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl tracking-wider font-medium text-gray-800">
+          <h1 className="text-3xl tracking-wider mt-3 ml-2 font-medium text-gray-700">
             Welcome back, Admin!
           </h1>
         </div>
       </div>
 
       {/* 2. STATS CARDS ROW */}
-      <div className="text-5xl">
+      <div className="text-5xl ml-2">
         Coming Soon ... 
       </div>
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
