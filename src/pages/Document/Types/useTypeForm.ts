@@ -8,19 +8,13 @@ import {
   updateDocumentTypeApi,
   getDocumentTypeByIdApi,
 } from "../../../service/apis/documentType.api";
+import type { DocumentTypePayload } from "../../../types/payloads/document/documentType.payloads";
+import type { DocumentTypeResponseData } from "../../../types/responses/document/documentType.responses";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+ 
+export type TypeFormValues = DocumentTypePayload;
 
-export type TypeFormValues = {
-  title: string;
-  subTitle: string;
-  section: string;
-  supportedExtensions: string[];
-  required: boolean;
-  multiple: boolean;
-};
-
-const EXTENSION_OPTIONS = ["PDF", "DOCX", "DOC", "JPG", "JPEG", "PNG", "XLSX", "CSV", "TXT"];
+export const EXTENSION_OPTIONS: string[] = ["PDF", "DOCX", "DOC", "JPG", "JPEG", "PNG", "XLSX", "CSV", "TXT"];
 
 const emptyValues: TypeFormValues = {
   title: "",
@@ -31,17 +25,15 @@ const emptyValues: TypeFormValues = {
   multiple: false,
 };
 
-// ─── Validation ───────────────────────────────────────────────────────────────
-
+// ─── Validation Schema ───────────────────────────────────────────────────────
 const validationSchema = Yup.object({
-  title:   Yup.string().required("Title is required"),
-  subTitle: Yup.string(),
+  title: Yup.string().required("Title is required"),
+  subTitle: Yup.string().optional(),
   section: Yup.string().required("Section is required"),
   supportedExtensions: Yup.array().min(1, "Select at least one extension"),
 });
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-
+// ─── Custom Form Hook ────────────────────────────────────────────────────────
 export const useTypeForm = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -60,31 +52,33 @@ export const useTypeForm = () => {
       setApiError(null);
       try {
         if (isEdit && id) {
+          
           const res = await updateDocumentTypeApi(id, values);
           if (res?.success !== false) {
-            toast.success("Document type updated.");
+            toast.success("Document type updated successfully.");
             navigate("/document-types");
           } else {
             setApiError(res?.message ?? "Failed to update document type.");
           }
         } else {
+           
           const res = await createDocumentTypeApi(values);
           if (res?.success !== false) {
-            toast.success("Document type created.");
+            toast.success("Document type created successfully.");
             navigate("/document-types");
           } else {
             setApiError(res?.message ?? "Failed to create document type.");
           }
         }
       } catch (err: any) {
-        setApiError(err?.response?.data?.message ?? "Something went wrong.");
+        setApiError(err?.response?.data?.message ?? "Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }
     },
   });
 
-  // ── Pre-fill on edit ───────────────────────────────────────────────────────
+  // ── Pre-fill Form Controls On Edit Mode ────────────────────────────────────
   useEffect(() => {
     if (!isEdit || !id) return;
 
@@ -93,19 +87,21 @@ export const useTypeForm = () => {
       setApiError(null);
       try {
         const res = await getDocumentTypeByIdApi(id);
-        const t = res?.data ?? res;
+        // Structure mapped securely according to typed higher-order signature
+        const t: DocumentTypeResponseData | undefined = res?.data;
+        
         if (t) {
           formik.setValues({
-            title:               t.title               ?? "",
-            subTitle:            t.subTitle            ?? "",
-            section:             t.section             ?? "",
+            title: t.title ?? "",
+            subTitle: t.subTitle ?? "",
+            section: t.section ?? "",
             supportedExtensions: t.supportedExtensions ?? [],
-            required:            t.required            ?? false,
-            multiple:            t.multiple            ?? false,
+            required: t.required ?? false,
+            multiple: t.multiple ?? false,
           });
         }
       } catch (err: any) {
-        setApiError(err?.response?.data?.message ?? "Failed to load document type.");
+        setApiError(err?.response?.data?.message ?? "Failed to load document type rules.");
       } finally {
         setFetching(false);
       }
@@ -113,9 +109,9 @@ export const useTypeForm = () => {
 
     fetchType();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, isEdit]);
 
-  // ── Extension toggle helper ────────────────────────────────────────────────
+  // ── Selection Handlers ─────────────────────────────────────────────────────
   const toggleExtension = (ext: string) => {
     const current = formik.values.supportedExtensions;
     const next = current.includes(ext)

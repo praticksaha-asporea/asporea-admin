@@ -4,29 +4,29 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import {
-  createAssignmentApi
-  // getAssignmentByIdApi,
+  createAssignmentApi,
+  getAssignmentByIdApi,
+  updateAssignmentApi
 } from "../../service/apis/assignment.api";
 import { getUniqueRolesApi, getUsersByRoleApi } from "../../service/apis/user.api";
 import { getBranchesApi } from "../../service/apis/branch.api";
 import { getShiftsApi } from "../../service/apis/shift.api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type AssignmentFormValues = {
-  role: string;
-  employeeId: string;
-  branchId: string;
-  shiftId: string;
-  effectiveFrom: string;
-  minuteOfSlots: number;
-  counterNo?: string;
+ 
+import type { AssignmentPayload } from "../../types/payloads/assignment/assignment.payloads";
+import type { BranchResponseData } from "../../types/responses/branch/branch.responses";
+import type { ShiftResponseData } from "../../types/responses/shift/shift.responses";
+import type { UserResponseData } from "../../types/responses/user/user.responses";
+ 
+export type AssignmentFormValues = Omit<AssignmentPayload, "counterNo"> & {
+  counterNo: string;
 };
 
-export type DropdownUser = { _id: string; firstName: string; lastName: string; role: string };
+ 
+export type DropdownUser = Pick<UserResponseData, "_id" | "firstName" | "lastName" | "role">;
 export type DropdownRole = string;
-export type DropdownBranch = { _id: string; title: string };
-export type DropdownShift = { _id: string; shiftName: string };
+export type DropdownBranch = Pick<BranchResponseData, "_id" | "title">;
+export type DropdownShift = Pick<ShiftResponseData, "_id" | "shiftName">;
 
 const emptyValues: AssignmentFormValues = {
   role: "",
@@ -38,25 +38,21 @@ const emptyValues: AssignmentFormValues = {
   counterNo: "",
 };
 
-// ─── Validation ───────────────────────────────────────────────────────────────
-
 const validationSchema = Yup.object({
   role: Yup.string().required("Role is required to filter"),
   employeeId: Yup.string().required("Please select an employee"),
   branchId: Yup.string().required("Please select a branch"),
   shiftId: Yup.string().required("Please select a shift"),
-  effectiveFrom: Yup.date().required("Date is required"),
+  effectiveFrom: Yup.date()
+    .min(new Date(new Date().setHours(0, 0, 0, 0)), "Past dates are not allowed")
+    .required("Date is required"),
   minuteOfSlots: Yup.number().min(5, "Min 5 mins").required("Required"),
-  counterNo: Yup.number()
-  .when("role", {
+  counterNo: Yup.number().when("role", {
     is: (role: string) => ["tac", "coordinator"].includes(role),
     then: (schema) => schema.required("Counter number is required"),
-    otherwise: (schema) => schema
-    .optional(),
+    otherwise: (schema) => schema.optional(),
   }),
 });
-
-// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export const useAssignmentForm = () => {
   const navigate = useNavigate();
@@ -64,17 +60,15 @@ export const useAssignmentForm = () => {
   const isEdit = Boolean(id);
 
   const [loading, setLoading] = useState(false);
-  const [fetching] = useState(isEdit);
+  const [fetching, setFetching] = useState(isEdit);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // ── Dropdown data ──────────────────────────────────────────────────────────
-  const [filteredUsers, setFilteredUsers]   = useState<DropdownUser[]>([]);
-  const [usersLoading, setUsersLoading]     = useState(false);
-  const [uniqueRoles, setUniqueRoles]       = useState<DropdownRole[]>([]);
-  const [branches, setBranches]             = useState<DropdownBranch[]>([]);
-  const [shifts, setShifts]                 = useState<DropdownShift[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<DropdownUser[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+  const [uniqueRoles, setUniqueRoles] = useState<DropdownRole[]>([]);
+  const [branches, setBranches] = useState<DropdownBranch[]>([]);
+  const [shifts, setShifts] = useState<DropdownShift[]>([]);
 
-  // Load roles, branches, shifts on mount (not users — those load on role change)
   useEffect(() => {
     const loadDropdowns = async () => {
       try {
@@ -86,11 +80,11 @@ export const useAssignmentForm = () => {
 
         const BLOCKED_ROLES = new Set(["user", "admin", "pca", "pcra", "institute", "sub_pca"]);
         const uniqueRolesFiltered: DropdownRole[] =
-          rRes?.data.filter((role: string) => !BLOCKED_ROLES.has(role));
+          (rRes?.data as any)?.filter((role: string) => !BLOCKED_ROLES.has(role)) || [];
 
-        setUniqueRoles(uniqueRolesFiltered || []);
-        setBranches(bRes?.data?.data ?? []);
-        setShifts(sRes?.data?.data ?? []);
+        setUniqueRoles(uniqueRolesFiltered);
+        setBranches((bRes?.data as any)?.data ?? []);
+        setShifts((sRes?.data as any)?.data ?? []);
       } catch {
         // non-fatal
       }
@@ -98,13 +92,12 @@ export const useAssignmentForm = () => {
     loadDropdowns();
   }, []);
 
-  // ── Fetch users when role changes ──────────────────────────────────────────
   const fetchUsersByRole = async (role: string) => {
     if (!role) { setFilteredUsers([]); return; }
     setUsersLoading(true);
     try {
       const res = await getUsersByRoleApi(role);
-      setFilteredUsers(res?.data?.data ?? []);
+      setFilteredUsers((res?.data as any)?.data ?? []);
     } catch {
       setFilteredUsers([]);
     } finally {
@@ -116,87 +109,74 @@ export const useAssignmentForm = () => {
     initialValues: emptyValues,
     validationSchema,
     enableReinitialize: true,
-  onSubmit: async (values) => {
-  setLoading(true);
-  setApiError(null);
-  try {
-    if (isEdit && id) {
-      // Edit mode implementation...
-    } else {
-      // Payload normalizer: Agar numeric form numbers string format mein string empty hain, toh clean numerical payloads convert karo
-      const cleanPayload = {
-        ...values,
-        counterNo: values.counterNo ? Number(values.counterNo) : undefined,
-        minuteOfSlots: Number(values.minuteOfSlots)
-      };
+    onSubmit: async (values) => {
+      setLoading(true);
+      setApiError(null);
+      try {
+        const cleanPayload: AssignmentPayload = {
+          ...values,
+          counterNo: values.counterNo ? Number(values.counterNo) : undefined,
+          minuteOfSlots: Number(values.minuteOfSlots),
+        };
 
-      const res = await createAssignmentApi(cleanPayload);
-      if (res?.success !== false) {
-        toast.success("Employee assigned successfully.");
-        navigate("/employees");
-      } else {
-        setApiError(res?.message ?? "Failed to create assignment.");
+        if (isEdit && id) {
+          const res = await updateAssignmentApi(id, cleanPayload);
+          if (res?.success !== false) {
+            toast.success("Assignment updated successfully.");
+            navigate("/employees");
+          } else {
+            setApiError(res?.message ?? "Failed to update assignment.");
+          }
+        } else {
+          const res = await createAssignmentApi(cleanPayload);
+          if (res?.success !== false) {
+            toast.success("Employee assigned successfully.");
+            navigate("/employees");
+          } else {
+            setApiError(res?.message ?? "Failed to create assignment.");
+          }
+        }
+      } catch (err: any) {
+        setApiError(err?.response?.data?.message ?? "Something went wrong. Please try again.");
+      } finally {
+        setLoading(false);
       }
-    }
-  } catch (err: any) {
-    setApiError(
-      err?.response?.data?.message ?? "Something went wrong. Please try again."
-    );
-    // toast.error(err?.response?.data?.message ?? "Something went wrong. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-},
+    },
   });
 
-  // ── Pre-fill on edit ───────────────────────────────────────────────────────
-  // useEffect(() => {
-  //   if (!isEdit || !id) return;
-
-  //   const fetchAssignment = async () => {
-  //     setFetching(true);
-  //     setApiError(null);
-  //     try {
-  //       const res = await getAssignmentByIdApi(id);
-  //       const a = res?.data ?? res;
-  //       if (a) {
-  //         formik.setValues({
-  //           role: a.role ?? "",
-  //           employeeId: a.employeeId ?? "",
-  //           branchId: a.branchId ?? "",
-  //           shiftId: a.shiftId ?? "",
-  //           effectiveFrom: a.effectiveFrom?.split("T")[0] ?? emptyValues.effectiveFrom,
-  //           minuteOfSlots: a.minuteOfSlots ?? 30,
-  //           counterNo: a.counterNo ?? 1,
-  //         });
-  //       }
-  //     } catch (err: any) {
-  //       setApiError(
-  //         err?.response?.data?.message ?? "Failed to load assignment details."
-  //       );
-  //     } finally {
-  //       setFetching(false);
-  //     }
-  //   };
-
-  //   fetchAssignment();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [id]);
-
-  // ── Derived: users filtered by selected role ───────────────────────────────
- 
+  useEffect(() => {
+    if (!isEdit || !id) return;
+    const fetchAssignment = async () => {
+      setFetching(true);
+      setApiError(null);
+      try {
+        const res = await getAssignmentByIdApi(id);
+        const a = (res?.data as any) ?? res;
+        if (a) {
+          formik.setValues({
+            role: a.role ?? "",
+            employeeId: typeof a.employeeId === "object" ? a.employeeId._id : a.employeeId ?? "",
+            branchId: typeof a.branchId === "object" ? a.branchId._id : a.branchId ?? "",
+            shiftId: typeof a.shiftId === "object" ? a.shiftId._id : a.shiftId ?? "",
+            effectiveFrom: a.effectiveFrom?.split("T")[0] ?? emptyValues.effectiveFrom,
+            minuteOfSlots: a.minuteOfSlots ?? 30,
+            counterNo: a.counterNo ? String(a.counterNo) : "",
+          });
+          
+          if (a.role) fetchUsersByRole(a.role);
+        }
+      } catch (err: any) {
+        setApiError(err?.response?.data?.message ?? "Failed to load assignment details.");
+      } finally {
+        setFetching(false);
+      }
+    };
+    fetchAssignment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEdit]);
 
   return {
-    formik,
-    loading,
-    fetching,
-    apiError,
-    isEdit,
-    branches,
-    shifts,
-    filteredUsers,
-    usersLoading,
-    uniqueRoles,
-    fetchUsersByRole,
+    formik, loading, fetching, apiError, isEdit, branches, shifts,
+    filteredUsers, usersLoading, uniqueRoles, fetchUsersByRole,
   };
 };

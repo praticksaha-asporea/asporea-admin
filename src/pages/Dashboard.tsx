@@ -35,19 +35,27 @@ const Dashboard = () => {
       transition={{ duration: 0.4 }}
       className="space-y-8"
     >
-      {/* 1. WELCOME HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl tracking-wider mt-3 ml-2 font-medium text-gray-700">
-            Welcome back, Admin!
-          </h1>
-        </div>
-      </div>
-
-      {/* 2. STATS CARDS ROW */}
-      <div className="text-5xl ml-2">
-        Coming Soon ... 
-      </div>
+      
+      <div className="space-y-8 w-full">
+  <div className="flex flex-col items-center justify-center pt-8 px-4 md:items-end md:justify-end md:pr-16 w-full transition-all duration-300">
+    
+    
+    <div className="flex flex-col items-center text-center">
+      
+      {/* Welcome Message */}
+      <h1 className="text-2xl sm:text-3xl  sm:mt-48 tracking-wider font-medium text-gray-600">
+        Welcome back, Admin!
+      </h1>
+      
+       
+      <p className="text-xs sm:text-lg font-medium text-[#fc7728]  px-4 py-1.5 rounded-xl uppercase tracking-widest mt-3 inline-block">
+        Coming Soon...
+      </p>
+      
+    </div>
+    
+  </div>
+  </div>
       {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <motion.div whileHover={{ y: -5 }} className="bg-white p-6 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.04)] border border-gray-100">

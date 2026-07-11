@@ -271,7 +271,7 @@ export default CustomTable;
 export function UserCell({ firstName, lastName, email }: { firstName: string; lastName?: string; email: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-[#0054a6] font-bold text-sm uppercase">
+      <div className="w-10 h-10 rounded-full bg-linear-to-brrom-blue-100 to-indigo-100 flex items-center justify-center text-[#0054a6] font-bold text-sm uppercase">
         {firstName ? firstName.charAt(0) : "U"}
       </div>
       <div>

@@ -409,7 +409,7 @@ const UserForm = () => {
                     <input
                       type="checkbox"
                       name={`notificationPreference.${channel}`}
-                      checked={formik.values.notificationPreference[channel]}
+                     checked={formik.values.notificationPreference?.[channel] ?? false}
                       onChange={formik.handleChange}
                       className="w-5 h-5 rounded text-[#fc7728] focus:ring-[#fc7728]"
                     />

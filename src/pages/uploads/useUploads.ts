@@ -2,46 +2,40 @@ import { useState, useEffect } from "react";
 import { getUploadsListApi } from "../../service/apis/upload.api";
 import { toast } from "react-hot-toast";
 
+// Centralized Type Imports
+import type { UploadResponseData } from "../../types/responses/upload/upload.responses";
+import type { UploadListParams } from "../../types/payloads/upload/upload.payloads";
+
 export const useUploads = () => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [data, setData] = useState<UploadResponseData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [roleFilter, setRoleFilter] = useState<string>("");
 
   const fetchUploads = async () => {
     setLoading(true);
     try {
-      const params: any = { page, limit: 12 };
+      // Strictly typed query payload mapping
+      const params: UploadListParams = { page: String(page), limit: "12" };
       if (roleFilter) params.role = roleFilter;
 
-      console.log("--- 1. FIRING API WITH PARAMS ---", params);
       const res = await getUploadsListApi(params);
+      const responseData = res?.data;
 
-      console.log("--- 2. RAW API RESPONSE IN HOOK ---", res);
-
-      const responseData = res?.data || res;
-      console.log("--- 3. UNWRAPPED RESPONSE DATA ---", responseData);
-
-      if (responseData?.success !== false) {
-        const finalArray = responseData?.data?.data || responseData?.data || [];
-        const pages =
-          responseData?.data?.pagination?.totalPages ||
-          responseData?.pagination?.totalPages ||
-          1;
-
-        console.log("--- 4. FINAL ARRAY SETTING TO STATE ---", finalArray);
-        console.log("--- 5. TOTAL PAGES SETTING TO STATE ---", pages);
+      if (res?.success !== false && responseData) {
+         
+        const dynamicData = responseData as any;
+        const finalArray: UploadResponseData[] = dynamicData?.data ?? dynamicData?.types ?? [];
+        const pages: number = dynamicData?.pagination?.totalPages ?? 1;
 
         setData(finalArray);
         setTotalPages(pages);
       } else {
-        console.warn("--- BACKEND RETURNED SUCCESS FALSE ---", responseData);
-        toast.error(responseData?.message || "Failed to fetch uploads");
+        toast.error(res?.message ?? "Failed to fetch uploads");
       }
-    } catch (error) {
-      console.error("--- ❌ CRITICAL API FETCH ERROR IN HOOK ---", error);
-      toast.error("Something went wrong");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message ?? "Something went wrong while loading uploads");
     } finally {
       setLoading(false);
     }
@@ -49,6 +43,7 @@ export const useUploads = () => {
 
   useEffect(() => {
     fetchUploads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, roleFilter]);
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

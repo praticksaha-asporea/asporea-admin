@@ -6,23 +6,22 @@ import {
   getSectionsApi,
   createSectionApi,
 } from "../../../service/apis/assessmentSection.api";
+import type { AssessmentSection } from "../../../types/responses/assessment/section/assessmentSection.responses";
 
 export const useSectionForm = () => {
   const navigate = useNavigate();
-  const [parentSections, setParentSections] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const [parentSections, setParentSections] = useState<AssessmentSection[]>([]);  
+const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-
-  useEffect(() => {
+useEffect(() => {
     const fetchParentSections = async () => {
       try {
         const res = await getSectionsApi();
-        const allSections = res?.data?.data?.data || res?.data?.data || [];
-
-        const parents = allSections.filter(
-          (s: any) => !s.underSection || s.underSection.trim() === "",
-        );
-        setParentSections(parents);
+        if (res?.success && res.data) {
+          const allSections = Array.isArray(res.data) ? res.data : (res.data as any).data || [];
+          const parents = allSections.filter((s: AssessmentSection) => !s.underSection || s.underSection.trim() === "");
+          setParentSections(parents);
+        }
       } catch (error) {
         console.error("Error fetching sections:", error);
         toast.error("Failed to load parent sections");
@@ -32,7 +31,6 @@ export const useSectionForm = () => {
     };
     fetchParentSections();
   }, []);
-
   const formik = useFormik({
     initialValues: {
       section: "",
@@ -84,11 +82,13 @@ export const useSectionForm = () => {
             : undefined,
       };
 
-      try {
+     try {
         const res = await createSectionApi(payload);
-        if (res) {
-          toast.success("Section created successfully!");
+        if (res?.success) {
+          toast.success(res.message || "Section created successfully!");
           navigate("/assessment-sections");
+        } else {
+          toast.error(res?.message || "Failed to create section");
         }
       } catch (error) {
         console.error("Error creating section:", error);

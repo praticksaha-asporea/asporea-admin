@@ -1,30 +1,27 @@
 import httpsCall from "../httpCall";
 import catchAsync from "../../utils/catchAsync";
+import type { AxiosResponse } from "axios";
+import type { ApiResponse } from "../../types/api/baseResponse";
+import type { GeneralSettingsPayload } from "../../types/payloads/general/generalSettings.payloads";
+import type { GeneralSettingsResponseData } from "../../types/responses/general/generalSettings.responses";
 
-export type GeneralSettingsPayload = {
-  tacAssignment: "random" | "counterwise";
-  inquiryNumberFormat: string;
-  escalationTimelineHours?: number;
-  inqResTimelineHours?: number;
-  preCounsellingTimelineHours?: number;
-  assessmentTimelineHours?: number;
-  assessment?: {
-    fullMarks?: number | "";
-    passingMarks?: number | "";
-  };
-  technical?: {
-    fullMarks?: number | "";
-    passingMarks?: number | "";
-  };
-};
+export const getGeneralSettingsApi: () => Promise<
+  ApiResponse<GeneralSettingsResponseData>
+> = catchAsync(
+  async (): Promise<
+    AxiosResponse<ApiResponse<GeneralSettingsResponseData>>
+  > => {
+    const res = await httpsCall.get("/general-settings/view");
+    return res;
+  },
+);
 
-export const getGeneralSettingsApi = catchAsync(async () => {
-  const res = await httpsCall.get("/general-settings/view");
-  return res;
-});
-
-export const updateGeneralSettingsApi = catchAsync(
-  async (data: GeneralSettingsPayload) => {
+export const updateGeneralSettingsApi: (
+  data: GeneralSettingsPayload,
+) => Promise<ApiResponse<GeneralSettingsResponseData>> = catchAsync(
+  async (
+    data: GeneralSettingsPayload,
+  ): Promise<AxiosResponse<ApiResponse<GeneralSettingsResponseData>>> => {
     const res = await httpsCall.patch("/general-settings/update", data);
     return res;
   },

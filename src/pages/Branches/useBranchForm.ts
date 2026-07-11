@@ -4,17 +4,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import { createBranchApi, updateBranchApi, getBranchByIdApi } from "../../service/apis/branch.api";
+import type { BranchPayload } from "../../types/payloads/branch/branch.payloads";
+import type { BranchResponseData } from "../../types/responses/branch/branch.responses";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type BranchFormValues = {
-  title: string;
-  location: string;
+ 
+export type BranchFormValues = Omit<BranchPayload, "latitude" | "longitude"> & {
   latitude: string;
   longitude: string;
-  counters: number;
-  timeZone: string;
-  workDays: string[];
 };
 
 const emptyValues: BranchFormValues = {
@@ -28,7 +24,6 @@ const emptyValues: BranchFormValues = {
 };
 
 // ─── Validation ───────────────────────────────────────────────────────────────
-
 const validationSchema = Yup.object({
   title:     Yup.string().required("Title is required"),
   location:  Yup.string().required("Location is required"),
@@ -38,7 +33,6 @@ const validationSchema = Yup.object({
 });
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
-
 export const useBranchForm = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -60,7 +54,6 @@ export const useBranchForm = () => {
           const res = await updateBranchApi(id, values);
           if (res?.success !== false) {
             toast.success("Branch updated successfully.");
-            // navigate("/branches");
           } else {
             setApiError(res?.message ?? "Failed to update branch.");
           }
@@ -92,13 +85,13 @@ export const useBranchForm = () => {
       setApiError(null);
       try {
         const res = await getBranchByIdApi(id);
-        const b = res?.data ?? res;
+        const b = (res?.data ?? res) as BranchResponseData;
         if (b) {          
           formik.setValues({
             title:     b.title     ?? "",
             location:  b.location  ?? "",
-            latitude:  b.coordinates.coordinates?.[1]  ?? "",
-            longitude: b.coordinates.coordinates?.[0] ?? "",
+            latitude:  b.coordinates?.coordinates?.[1]?.toString() ?? "",
+            longitude: b.coordinates?.coordinates?.[0]?.toString() ?? "",
             counters:  b.counters  ?? 0,
             timeZone:  b.timeZone  ?? "Asia/Kolkata",
             workDays:  b.workDays  ?? [],
@@ -115,9 +108,9 @@ export const useBranchForm = () => {
 
     fetchBranch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, isEdit]);
 
-  // ── Day toggle helper (keeps logic out of the component) ───────────────────
+  // ── Day toggle helper ──
   const toggleDay = (day: string) => {
     const current = formik.values.workDays;
     const next = current.includes(day)

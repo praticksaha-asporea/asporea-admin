@@ -1,24 +1,12 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import {confirmToast} from "../../../utils/confirmToast";
+import { confirmToast } from "../../../utils/confirmToast";
 import {
   getQuestionsApi,
   deleteQuestionApi,
   restoreQuestionApi,
 } from "../../../service/apis/assessment.api";
-
-export type AssessmentQuestion = {
-  _id: string;
-  title: string;
-  shortName?: string;
-  marks: number;
-  section: string;
-  subSection?: string;
-  type: string;
-  levels: string[];
-  order: number;
-  isDeleted?: boolean;
-};
+import type { AssessmentQuestion } from "../../../types/responses/assessment/assessment.responses";
 
 export const useQuestionList = () => {
   const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
@@ -28,15 +16,25 @@ export const useQuestionList = () => {
   const fetchQuestions = async () => {
     setIsLoading(true);
     try {
-      const res = await getQuestionsApi({ 
-        limit: '100', 
-        includeDeleted: String(showDeleted) 
-      }); 
-      
-      if (res && res.data && res.data.data) {
-        const fetchedData = res.data.data.data || res.data.data || [];
+      const res = await getQuestionsApi({
+        limit: 100,
+        includeDeleted: String(showDeleted),
+      });
+
+      if (res?.success && res.data) {
+        let fetchedData: AssessmentQuestion[] = [];
+
+
+        if (Array.isArray(res.data)) {
+
+          fetchedData = res.data;
+        } else if (typeof res.data === "object" && "data" in res.data) {
+
+          const paginatedStructure = res.data as { data: AssessmentQuestion[] };
+          fetchedData = paginatedStructure.data ?? [];
+        }
+
         setQuestions(fetchedData);
-        
       } else {
         setQuestions([]);
       }
@@ -52,31 +50,35 @@ export const useQuestionList = () => {
   }, [showDeleted]);
 
   const handleDelete = async (id: string) => {
-    
-    const confirmed = await confirmToast("Are you sure you want to delete this option?");
-    
-    if (!confirmed) return;  
-
+    const confirmed = await confirmToast(
+      "Are you sure you want to delete this option?",
+    );
+    if (!confirmed) return;
     try {
       const res = await deleteQuestionApi(id);
-      if (res) {
-        toast.success("Option deleted successfully!");
-        fetchQuestions();  
+      if (res?.success) {
+        toast.success(res.message || "Option deleted successfully!");
+        fetchQuestions();
+      } else {
+        toast.error(res?.message || "Failed to delete");
       }
     } catch (error) {
       console.error("Delete failed:", error);
     }
   };
- const handleRestore = async (id: string) => {
-    const confirmed = await confirmToast("Do you want to restore this criteria option back to active form?");
-    
-    if (!confirmed) return;  
 
+  const handleRestore = async (id: string) => {
+    const confirmed = await confirmToast(
+      "Do you want to restore this criteria option back to active form?",
+    );
+    if (!confirmed) return;
     try {
       const res = await restoreQuestionApi(id);
-      if (res) {
-        toast.success("Option restored successfully!");
-        fetchQuestions();  
+      if (res?.success) {
+        toast.success(res.message || "Option restored successfully!");
+        fetchQuestions();
+      } else {
+        toast.error(res?.message || "Failed to restore");
       }
     } catch (error) {
       console.error("Restore failed:", error);

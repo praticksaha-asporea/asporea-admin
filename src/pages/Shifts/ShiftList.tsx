@@ -5,18 +5,14 @@ import CustomTable, {
   defaultRowActions,
   type ColumnDef,
 } from "../../components/UI/customTable/CustomTable";
-import { getShiftsApi, deleteShiftApi, type ScheduleObj } from "../../service/apis/shift.api";
+import { getShiftsApi, deleteShiftApi } from "../../service/apis/shift.api";
 import useDebounce from "../../utils/useDebounce";
 import { toast } from "react-hot-toast";
 import { confirmToast } from "../../utils/confirmToast";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type Shift = {
-  _id: string;
-  shiftName: string;
-  schedules: ScheduleObj[];
-};
+// Centralized Responses & Payload Imports
+import type { ShiftResponseData } from "../../types/responses/shift/shift.responses";
+import type { ScheduleObj } from "../../types/payloads/shift/shift.payloads";
 
 // ─── Cell renderers ───────────────────────────────────────────────────────────
 
@@ -66,7 +62,7 @@ function BreakCell({ schedules }: { schedules: ScheduleObj[] }) {
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const columns: ColumnDef<Shift>[] = [
+const columns: ColumnDef<ShiftResponseData>[] = [
   { header: "Shift",     accessor: (row) => <ShiftNameCell shiftName={row.shiftName} schedules={row.schedules} /> },
   { header: "Schedules", accessor: (row) => <SchedulesCell schedules={row.schedules} /> },
   { header: "Break",     accessor: (row) => <BreakCell schedules={row.schedules} /> },
@@ -79,7 +75,7 @@ const PAGE_SIZE = 2;
 const ShiftList = () => {
   const navigate = useNavigate();
 
-  const [shifts, setShifts]         = useState<Shift[]>([]);
+  const [shifts, setShifts]         = useState<ShiftResponseData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage]             = useState(1);
   const [search, setSearch]         = useState("");
@@ -111,19 +107,16 @@ const ShiftList = () => {
 
   useEffect(() => { fetchShifts(); }, [fetchShifts]);
 
-  const handleEdit   = (shift: Shift) => navigate(`/shifts/edit/${shift._id}`);
-  const handleDelete = async (shift: Shift) => {
+  const handleEdit   = (shift: ShiftResponseData) => navigate(`/shifts/edit/${shift._id}`);
+  const handleDelete = async (shift: ShiftResponseData) => {
     const confirmed = await confirmToast(`Delete shift "${shift.shiftName}"?`);
     if (!confirmed) return;
-    console.log(confirmed,555);
     
     try {
-      const res=await deleteShiftApi(shift._id);
+      const res = await deleteShiftApi(shift._id);
       setShifts((prev) => prev.filter((s) => s._id !== shift._id));
       setTotalCount((c) => c - 1);
-      // console.log(res,58);
-      
-      toast.success(res?.message);
+      toast.success(res?.message || "Shift deleted successfully");
     } catch (err: any) {
       toast.error(err?.response?.data?.message ?? "Failed to delete shift.");
     }
@@ -139,7 +132,7 @@ const ShiftList = () => {
   }
 
   return (
-    <CustomTable<Shift>
+    <CustomTable<ShiftResponseData>
       title="Shift Schedules"
       subtitle="Configure multi-day working hours and breaks."
       addLabel="Add Shift"

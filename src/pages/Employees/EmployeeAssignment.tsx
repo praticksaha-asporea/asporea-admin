@@ -8,23 +8,11 @@ import CustomTable, {
 } from "../../components/UI/customTable/CustomTable";
 import { getAssignmentsApi, deleteAssignmentApi } from "../../service/apis/assignment.api";
 import { confirmToast } from "../../utils/confirmToast";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type Assignment = {
-  _id: string;
-  employeeId: { _id: string; firstName: string; lastName: string; role: string } | string;
-  branchId: { _id: string; title: string } | string;
-  shiftId: { _id: string; shiftName: string } | string;
-  effectiveFrom: string;
-  minuteOfSlots: number;
-  counterNo?: number;
-  role: string;
-};
+import type { AssignmentResponseData } from "../../types/responses/assignment/assignment.responses";
 
 // ─── Cell renderers ───────────────────────────────────────────────────────────
 
-function EmployeeCell({ assignment }: { assignment: Assignment }) {
+function EmployeeCell({ assignment }: { assignment: AssignmentResponseData }) {
   const emp = assignment.employeeId;
   const name = typeof emp === "object" ? `${emp?.firstName} ${emp?.lastName}` : emp;
   const role = typeof emp === "object" ? emp?.role : assignment.role;
@@ -36,7 +24,7 @@ function EmployeeCell({ assignment }: { assignment: Assignment }) {
   );
 }
 
-function LocationShiftCell({ assignment }: { assignment: Assignment }) {
+function LocationShiftCell({ assignment }: { assignment: AssignmentResponseData }) {
   const branchName = typeof assignment.branchId === "object" ? assignment.branchId.title : assignment.branchId;
   const shiftName = typeof assignment.shiftId === "object" ? assignment.shiftId.shiftName : assignment.shiftId;
   return (
@@ -51,6 +39,7 @@ function LocationShiftCell({ assignment }: { assignment: Assignment }) {
   );
 }
 
+// Fixed parameter types for config cell matching clean data types
 function ConfigCell({ minuteOfSlots, counterNo }: { minuteOfSlots: number; counterNo?: number }) {
   return (
     <div className="flex gap-2">
@@ -68,7 +57,7 @@ function ConfigCell({ minuteOfSlots, counterNo }: { minuteOfSlots: number; count
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const columns: ColumnDef<Assignment>[] = [
+const columns: ColumnDef<AssignmentResponseData>[] = [
   { header: "Employee", accessor: (row) => <EmployeeCell assignment={row} /> },
   { header: "Location & Shift", accessor: (row) => <LocationShiftCell assignment={row} /> },
   {
@@ -109,7 +98,7 @@ const PAGE_SIZE = 10;
 const EmployeeAssignment = () => {
   const navigate = useNavigate();
 
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [assignments, setAssignments] = useState<AssignmentResponseData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -150,7 +139,7 @@ const EmployeeAssignment = () => {
     return () => { if (searchTimer.current) clearTimeout(searchTimer.current); };
   }, [fetchAssignments, search]);
 
-  const handleDelete = async (assignment: Assignment) => {
+  const handleDelete = async (assignment: AssignmentResponseData) => {
     const confirmed = await confirmToast("Remove this assignment?");
     if (!confirmed) return;
     try {
@@ -163,7 +152,7 @@ const EmployeeAssignment = () => {
     }
   };
 
-  const rowActions: RowAction<Assignment>[] = [
+  const rowActions: RowAction<AssignmentResponseData>[] = [
     { icon: <Trash2 className="w-4 h-4" />, label: "Delete", onClick: handleDelete, colorClass: "hover:text-red-500 hover:bg-red-50" },
   ];
 
@@ -178,7 +167,7 @@ const EmployeeAssignment = () => {
 
   return (
     <>
-      <CustomTable<Assignment>
+      <CustomTable<AssignmentResponseData>
         title="Employee Assignment"
         subtitle="Assign employees to branches and shifts."
         addLabel="New Assignment"

@@ -8,21 +8,11 @@ import CustomTable, {
 import { getUsersApi } from "../../service/apis/user.api";
 import useDebounce from "../../utils/useDebounce";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type User = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-  createdAt: string;
-};
+// Centralized Response Imports
+import type { UserResponseData } from "../../types/responses/user/user.responses";
 
 // ─── Column definitions ───────────────────────────────────────────────────────
-
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<UserResponseData>[] = [
   {
     header: "User Details",
     accessor: (row) => <UserCell firstName={row.firstName} lastName={row.lastName} email={row.email} />,
@@ -46,7 +36,6 @@ const columns: ColumnDef<User>[] = [
 ];
 
 // ─── Filter config ────────────────────────────────────────────────────────────
-
 const filterConfigs: FilterConfig[] = [
   {
     key: "role",
@@ -80,11 +69,10 @@ const filterConfigs: FilterConfig[] = [
 const PAGE_SIZE = 10;
 
 // ─── Component ────────────────────────────────────────────────────────────────
-
 const UserList = () => {
   const navigate = useNavigate();
 
-  const [users, setUsers]           = useState<User[]>([]);
+  const [users, setUsers]           = useState<UserResponseData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage]             = useState(1);
   const [search, setSearch]         = useState("");
@@ -100,7 +88,6 @@ const UserList = () => {
     setPage(1);
   };
 
-  // ── Fetch — depends on debounced search, not raw input ────────────────────
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -123,10 +110,8 @@ const UserList = () => {
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
-  // ── Actions ────────────────────────────────────────────────────────────────
-  const handleEdit = (user: User) => navigate(`/users/edit/${user._id}`);
+  const handleEdit = (user: UserResponseData) => navigate(`/users/edit/${user._id}`);
 
-  // ── Error state ────────────────────────────────────────────────────────────
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -139,7 +124,7 @@ const UserList = () => {
   }
 
   return (
-    <CustomTable<User>
+    <CustomTable<UserResponseData>
       title="User Management"
       subtitle="Manage your team members and their account permissions."
       addLabel="Add New User"

@@ -15,6 +15,9 @@ import { toast } from "react-hot-toast";
 import { confirmToast } from "../../utils/confirmToast";
 import { deleteUploadApi } from "../../service/apis/upload.api";
 
+// Centralized Response and Ref Imports
+import type { UploadResponseData, UploadUserRef } from "../../types/responses/upload/upload.responses";
+
 const Uploads = () => {
   const {
     data,
@@ -26,6 +29,7 @@ const Uploads = () => {
     handleRoleChange,
     fetchUploads
   } = useUploads();
+  
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -48,16 +52,18 @@ const Uploads = () => {
     "tac_head",
   ];
 
-  const isImageFile = (path: any) => {
+  const isImageFile = (path: string | undefined): boolean => {
     if (!path || typeof path !== "string") return false;
     if (path.startsWith("data:image") || path.includes("base64")) return true;
     return /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i.test(path);
   };
-const isPdfFile = (path: any) => {
+
+  const isPdfFile = (path: string | undefined): boolean => {
     if (!path || typeof path !== "string") return false;
-    return /\.pdf$/i.test(path); // File extension .pdf check karega
+    return /\.pdf$/i.test(path);
   };
-  const resolveFileSrc = (path: string) => {
+
+  const resolveFileSrc = (path: string | undefined): string => {
     if (!path) return "";
     if (
       path.startsWith("data:") ||
@@ -89,7 +95,7 @@ const isPdfFile = (path: any) => {
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-      {/* ── Header Section ── */}
+      {/* Header Panel Control */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
@@ -117,7 +123,7 @@ const isPdfFile = (path: any) => {
         </div>
       </div>
 
-      {/* ── Grid View Area ── */}
+      {/* Media Board Grid Area Boundaries */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
@@ -143,23 +149,19 @@ const isPdfFile = (path: any) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {data.map((item, index) => {
+          {data.map((item: UploadResponseData, index: number) => {
             const isImage = isImageFile(item.path);
             const targetSrc = resolveFileSrc(item.path);
 
-            const userData =
+            const userData: UploadUserRef | null =
               item.user && typeof item.user === "object" && item.user.firstName
                 ? item.user
-                : item.userId &&
-                    typeof item.userId === "object" &&
-                    item.userId.firstName
+                : item.userId && typeof item.userId === "object" && item.userId.firstName
                   ? item.userId
                   : null;
 
             const profilePicPath = userData?.profilePic || null;
-            const resolvedUserAvatar = profilePicPath
-              ? resolveFileSrc(profilePicPath)
-              : null;
+            const resolvedUserAvatar = profilePicPath ? resolveFileSrc(profilePicPath) : null;
 
             return (
               <motion.div
@@ -169,7 +171,6 @@ const isPdfFile = (path: any) => {
                 key={item._id}
                 className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] overflow-hidden hover:shadow-lg transition-shadow group flex flex-col"
               >
-               
                 <div
                   className="relative w-full h-40 bg-gray-50 overflow-hidden cursor-pointer flex items-center justify-center border-b border-gray-100/50"
                   onClick={() => {
@@ -186,31 +187,22 @@ const isPdfFile = (path: any) => {
                       alt="Upload preview"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          `${BACKEND_BASE_URL}${item.path}`;
+                        (e.target as HTMLImageElement).src = `${BACKEND_BASE_URL}${item.path}`;
                       }}
                     />
                   ) : isPdfFile(item.path) ? (
-                  
                     <div className="w-full h-full flex items-center justify-center bg-gray-50/50 select-none group">
                       <div className="relative w-20 h-24 bg-white rounded-lg border border-gray-200 shadow-[0_4px_12px_-4px_rgba(0,0,0,0.08)] group-hover:shadow-md group-hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
-                        
-                       
                         <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-center">
                           <FileText className="w-8 h-8 text-red-500/90 mx-auto stroke-[1.8]" />
                         </div>
-
-                      
                         <div className="bg-red-600 text-white text-[11px] font-black tracking-wider text-center py-1 uppercase shadow-inner">
                           PDF
                         </div>
-                        
-                      
                         <div className="absolute top-0 right-0 w-3 h-3 bg-gray-100 border-b border-l border-gray-300 rounded-bl-sm"></div>
                       </div>
                     </div>
                   ) : (
-                  
                     <div className="w-full h-full flex items-center justify-center bg-blue-50/50">
                       <div className="relative w-20 h-24 bg-white rounded-lg border border-blue-100 flex flex-col justify-between overflow-hidden p-3">
                         <FileText className="w-8 h-8 text-blue-400 mx-auto mt-4" />
@@ -223,18 +215,15 @@ const isPdfFile = (path: any) => {
                     {dayjs(item.createdAt).format("DD MMM YYYY")}
                   </div>
                 </div>
-                 
 
-                {/* Card Footer Section */}
-               <div className="p-4 flex items-center justify-between gap-3 mt-auto">
-                  
-                
+                {/* Card Contextual User Footprint Info */}
+                <div className="p-4 flex items-center justify-between gap-3 mt-auto">
                   <div className="flex items-center gap-3 overflow-hidden flex-1">
                     <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-100 to-indigo-100 shrink-0 border border-gray-100 flex items-center justify-center overflow-hidden">
                       {resolvedUserAvatar ? (
                         <img
                           src={resolvedUserAvatar}
-                          alt="User DP"
+                          alt="User profile"
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = "none";
@@ -257,7 +246,6 @@ const isPdfFile = (path: any) => {
                     </div>
                   </div>
 
-                  
                   <button
                     type="button"
                     onClick={() => handleDeleteClick(item._id)}
@@ -266,7 +254,6 @@ const isPdfFile = (path: any) => {
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  
                 </div>
               </motion.div>
             );
@@ -274,10 +261,11 @@ const isPdfFile = (path: any) => {
         </div>
       )}
 
-      {/* ── Pagination Controls ── */}
+      {/* Pagination Bar Controller */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 mt-8">
           <button
+            type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition-colors cursor-pointer"
@@ -288,6 +276,7 @@ const isPdfFile = (path: any) => {
             Page {page} of {totalPages}
           </span>
           <button
+            type="button"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition-colors cursor-pointer"
@@ -297,7 +286,7 @@ const isPdfFile = (path: any) => {
         </div>
       )}
 
-      {/* ── IMAGE FULL VIEW MODAL ── */}
+      {/* Media Overlay Box Lightbox Boundary */}
       <AnimatePresence>
         {previewImage && (
           <motion.div
@@ -315,6 +304,7 @@ const isPdfFile = (path: any) => {
               onClick={(e) => e.stopPropagation()}
             >
               <button
+                type="button"
                 onClick={() => setPreviewImage(null)}
                 className="absolute -top-12 right-0 text-white hover:text-gray-300 p-2 cursor-pointer transition-colors"
               >
@@ -322,7 +312,7 @@ const isPdfFile = (path: any) => {
               </button>
               <img
                 src={previewImage}
-                alt="Full view"
+                alt="Full preview layout view"
                 className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-2xl shadow-2xl block mx-auto"
               />
             </motion.div>

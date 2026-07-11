@@ -7,20 +7,10 @@ import {
   updateGeneralSettingsApi,
 } from "../../service/apis/generalSettings.api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+import type { GeneralSettingsPayload } from "../../types/payloads/general/generalSettings.payloads";
+import type { GeneralSettingsResponseData } from "../../types/responses/general/generalSettings.responses";
 
-export type GeneralSettingsValues = {
-  tacAssignmentType: "random" | "counterwise";
-  inquiryNumberFormat: string;
-  escalationTimelineHours: number | "";
-  inqResTimelineHours: number | "";
-  preCounsellingTimelineHours: number | "";
-  assessmentTimelineHours: number | "";
-  assessment: { fullMarks: number | ""; passingMarks: number | "" };
-  technical: { fullMarks: number | ""; passingMarks: number | "" };
-};
-
-// ── Read-only stats (view only, not submitted) ─────────────────────────────
+export type GeneralSettingsValues = GeneralSettingsPayload;
 
 export type SettingsStats = {
   lastInq?: number;
@@ -37,8 +27,6 @@ const emptyValues: GeneralSettingsValues = {
   assessment: { fullMarks: "", passingMarks: "" },
   technical: { fullMarks: "", passingMarks: "" },
 };
-
-// ─── Validation ───────────────────────────────────────────────────────────────
 
 const validationSchema = Yup.object({
   tacAssignmentType: Yup.string().oneOf(["random", "counterwise"]).required(),
@@ -59,8 +47,6 @@ const validationSchema = Yup.object({
   }),
 });
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-
 export const useGeneralSettings = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -80,23 +66,23 @@ export const useGeneralSettings = () => {
           toast.error(res?.message ?? "Failed to update settings.");
         }
       } catch (err: any) {
-        // toast.error(err?.response?.data?.message ?? "Something went wrong.");
+        toast.error(err?.response?.data?.message ?? "Something went wrong.");
       } finally {
         setLoading(false);
       }
     },
   });
 
-  // ── Fetch on mount ─────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchSettings = async () => {
       setFetching(true);
       try {
         const res = await getGeneralSettingsApi();
-        const s = res?.data ?? res;
+        const s = res?.data as GeneralSettingsResponseData;
         if (s) {
           formik.setValues({
-            tacAssignmentType: s.tacAssignmentType ?? "random",
+            tacAssignmentType:
+              s.tacAssignmentType ?? s.tacAssignment ?? "random",
             inquiryNumberFormat: s.inquiryNumberFormat ?? "ASP-INQ-0000",
             escalationTimelineHours: s.escalationTimelineHours ?? "",
             inqResTimelineHours: s.inqResTimelineHours ?? "",
@@ -109,16 +95,16 @@ export const useGeneralSettings = () => {
             technical: {
               fullMarks: s.technical?.fullMarks ?? "",
               passingMarks: s.technical?.passingMarks ?? "",
-            }
+            },
           });
-          // read-only stats
+
           setStats({
             lastInq: s.lastInq,
             lastFy: s.lastFy,
           });
         }
       } catch {
-        // non-fatal — form stays at defaults
+        // Fallback catch boundary
       } finally {
         setFetching(false);
       }

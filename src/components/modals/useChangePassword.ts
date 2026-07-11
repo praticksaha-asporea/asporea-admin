@@ -4,18 +4,13 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { changePasswordApi } from "../../service/apis/auth.api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+ 
+import type { ChangePasswordPayload } from "../../types/payloads/auth/auth.payloads";
 
-type ChangePasswordValues = {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-};
+export type ChangePasswordValues = Omit<ChangePasswordPayload, "userId">;
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-
-export const useChangePassword = (onClose: () => void) => {
-  const [loading, setLoading] = useState(false);
+export const useChangePassword = (userId: string, onClose: () => void) => {
+  const [loading, setLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
     oldPassword: Yup.string().required("Old password is required"),
@@ -35,14 +30,14 @@ export const useChangePassword = (onClose: () => void) => {
       setLoading(true);
       try {
         const res = await changePasswordApi({
-          userId: "",           // caller can pass userId via prop if needed
+          userId,
           oldPassword: values.oldPassword,
           newPassword: values.newPassword,
           confirmPassword: values.confirmPassword,
         });
 
-        if (res?.success) {
-          toast.success(res.message ?? "Password updated successfully.");
+        if (res?.success !== false) {
+          toast.success(res?.message ?? "Password updated successfully.");
           resetForm();
           setTimeout(onClose, 1500);
         } else {

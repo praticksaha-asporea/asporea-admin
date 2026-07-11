@@ -7,7 +7,7 @@ const TypeForm = () => {
   const navigate = useNavigate();
   const { formik, loading, fetching, apiError, isEdit, toggleExtension, EXTENSION_OPTIONS } = useTypeForm();
 
-  // ── Fetch skeleton ─────────────────────────────────────────────────────────
+  // ─── Loader Layout Skeleton Boundary ───────────────────────────────────────
   if (fetching) {
     return (
       <div className="max-w-4xl mx-auto pb-20 animate-pulse space-y-8">
@@ -23,9 +23,10 @@ const TypeForm = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto pb-20">
 
-      {/* ── Top Bar ── */}
+      {/* ── Top Identity Controller Bar ── */}
       <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
         <button
+          type="button"
           onClick={() => navigate("/document-types")}
           className="flex items-center gap-2 text-gray-500 hover:text-gray-800 font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition-all"
         >
@@ -50,7 +51,7 @@ const TypeForm = () => {
         </button>
       </div>
 
-      {/* ── API error banner ── */}
+      {/* ── Network Operations Failure Feedback ── */}
       {apiError && (
         <div className="mb-6 px-5 py-4 bg-red-50 border border-red-200 rounded-2xl text-sm font-bold text-red-600">
           {apiError}
@@ -59,7 +60,7 @@ const TypeForm = () => {
 
       <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* ── Left: Details ── */}
+        {/* ── Left Side Layout Block: Rule Configuration Data ── */}
         <div className="lg:col-span-2 space-y-8">
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
@@ -71,7 +72,7 @@ const TypeForm = () => {
 
             <div className="space-y-6">
 
-              {/* Title */}
+              {/* Title Input Control */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                   Title <span className="text-red-500">*</span>
@@ -91,7 +92,7 @@ const TypeForm = () => {
                 )}
               </div>
 
-              {/* Sub Title */}
+              {/* Sub Title Input Control */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                   Sub Title
@@ -104,14 +105,14 @@ const TypeForm = () => {
                 />
               </div>
 
-              {/* Section */}
+              {/* Dropdown Section Selection */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                   Section <span className="text-red-500">*</span>
                 </label>
                 <select
                   {...formik.getFieldProps("section")}
-                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 appearance-none transition-all ${
+                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 appearance-none cursor-pointer transition-all ${
                     formik.touched.section && formik.errors.section
                       ? "border-red-400 focus:bg-white"
                       : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
@@ -129,7 +130,7 @@ const TypeForm = () => {
                 )}
               </div>
 
-              {/* Supported Extensions */}
+              {/* Multiple Tags/Chips Array Extension Selection Control */}
               <div className="space-y-3">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                   Supported Extensions <span className="text-red-500">*</span>
@@ -164,7 +165,7 @@ const TypeForm = () => {
           </div>
         </div>
 
-        {/* ── Right: Options ── */}
+        {/* ── Right Side Layout Block: Toggle Rules & Scopes ── */}
         <div className="space-y-8">
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]" />
@@ -176,40 +177,42 @@ const TypeForm = () => {
 
             <div className="space-y-5">
 
-              {/* Required toggle */}
+              {/* Required/Mandatory Scope Toggle Check */}
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
                 <div>
                   <p className="text-sm font-bold text-gray-700">Required</p>
                   <p className="text-xs text-gray-400 font-medium mt-0.5">Must be submitted</p>
                 </div>
-                <div
+                <button
+                  type="button"
                   onClick={() => formik.setFieldValue("required", !formik.values.required)}
-                  className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
+                  className={`relative w-11 h-6 rounded-full transition-colors ${
                     formik.values.required ? "bg-[#fc7728]" : "bg-gray-200"
                   }`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
                     formik.values.required ? "translate-x-5" : "translate-x-0"
                   }`} />
-                </div>
+                </button>
               </div>
 
-              {/* Multiple toggle */}
+              {/* Single/Multiple Items Submission Rule Toggle Check */}
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
                 <div>
                   <p className="text-sm font-bold text-gray-700">Multiple Files</p>
                   <p className="text-xs text-gray-400 font-medium mt-0.5">Allow more than one</p>
                 </div>
-                <div
+                <button
+                  type="button"
                   onClick={() => formik.setFieldValue("multiple", !formik.values.multiple)}
-                  className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
+                  className={`relative w-11 h-6 rounded-full transition-colors ${
                     formik.values.multiple ? "bg-[#fc7728]" : "bg-gray-200"
                   }`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
                     formik.values.multiple ? "translate-x-5" : "translate-x-0"
                   }`} />
-                </div>
+                </button>
               </div>
 
             </div>

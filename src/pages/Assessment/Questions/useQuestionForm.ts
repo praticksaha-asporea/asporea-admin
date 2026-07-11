@@ -7,6 +7,7 @@ import {
   updateQuestionApi,
   getQuestionByIdApi,
 } from "../../../service/apis/assessment.api";
+import type { QuestionPayload } from "../../../types/payloads/assessment/assessment.payload";
 
 export const useQuestionForm = () => {
   const { id } = useParams();
@@ -33,17 +34,14 @@ export const useQuestionForm = () => {
       fetchQuestionData(id);
     }
   }, [id, isEdit]);
-
-  const fetchQuestionData = async (questionId: string) => {
+const fetchQuestionData = async (questionId: string) => {
     setIsFetching(true);
     try {
       const res = await getQuestionByIdApi(questionId);
 
-      const item = res?.data?.data || res?.data || res;
-
-      
-
-      if (item && (item.title || item.section || item.shortName)) {
+       
+      if (res?.success && res.data) {
+        const item = res.data;
         setFormData({
           title: item.title || "",
           shortName: item.shortName || "",
@@ -55,9 +53,7 @@ export const useQuestionForm = () => {
           order: item.order || 0,
         });
       } else {
-        console.error(
-          "Error: Question data is missing expected fields (title, section, etc.)",
-        );
+        toast.error(res?.message || "Error fetching details");
       }
     } catch (error) {
       console.error("Error fetching question details from DB:", error);
@@ -65,9 +61,14 @@ export const useQuestionForm = () => {
       setIsFetching(false);
     }
   };
-
-  const handleChange = (e: any) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ 
+      ...prev, 
+      [name]: value 
+    }));
   };
 
   const handleLevelChange = (index: number, value: string) => {
@@ -83,16 +84,14 @@ export const useQuestionForm = () => {
       ...formData,
       levels: formData.levels.filter((_, i) => i !== index),
     });
-
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.section.trim()) {
       return toast.error("Title and Section are required!");
     }
 
     setIsLoading(true);
-
-    const payload = {
+    const payload: QuestionPayload = {
       ...formData,
       marks: Number(formData.marks),
       order: Number(formData.order),
@@ -100,18 +99,15 @@ export const useQuestionForm = () => {
     };
 
     try {
-      if (isEdit) {
-        const res = await updateQuestionApi(id as string, payload);
-        if (res) {
-          toast.success("Question updated successfully!");
-          navigate("/questions");
-        }
+      const res = isEdit 
+        ? await updateQuestionApi(id as string, payload)
+        : await createQuestionApi(payload);
+
+      if (res?.success) {
+        toast.success(res.message || `Question ${isEdit ? 'updated' : 'created'} successfully!`);
+        navigate("/questions");
       } else {
-        const res = await createQuestionApi(payload);
-        if (res) {
-          toast.success("Question created successfully!");
-          navigate("/questions");
-        }
+        toast.error(res?.message || "Something went wrong");
       }
     } catch (error) {
       console.error("Error during submit", error);

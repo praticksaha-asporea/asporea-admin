@@ -240,6 +240,9 @@ const AssignmentForm = () => {
                 <Calendar className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
                 <input
                   type="date"
+                  min={new Date().toISOString().split("T")[0]}
+                  onKeyDown={(e) => e.preventDefault()}
+                  onClick={(e) => e.currentTarget.showPicker?.()}  
                   {...formik.getFieldProps("effectiveFrom")}
                   className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
                 />

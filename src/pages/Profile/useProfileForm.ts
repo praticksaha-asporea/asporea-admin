@@ -7,23 +7,17 @@ import { toast } from "react-hot-toast";
 import { updateProfileApi } from "../../service/apis/user.api";
 import { setUser } from "../../store/auth.store";
 import type { RootState } from "../../store/store";
+import type { ProfilePayload } from "../../types/payloads/user/user.payloads";
+import type { UserResponseData } from "../../types/responses/user/user.responses";
 
-export type ProfileFormValues = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  whatsappNumber: string;
-  address: string;
-  passportStatus: string;
-  passportNo: string;
-  enquired: string;
-  notificationPreference: {
-    sms: boolean;
-    whatsapp: boolean;
-    email: boolean;
-  };
-};
+export type ProfileFormValues = Omit<ProfilePayload, "id" | "profilePicData">;
+
+  export interface AreaPixels {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 const emptyValues: ProfileFormValues = {
   firstName: "",
@@ -55,10 +49,10 @@ const validationSchema = Yup.object({
   }
 
 
+
 export const useProfileForm = () => {
   const dispatch = useDispatch();
-  const reduxUser = useSelector((state: RootState) => (state.authSlice as any).user);
-
+  const reduxUser = useSelector((state: RootState) => state.authSlice.user) as UserResponseData | null;
   const [loading, setLoading]       = useState(false);
   const [fetching, setFetching]     = useState(true);
   const [apiError, setApiError]     = useState<string | null>(null);
@@ -72,7 +66,7 @@ export const useProfileForm = () => {
   const [tempImageSrc, setTempImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<AreaPixels | null>(null);
 
   useEffect(() => {
     if (reduxUser?.profilePic?.path) {
@@ -112,11 +106,12 @@ export const useProfileForm = () => {
     };
     reader.readAsDataURL(file);
   };
-
-  const getCroppedImg = async () => {
+const getCroppedImg = async () => {
     try {
+      if (!croppedAreaPixels || !tempImageSrc) return;  
+
       const image = new Image();
-      image.src = tempImageSrc!;
+      image.src = tempImageSrc;
       await new Promise((resolve) => (image.onload = resolve));
 
       const canvas = document.createElement("canvas");
@@ -148,7 +143,7 @@ export const useProfileForm = () => {
     }
   };
 
-  // 🌟 Skip Cropping Option
+  
   const useOriginalImg = () => {
     setImgSrc(tempImageSrc!);
     setFileInput(tempImageSrc!);
@@ -156,23 +151,25 @@ export const useProfileForm = () => {
     toast.success("Original image selected!");
   };
 
-  // 🌟 Permanent removal signal dispatch
+  
   const handleAvatarReset = () => {
     setFileInput("REMOVE");
     setImgSrc("");
     toast.success("Picture staging area cleared! Click 'Save Changes' to confirm.");
   };
-
-  const formik = useFormik<ProfileFormValues>({
+const formik = useFormik<ProfileFormValues>({
     initialValues: emptyValues,
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
+      
+      if (!reduxUser?._id) return;
+
       setLoading(true);
       setApiError(null);
       try {
-        // 🌟 Seamlessly inject our image payload straight to your /user/profile-update endpoint
-        const addValues = {
+       
+        const addValues: ProfilePayload = {
           id: reduxUser._id,
           ...values,
           profilePicData: fileInput || "",
@@ -182,17 +179,15 @@ export const useProfileForm = () => {
         if (res?.success !== false) {
           toast.success("Profile updated successfully.");
 
-          // Force local immutable deep updates to sync store variables
-          let syncedReduxUser = { ...reduxUser, ...values };
           
-          if (fileInput === "REMOVE") {
-            syncedReduxUser.profilePic = null;
-          } else if (res?.data?.profilePic) {
-            syncedReduxUser.profilePic = res.data.profilePic;
-          }
+          const syncedReduxUser: UserResponseData = {
+            ...reduxUser,
+            ...values,
+            profilePic: fileInput === "REMOVE" ? null : (res?.data?.profilePic ?? reduxUser.profilePic)
+          };
 
           dispatch(setUser(syncedReduxUser));
-          setFileInput(""); // Resets alerting system flags on success
+          setFileInput(""); 
         } else {
           toast.error(res?.message ?? "Failed to update profile.");
         }

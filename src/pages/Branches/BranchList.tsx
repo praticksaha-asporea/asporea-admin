@@ -7,25 +7,14 @@ import CustomTable, {
 } from "../../components/UI/customTable/CustomTable";
 import { getBranchesApi } from "../../service/apis/branch.api";
 import useDebounce from "../../utils/useDebounce";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type Branch = {
-  _id: string;
-  title: string;
-  location: string;
-  timeZone: string;
-  counters: number;
-  workDays: string[];
-  status?: string;
-};
+import type { BranchResponseData } from "../../types/responses/branch/branch.responses";
 
 // ─── Cell renderers ───────────────────────────────────────────────────────────
 
 function BranchCell({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-[#0054a6] border border-blue-100/50 shrink-0">
+      <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-[#0054a6] border border-blue-100/50 shrink-0">
         <Building2 className="w-5 h-5" />
       </div>
       <p className="text-sm font-bold text-gray-800">{title}</p>
@@ -33,12 +22,13 @@ function BranchCell({ title }: { title: string }) {
   );
 }
 
+ 
 function LocationCell({ location, timeZone }: { location: string; timeZone: string }) {
   return (
     <div>
       <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600">
         <MapPin className="w-4 h-4 text-orange-400 shrink-0" />
-        <span className="truncate max-w-[160px]">{location}</span>
+        <span className="truncate max-w-40">{location}</span>
       </div>
       <p className="text-xs text-gray-400 font-medium mt-1 pl-5">{timeZone}</p>
     </div>
@@ -60,7 +50,7 @@ function WorkDaysCell({ workDays }: { workDays: string[] }) {
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const columns: ColumnDef<Branch>[] = [
+const columns: ColumnDef<BranchResponseData>[] = [
   { header: "Branch",              accessor: (row) => <BranchCell title={row.title} /> },
   { header: "Location & Timezone", accessor: (row) => <LocationCell location={row.location} timeZone={row.timeZone} /> },
   { header: "Counters",            accessor: (row) => <span className="text-lg font-black text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">{row.counters ?? 0}</span> },
@@ -89,7 +79,7 @@ const PAGE_SIZE = 10;
 const BranchList = () => {
   const navigate = useNavigate();
 
-  const [branches, setBranches]     = useState<Branch[]>([]);
+  const [branches, setBranches]     = useState<BranchResponseData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage]             = useState(1);
   const [search, setSearch]         = useState("");
@@ -127,7 +117,7 @@ const BranchList = () => {
 
   useEffect(() => { fetchBranches(); }, [fetchBranches]);
 
-  const handleEdit = (branch: Branch) => navigate(`/branches/edit/${branch._id}`);
+  const handleEdit = (branch: BranchResponseData) => navigate(`/branches/edit/${branch._id}`);
 
   if (error) {
     return (
@@ -139,7 +129,7 @@ const BranchList = () => {
   }
 
   return (
-    <CustomTable<Branch>
+    <CustomTable<BranchResponseData>
       title="Branches"
       subtitle="Manage physical locations and operations."
       addLabel="Add Branch"

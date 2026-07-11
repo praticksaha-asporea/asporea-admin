@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";  
 import { getSectionsApi, getSectionDetailApi, updateSectionApi } from "../../../service/apis/assessmentSection.api";
-
+import type { AssessmentSection } from "../../../types/responses/assessment/section/assessmentSection.responses";
 export const useEditSection = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const [parentSections, setParentSections] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const [parentSections, setParentSections] = useState<AssessmentSection[]>([]);  
+const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   
  
@@ -20,24 +20,30 @@ export const useEditSection = () => {
     maxScore: "",
   });
 
-  useEffect(() => {
+ useEffect(() => {
     const initData = async () => {
       if (!id) return;
       try {
+         
         const sectionsRes = await getSectionsApi();
-        const allSections = sectionsRes?.data?.data?.data || sectionsRes?.data?.data || [];
-        const parents = allSections.filter((s: any) => (!s.underSection || s.underSection.trim() === "") && s._id !== id);
-        setParentSections(parents);
+        if (sectionsRes?.success && sectionsRes.data) {
+          const allSections = Array.isArray(sectionsRes.data) ? sectionsRes.data : (sectionsRes.data as any).data || [];
+          const parents = allSections.filter((s: AssessmentSection) => (!s.underSection || s.underSection.trim() === "") && s._id !== id);
+          setParentSections(parents);
+        }
 
+         
         const detailRes = await getSectionDetailApi(id);
-        const currentSection = detailRes?.data?.data || detailRes?.data;
-        if (currentSection) {
+        if (detailRes?.success && detailRes.data) {
+          const currentSection = detailRes.data;
           setInitialData({
             section: currentSection.section || "",
             shortName: currentSection.shortName || "",
             underSection: currentSection.underSection || "",
             maxScore: currentSection.maxScore ? String(currentSection.maxScore) : "",
           });
+        } else {
+          toast.error(detailRes?.message || "Failed to load section detail");
         }
       } catch (error) {
         console.error("Error fetching section detail", error);
@@ -94,12 +100,14 @@ export const useEditSection = () => {
         maxScore: values.underSection === "" && values.maxScore ? Number(values.maxScore) : undefined,
       };
 
-      if (!id) return;
+     if (!id) return;
       try {
         const res = await updateSectionApi(id, payload);
-        if (res) {
-          toast.success("Section updated successfully!");
+        if (res?.success) {
+          toast.success(res.message || "Section updated successfully!");
           navigate("/assessment-sections");
+        } else {
+          toast.error(res?.message || "Failed to update section");
         }
       } catch (error) {
         console.error("Error updating section", error);

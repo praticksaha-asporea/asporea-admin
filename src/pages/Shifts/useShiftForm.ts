@@ -3,14 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
-import { createShiftApi, updateShiftApi, getShiftByIdApi, type ScheduleObj } from "../../service/apis/shift.api";
+import { createShiftApi, updateShiftApi, getShiftByIdApi } from "../../service/apis/shift.api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+ 
+import type { ShiftPayload, ScheduleObj } from "../../types/payloads/shift/shift.payloads";
 
-export type ShiftFormValues = {
-  shiftName: string;
-  schedules: ScheduleObj[];
-};
+ 
+export type ShiftFormValues = ShiftPayload;
 
 export const emptySchedule: ScheduleObj = {
   days: [],
@@ -25,14 +24,12 @@ const emptyValues: ShiftFormValues = {
 };
 
 // ─── Validation ───────────────────────────────────────────────────────────────
-
 const validationSchema = Yup.object({
   shiftName: Yup.string().required("Shift name is required"),
   schedules: Yup.array().min(1, "Add at least one schedule configuration"),
 });
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
-
 export const useShiftForm = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -42,7 +39,7 @@ export const useShiftForm = () => {
   const [fetching, setFetching]   = useState(isEdit);
   const [apiError, setApiError]   = useState<string | null>(null);
 
-  // ── Schedule builder state (lives here, not in the component) ──────────────
+  // ── Schedule builder state ──
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleObj>(emptySchedule);
   const [editingIndex, setEditingIndex]         = useState<number | null>(null);
 
@@ -108,7 +105,7 @@ export const useShiftForm = () => {
 
     fetchShift();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, isEdit]);
 
   // ── Schedule helpers ───────────────────────────────────────────────────────
   const toggleScheduleDay = (day: string) => {
@@ -120,10 +117,10 @@ export const useShiftForm = () => {
 
   const addOrUpdateSchedule = (): boolean => {
     if (!currentSchedule.startTime || !currentSchedule.endTime || currentSchedule.days.length === 0) {
-      return false; // caller shows the error
+      return false;
     }
     if (currentSchedule.endTime <= currentSchedule.startTime) {
-      return false; // end must be strictly after start — no overnight crossing
+      return false;
     }
     const updated = [...formik.values.schedules];
     if (editingIndex !== null) {
@@ -160,7 +157,6 @@ export const useShiftForm = () => {
     fetching,
     apiError,
     isEdit,
-    // schedule builder
     currentSchedule,
     setCurrentSchedule,
     editingIndex,

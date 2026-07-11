@@ -8,7 +8,6 @@ const PositionForm = () => {
   const navigate = useNavigate();
   const { formik, loading, fetching, isEdit, docTypes, brochureFile, brochurePreview, handleBrochureChange, clearBrochure } = usePositionForm();
 
-  // ── Fetch skeleton ─────────────────────────────────────────────────────────
   if (fetching) {
     return (
       <div className="max-w-5xl mx-auto pb-20 animate-pulse space-y-8">
@@ -21,7 +20,6 @@ const PositionForm = () => {
     );
   }
 
-  // map docTypes → SelectOption
   const docOptions: SelectOption[] = docTypes.map((d) => ({
     value: d._id,
     label: d.title,
@@ -31,9 +29,10 @@ const PositionForm = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto pb-20">
 
-      {/* ── Top Bar ── */}
+      {/* ── Top Bar Control Identity ── */}
       <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
         <button
+          type="button"
           onClick={() => navigate("/positions")}
           className="flex items-center gap-2 text-gray-500 hover:text-gray-800 font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition-all"
         >
@@ -58,14 +57,12 @@ const PositionForm = () => {
         </button>
       </div>
 
-      {/* ── API error banner ── */}
-
       <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* ── Left: Basic Info + Required Docs ── */}
+        {/* ── Left Side Layout: Details & Rules ── */}
         <div className="lg:col-span-2 space-y-8">
 
-          {/* Title + Details */}
+          {/* Title + Details Content */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
@@ -75,7 +72,7 @@ const PositionForm = () => {
             </div>
 
             <div className="space-y-6">
-              {/* Title */}
+              {/* Title Input */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                   Title <span className="text-red-500">*</span>
@@ -95,7 +92,7 @@ const PositionForm = () => {
                 )}
               </div>
 
-              {/* Details */}
+              {/* Textarea Details Input */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Details</label>
                 <textarea
@@ -108,7 +105,7 @@ const PositionForm = () => {
             </div>
           </div>
 
-          {/* Required Documents */}
+          {/* Required Documents Multi-Selection Dropdown wrapper */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0D80F2] rounded-l-3xl" />
 
@@ -117,7 +114,6 @@ const PositionForm = () => {
               <h2 className="text-2xl font-medium tracking-wider text-gray-700">Required Documents</h2>
             </div>
 
-            {/* relative wrapper so dropdown escapes card */}
             <div className="relative">
               <MultiSelectSearch
                 options={docOptions}
@@ -131,10 +127,10 @@ const PositionForm = () => {
 
         </div>
 
-        {/* ── Right: Mandatory Docs + Summary ── */}
+        {/* ── Right Side Layout: Summary, Mandatory & Brochures ── */}
         <div className="space-y-8">
 
-          {/* Mandatory Documents */}
+          {/* Mandatory Documents Control */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728] rounded-l-3xl" />
 
@@ -154,7 +150,7 @@ const PositionForm = () => {
             </div>
           </div>
 
-          {/* Summary card */}
+          {/* Configuration Summary Badge Counter Card */}
           <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-3">
             <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Summary</p>
             <div className="flex justify-between items-center">
@@ -171,12 +167,11 @@ const PositionForm = () => {
             </div>
           </div>
 
-          {/* Position Brochure upload */}
+          {/* Position Brochure Multi-Part Multer File Upload Interface */}
           <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-gray-300" />
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Position Brochure</p>
 
-            {/* Current / selected file */}
             {(brochureFile || brochurePreview) ? (
               <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-100 rounded-2xl">
                 <FileCheck className="w-5 h-5 text-green-500 shrink-0" />
@@ -199,7 +194,6 @@ const PositionForm = () => {
                 </button>
               </div>
             ) : (
-              /* Drop zone */
               <label
                 htmlFor="brochure-upload"
                 className="flex flex-col items-center gap-3 p-6 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:border-[#0054a6]/40 hover:bg-blue-50/30 transition-all group"

@@ -5,15 +5,11 @@ import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import { createPositionApi, updatePositionApi, getPositionByIdApi } from "../../service/apis/position.api";
 import { getDocumentTypesApi } from "../../service/apis/documentType.api";
+import type { PositionPayload } from "../../types/payloads/position/position.payloads";
+import type { PositionResponseData } from "../../types/responses/position/position.responses";
+import type { DocumentTypeResponseData } from "../../types/responses/document/documentType.responses";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type PositionFormValues = {
-  title: string;
-  details: string;
-  requiredDocuments: string[];
-  mandatoryDocuments: string[];
-};
+export type PositionFormValues = Omit<PositionPayload, "positionBrochure">;
 
 export type DocTypeOption = {
   _id: string;
@@ -28,14 +24,10 @@ const emptyValues: PositionFormValues = {
   mandatoryDocuments: [],
 };
 
-// ─── Validation ───────────────────────────────────────────────────────────────
-
 const validationSchema = Yup.object({
-  title:   Yup.string().required("Title is required"),
+  title: Yup.string().required("Title is required"),
   details: Yup.string().optional()
 });
-
-// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export const usePositionForm = () => {
   const navigate = useNavigate();
@@ -46,7 +38,7 @@ export const usePositionForm = () => {
   const [fetching, setFetching]         = useState(isEdit);
   const [docTypes, setDocTypes]         = useState<DocTypeOption[]>([]);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
-  const [brochurePreview, setBrochurePreview] = useState<string>("");   // existing URL from API
+  const [brochurePreview, setBrochurePreview] = useState<string>("");
 
   const handleBrochureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -58,14 +50,22 @@ export const usePositionForm = () => {
     setBrochurePreview("");
   };
 
-  // ── Load document types for dropdowns ─────────────────────────────────────
+  // Load document types for dropdown multi-select
   useEffect(() => {
     const loadDocTypes = async () => {
       try {
         const res = await getDocumentTypesApi({ limit: "100" });
-        setDocTypes(res?.data?.types ?? []);
+        // Handle explicit dynamic response layout mapping safely
+        const backendData = res?.data as unknown as { types?: DocumentTypeResponseData[] };
+        const items = backendData?.types ?? [];
+        
+        setDocTypes(items.map(t => ({
+          _id: t._id,
+          title: t.title,
+          section: t.section
+        })));
       } catch {
-        // non-fatal
+        // Safe silence non-fatal
       }
     };
     loadDocTypes();
@@ -81,57 +81,53 @@ export const usePositionForm = () => {
         if (isEdit && id) {
           const res = await updatePositionApi(id, values, brochureFile);
           if (res?.success !== false) {
-            toast.success("Position updated.");
+            toast.success("Position updated successfully.");
             navigate("/positions");
           }
         } else {
           const res = await createPositionApi(values, brochureFile);
           if (res?.success !== false) {
-            toast.success("Position created.");
+            toast.success("Position created successfully.");
             navigate("/positions");
           }
         }
       } catch (err: any) {
-        // toast.error(err?.response?.data?.message ?? "Something went wrong.");
+        toast.error(err?.response?.data?.message ?? "Something went wrong.");
       } finally {
         setLoading(false);
       }
     },
   });
 
-  // ── Pre-fill on edit ───────────────────────────────────────────────────────
+  // Pre-fill fields safely on edit scenario
   useEffect(() => {
     if (!isEdit || !id) return;
 
     const fetchPosition = async () => {
       setFetching(true);
-      // setApiError(null);
       try {
         const res = await getPositionByIdApi(id);
-        const p = res?.data ?? res;
+        const p = res?.data as PositionResponseData | undefined;
         if (p) {
           formik.setValues({
-            title:              p.title   ?? "",
-            details:            p.details ?? "",
-            requiredDocuments:  (p.requiredDocuments  ?? []).map((d: any) => d?._id ?? d),
-            mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d: any) => d?._id ?? d),
+            title: p.title ?? "",
+            details: p.details ?? "",
+            requiredDocuments: (p.requiredDocuments ?? []).map((d) => d?._id ?? d),
+            mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) => d?._id ?? d),
           });
           if (p.positionBrochure) setBrochurePreview(p.positionBrochure);
         }
-      } 
-      catch (err: any) {
-        // setApiError(err?.response?.data?.message ?? "Failed to load position.");
-      } 
-      finally {
+      } catch {
+        // Catch block boundary
+      } finally {
         setFetching(false);
       }
     };
 
     fetchPosition();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, isEdit]);
 
-  // ── Document toggle helpers ────────────────────────────────────────────────
   const toggleDoc = (field: "requiredDocuments" | "mandatoryDocuments", docId: string) => {
     const current = formik.values[field];
     const next = current.includes(docId)
