@@ -1,5 +1,6 @@
 
 export interface IUser {
+  _id: string;
   firstName?: string;
   lastName?: string;
   email: string;
@@ -8,8 +9,7 @@ export interface IUser {
   address?: string;
 
   password?: string;
-  role?: "admin" | "tac" | "user" | "foe" | "finance" | "coordinator" | "pca" | "pcra" | "institute" | "sub_pca" | "branch_head" | "tac_head",
-  passportStatus?: "having" | "not" | "applied";
+  role?: "admin" | "tac" | "user" | "foe" | "finance" | "coordinator" | "pca" | "pcra" | "institute" | "sub_pca" | "branch_head" | "tac_head";  passportStatus?: "having" | "not" | "applied";
   passportNo: string;
   enquired?: "yes" | "no";
 
@@ -28,7 +28,6 @@ export interface IUser {
 
   reviewer?: string;
   createdBy?: string;
-
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }

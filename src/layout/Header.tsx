@@ -186,6 +186,7 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
     </header>
     <ChangePasswordModal 
         isOpen={isPasswordModalOpen} 
+        userId={user?._id ?? ""}
         onClose={() => setIsPasswordModalOpen(false)} 
       />
     </>
