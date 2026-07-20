@@ -8,6 +8,7 @@ import {
   HandCoins,
   ClipboardList,
   UploadCloud,
+  Link2,
 } from "lucide-react";
 import logo from "../assets/asporeaLogo.png";
 
@@ -53,6 +54,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         { name: "Questions", path: "/questions" }
       ],
     },
+    { name: "External Sources", icon: Link2, path: "/external-sources" },
   ];
 
   useEffect(() => {

@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound/NotFound"
 import Uploads from "./pages/uploads/uploads";
 import SectionList from "./pages/Assessment/Sections/SectionList";
 import EditSection from "./pages/Assessment/Sections/EditSection";
+import ExternalSources from "./pages/ExternalSources";
 
 function App() {
   return (
@@ -64,6 +65,8 @@ function App() {
             <Route path="/questions/add" element={<QuestionForm />} />
             <Route path="/questions/edit/:id" element={<QuestionForm />} />
             <Route path="/uploads" element={<Uploads />} />
+            <Route path="/external-sources" element={<ExternalSources />} />
+
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
