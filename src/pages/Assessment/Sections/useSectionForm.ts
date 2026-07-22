@@ -9,7 +9,7 @@ import {
 import type { AssessmentSection } from "../../../types/responses/assessment/section/assessmentSection.responses";
 
 export const useSectionForm = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 const [parentSections, setParentSections] = useState<AssessmentSection[]>([]);  
 const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -24,7 +24,7 @@ useEffect(() => {
         }
       } catch (error) {
         console.error("Error fetching sections:", error);
-        toast.error("Failed to load parent sections");
+         
       } finally {
         setIsFetching(false);
       }

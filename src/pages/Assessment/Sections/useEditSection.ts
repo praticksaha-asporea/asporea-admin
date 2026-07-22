@@ -47,7 +47,7 @@ const [isLoading, setIsLoading] = useState(false);
         }
       } catch (error) {
         console.error("Error fetching section detail", error);
-        toast.error("Failed to load section data");
+        
       } finally {
         setIsFetching(false);
       }

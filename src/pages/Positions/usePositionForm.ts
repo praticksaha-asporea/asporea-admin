@@ -92,7 +92,7 @@ export const usePositionForm = () => {
           }
         }
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Something went wrong.");
+        console.error(err);
       } finally {
         setLoading(false);
       }

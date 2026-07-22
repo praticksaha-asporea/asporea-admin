@@ -44,9 +44,7 @@ export const useChangePassword = (userId: string, onClose: () => void) => {
           toast.error(res?.message ?? "Failed to update password.");
         }
       } catch (err: any) {
-        toast.error(
-          err?.response?.data?.message ?? "Something went wrong. Please try again."
-        );
+      console.error("API Error:", err);
       } finally {
         setLoading(false);
       }

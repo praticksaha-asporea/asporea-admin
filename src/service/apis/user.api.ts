@@ -16,6 +16,7 @@ export const getUsersApi: (
     params?: Record<string, string>,
   ): Promise<AxiosResponse<ApiResponse<PaginatedData<UserResponseData>>>> => {
     const res = await httpsCall.get("/admin/user/get-list", { params });
+      
     return res;
   },
 );

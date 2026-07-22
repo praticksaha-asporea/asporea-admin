@@ -26,6 +26,7 @@ import Uploads from "./pages/uploads/uploads";
 import SectionList from "./pages/Assessment/Sections/SectionList";
 import EditSection from "./pages/Assessment/Sections/EditSection";
 import ExternalSources from "./pages/ExternalSources";
+import SourceForm from "./pages/ExternalSources/SourceForm";
 
 function App() {
   return (
@@ -66,6 +67,10 @@ function App() {
             <Route path="/questions/edit/:id" element={<QuestionForm />} />
             <Route path="/uploads" element={<Uploads />} />
             <Route path="/external-sources" element={<ExternalSources />} />
+            <Route path="/external-sources/add" element={<SourceForm />} />
+            <Route path="/external-sources/edit/:id" element={<SourceForm />} />
+
+            
 
           </Route>
         </Route>

@@ -66,7 +66,7 @@ export const useGeneralSettings = () => {
           toast.error(res?.message ?? "Failed to update settings.");
         }
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Something went wrong.");
+        console.error(err)
       } finally {
         setLoading(false);
       }

@@ -192,9 +192,7 @@ const formik = useFormik<ProfileFormValues>({
           toast.error(res?.message ?? "Failed to update profile.");
         }
       } catch (err: any) {
-        toast.error(
-          err?.response?.data?.message ?? "Something went wrong. Please try again."
-        );
+       console.error(err)
       } finally {
         setLoading(false);
       }

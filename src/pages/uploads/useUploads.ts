@@ -16,7 +16,7 @@ export const useUploads = () => {
   const fetchUploads = async () => {
     setLoading(true);
     try {
-      // Strictly typed query payload mapping
+       
       const params: UploadListParams = { page: String(page), limit: "12" };
       if (roleFilter) params.role = roleFilter;
 
@@ -35,8 +35,7 @@ export const useUploads = () => {
         toast.error(res?.message ?? "Failed to fetch uploads");
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? "Something went wrong while loading uploads");
-    } finally {
+      console.error(error)    } finally {
       setLoading(false);
     }
   };

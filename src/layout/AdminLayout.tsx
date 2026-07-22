@@ -47,9 +47,8 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 
  
-const VIDEO_SOURCE = "https://www.pexels.com/download/video/34540815/"; 
+// const VIDEO_SOURCE = "https://www.pexels.com/download/video/34540815/"; 
 
-const FALLBACK_IMAGE = "https://images.pexels.com/photos/7334502/pexels-photo-7334502.jpeg";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -70,21 +69,21 @@ const AdminLayout = () => {
         <main
           className="flex-1 overflow-y-auto relative z-0"
           style={{
-            backgroundImage: `url('${FALLBACK_IMAGE}')`,  
+            
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         >
            
-          <video
+          {/* <video
             src={VIDEO_SOURCE}
             autoPlay
             loop
             muted
             playsInline
             className="absolute inset-0 w-full h-full object-cover pointer-events-none -z-10 object-center"
-          />
+          /> */}
 
           
           <div className="relative z-10 min-h-full w-full">

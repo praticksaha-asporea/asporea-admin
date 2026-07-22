@@ -37,10 +37,9 @@ const Dashboard = () => {
     >
       
       <div className="space-y-8 w-full">
-  <div className="flex flex-col items-center justify-center pt-8 px-4 md:items-end md:justify-end md:pr-16 w-full transition-all duration-300">
+<div className="flex min-h-[calc(100vh-120px)] -mt-30 w-full items-center justify-center p-4">    
     
-    
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center  text-center">
       
       {/* Welcome Message */}
       <h1 className="text-2xl sm:text-3xl  sm:mt-48 tracking-wider font-medium text-gray-600">

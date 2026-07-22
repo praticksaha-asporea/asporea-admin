@@ -94,7 +94,7 @@ export const useUserForm = () => {
           }
         }
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Something went wrong.");
+         console.error(err)
       } finally {
         setLoading(false);
       }
@@ -120,7 +120,7 @@ export const useUserForm = () => {
             whatsappNumber: u.whatsappNumber ?? "",
             address: u.address ?? "",
             role: u.role ?? "",
-            password: "", // Security architecture: Never pre-fill existing passwords
+            password: "",  
             status: u.status ?? "active",  
             passportStatus: u.passportStatus ?? "not",
             passportNo: u.passportNo ?? "",
@@ -134,7 +134,7 @@ export const useUserForm = () => {
           });
         }
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Failed to load user details.");
+        console.error(err)
       } finally {
         setFetching(false);
       }
