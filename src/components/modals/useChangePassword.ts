@@ -4,13 +4,22 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { changePasswordApi } from "../../service/apis/auth.api";
 
- 
+
 import type { ChangePasswordPayload } from "../../types/payloads/auth/auth.payloads";
 
 export type ChangePasswordValues = Omit<ChangePasswordPayload, "userId">;
 
 export const useChangePassword = (userId: string, onClose: () => void) => {
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [showPass, setShowPass] = useState({
+    old: false,
+    new: false,
+    confirm: false,
+  });
+
+  const toggleVisibility = (field: "old" | "new" | "confirm") =>
+    setShowPass((prev) => ({ ...prev, [field]: !prev[field] }));
 
   const validationSchema = Yup.object({
     oldPassword: Yup.string().required("Old password is required"),
@@ -44,12 +53,12 @@ export const useChangePassword = (userId: string, onClose: () => void) => {
           toast.error(res?.message ?? "Failed to update password.");
         }
       } catch (err: any) {
-      console.error("API Error:", err);
+        console.error("API Error:", err);
       } finally {
         setLoading(false);
       }
     },
   });
 
-  return { formik, loading };
+  return { formik, loading, showPass, toggleVisibility };
 };

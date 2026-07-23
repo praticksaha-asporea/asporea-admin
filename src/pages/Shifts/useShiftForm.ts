@@ -5,10 +5,10 @@ import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import { createShiftApi, updateShiftApi, getShiftByIdApi } from "../../service/apis/shift.api";
 
- 
+
 import type { ShiftPayload, ScheduleObj } from "../../types/payloads/shift/shift.payloads";
 
- 
+
 export type ShiftFormValues = ShiftPayload;
 
 export const emptySchedule: ScheduleObj = {
@@ -35,13 +35,13 @@ export const useShiftForm = () => {
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
 
-  const [loading, setLoading]     = useState(false);
-  const [fetching, setFetching]   = useState(isEdit);
-  const [apiError, setApiError]   = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(isEdit);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // ── Schedule builder state ──
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleObj>(emptySchedule);
-  const [editingIndex, setEditingIndex]         = useState<number | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const formik = useFormik<ShiftFormValues>({
     initialValues: emptyValues,
@@ -86,8 +86,8 @@ export const useShiftForm = () => {
       setFetching(true);
       setApiError(null);
       try {
-        const res = await getShiftByIdApi(id);
-        const s = res?.data ?? res;
+        const { data: s } = await getShiftByIdApi(id);
+        // const s = res?.data ?? res;
         if (s) {
           formik.setValues({
             shiftName: s.shiftName ?? "",

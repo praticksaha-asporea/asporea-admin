@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Lock, KeyRound, EyeOff, Eye, X, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useChangePassword } from "./useChangePassword";
@@ -14,16 +14,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   userId,
   onClose,
 }) => {
-  const { formik, loading } = useChangePassword(userId, onClose);
-  const [showPass, setShowPass] = useState({
-    old: false,
-    new: false,
-    confirm: false,
-  });
-
-  const toggleVisibility = (field: "old" | "new" | "confirm") =>
-    setShowPass((prev) => ({ ...prev, [field]: !prev[field] }));
-
+  const { formik, loading, showPass, toggleVisibility } = useChangePassword(userId, onClose);
   return (
     <AnimatePresence>
       {isOpen && (
@@ -81,11 +72,10 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                     type={showPass.old ? "text" : "password"}
                     placeholder="Enter current password"
                     {...formik.getFieldProps("oldPassword")}
-                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
-                      formik.touched.oldPassword && formik.errors.oldPassword
-                        ? "border-red-400 bg-white"
-                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
-                    }`}
+                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.oldPassword && formik.errors.oldPassword
+                      ? "border-red-400 bg-white"
+                      : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                      }`}
                   />
                   <button
                     type="button"
@@ -117,11 +107,10 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                     type={showPass.new ? "text" : "password"}
                     placeholder="Enter new password"
                     {...formik.getFieldProps("newPassword")}
-                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
-                      formik.touched.newPassword && formik.errors.newPassword
-                        ? "border-red-400 bg-white"
-                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                    }`}
+                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.newPassword && formik.errors.newPassword
+                      ? "border-red-400 bg-white"
+                      : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                      }`}
                   />
                   <button
                     type="button"
@@ -153,12 +142,11 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                     type={showPass.confirm ? "text" : "password"}
                     placeholder="Confirm new password"
                     {...formik.getFieldProps("confirmPassword")}
-                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
-                      formik.touched.confirmPassword &&
+                    className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-sm transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.confirmPassword &&
                       formik.errors.confirmPassword
-                        ? "border-red-400 bg-white"
-                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                    }`}
+                      ? "border-red-400 bg-white"
+                      : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                      }`}
                   />
                   <button
                     type="button"

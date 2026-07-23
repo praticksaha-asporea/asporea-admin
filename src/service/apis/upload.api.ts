@@ -13,12 +13,12 @@ export const getUploadsListApi: (
     params?: UploadListParams,
   ): Promise<AxiosResponse<ApiResponse<PaginatedData<UploadResponseData>>>> => {
     const res = await httpsCall.get("/admin/uploads", { params });
-    return res; 
+    return res;
   },
 );
 
-export const deleteUploadApi: (id: string) => Promise<ApiResponse<any>> =
-  catchAsync(async (id: string): Promise<AxiosResponse<ApiResponse<any>>> => {
+export const deleteUploadApi: (id: string) => Promise<ApiResponse<UploadResponseData>> =
+  catchAsync(async (id: string): Promise<AxiosResponse<ApiResponse<UploadResponseData>>> => {
     const res = await httpsCall.delete("/admin/uploads", { params: { id } });
     return res;
   });

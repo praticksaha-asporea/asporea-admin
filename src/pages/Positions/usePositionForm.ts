@@ -34,9 +34,9 @@ export const usePositionForm = () => {
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
 
-  const [loading, setLoading]           = useState(false);
-  const [fetching, setFetching]         = useState(isEdit);
-  const [docTypes, setDocTypes]         = useState<DocTypeOption[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(isEdit);
+  const [docTypes, setDocTypes] = useState<DocTypeOption[]>([]);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
   const [brochurePreview, setBrochurePreview] = useState<string>("");
 
@@ -58,7 +58,7 @@ export const usePositionForm = () => {
         // Handle explicit dynamic response layout mapping safely
         const backendData = res?.data as unknown as { types?: DocumentTypeResponseData[] };
         const items = backendData?.types ?? [];
-        
+
         setDocTypes(items.map(t => ({
           _id: t._id,
           title: t.title,
@@ -112,8 +112,15 @@ export const usePositionForm = () => {
           formik.setValues({
             title: p.title ?? "",
             details: p.details ?? "",
-            requiredDocuments: (p.requiredDocuments ?? []).map((d) => d?._id ?? d),
-            mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) => d?._id ?? d),
+            // requiredDocuments: (p.requiredDocuments ?? []).map((d) => d?._id ?? d),
+            // mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) => d?._id ?? d),
+            requiredDocuments: (p.requiredDocuments ?? []).map((d) =>
+              typeof d === "string" ? d : d._id
+            ),
+
+            mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) =>
+              typeof d === "string" ? d : d._id
+            ),
           });
           if (p.positionBrochure) setBrochurePreview(p.positionBrochure);
         }

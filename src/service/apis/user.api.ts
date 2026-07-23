@@ -16,7 +16,7 @@ export const getUsersApi: (
     params?: Record<string, string>,
   ): Promise<AxiosResponse<ApiResponse<PaginatedData<UserResponseData>>>> => {
     const res = await httpsCall.get("/admin/user/get-list", { params });
-      
+
     return res;
   },
 );
@@ -48,10 +48,10 @@ export const getUserByIdApi: (id: string) => Promise<ApiResponse<any>> =
 
 export const updateProfileApi: (
   data: ProfilePayload,
-) => Promise<ApiResponse<any>> = catchAsync(
+) => Promise<ApiResponse<UserResponseData>> = catchAsync(
   async (
     data: ProfilePayload,
-  ): Promise<AxiosResponse<ApiResponse<any>>> => {
+  ): Promise<AxiosResponse<ApiResponse<UserResponseData>>> => {
     const res = await httpsCall.patch("/user/profile-update", data);
     return res;
   },
@@ -81,9 +81,9 @@ export const updateUserApi: (
   },
 );
 
-export const deleteUserApi: (id: number | string) => Promise<ApiResponse<any>> =
+export const deleteUserApi: (id: number | string) => Promise<ApiResponse<UserResponseData>> =
   catchAsync(
-    async (id: number | string): Promise<AxiosResponse<ApiResponse<any>>> => {
+    async (id: number | string): Promise<AxiosResponse<ApiResponse<UserResponseData>>> => {
       const res = await httpsCall.delete(`/users/${id}`);
       return res;
     },

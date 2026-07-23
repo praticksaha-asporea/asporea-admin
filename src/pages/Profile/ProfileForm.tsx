@@ -37,7 +37,7 @@ const ProfileForm = () => {
     setZoom,
     setCroppedAreaPixels,
     getCroppedImg,
-    useOriginalImg,
+    useOriginalImg
   } = useProfileForm();
 
   // ── Fetch skeleton ─────────────────────────────────────────────────────────
@@ -73,6 +73,7 @@ const ProfileForm = () => {
                 alt="Profile"
                 onClick={() => setOpenPreview(true)}
                 className="w-16 h-16 rounded-2xl object-cover border-2 border-gray-100 cursor-pointer hover:scale-105 transition-transform shadow-sm"
+              // onError={() => { setImgSrc("") }}
               />
             ) : (
               <div
@@ -87,7 +88,7 @@ const ProfileForm = () => {
 
             <label
               htmlFor="avatar-upload"
-              className="absolute -bottom-1 -right-1 w-6 h-6  text-white rounded-lg flex items-center justify-center shadow-md cursor-pointer hover:bg-gray-300 transition-colors border border-white z-10"
+              className="absolute -bottom-1 -right-1 w-6 h-6  text-white rounded-lg flex items-center justify-center shadow-md cursor-pointer bg-red-400 hover:bg-red-600 transition-colors border border-white z-10"
             >
               <Camera className="w-3.5 h-3.5" />
             </label>
@@ -409,7 +410,7 @@ const ProfileForm = () => {
                 </button>
               </div>
 
-              
+
               <div className="relative w-full h-72 bg-slate-900 rounded-3xl overflow-hidden shadow-inner">
                 <Cropper
                   image={tempImageSrc}
@@ -422,7 +423,7 @@ const ProfileForm = () => {
                 />
               </div>
 
-              
+
               <div className="mt-6 space-y-1 px-1">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">
                   Zoom Control

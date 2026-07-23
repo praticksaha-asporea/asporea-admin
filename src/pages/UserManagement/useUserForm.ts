@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import type { UserPayload } from "../../types/payloads/user/user.payloads";
 import type { UserResponseData } from "../../types/responses/user/user.responses";
 
- 
+
 export type UserFormValues = UserPayload & {
   _showPassword: boolean;
 };
@@ -21,7 +21,7 @@ const emptyValues: UserFormValues = {
   address: "",
   role: "",
   password: "",
-  status: "active",  
+  status: "active",
   passportStatus: "not",
   passportNo: "",
   enquired: "no",
@@ -72,7 +72,7 @@ export const useUserForm = () => {
         const { _showPassword, ...cleanPayload } = values;
 
         if (isEdit && id) {
-       
+
           if (!cleanPayload.password) {
             delete cleanPayload.password;
           }
@@ -84,7 +84,7 @@ export const useUserForm = () => {
             toast.error(res?.message ?? "Failed to update user.");
           }
         } else {
-       
+
           const res = await createUserApi(cleanPayload);
           if (res?.success !== false) {
             toast.success("User created successfully");
@@ -94,7 +94,7 @@ export const useUserForm = () => {
           }
         }
       } catch (err: any) {
-         console.error(err)
+        console.error(err)
       } finally {
         setLoading(false);
       }
@@ -110,7 +110,7 @@ export const useUserForm = () => {
       try {
         const res = await getUserByIdApi(id);
         const u = (res?.data?.user ?? res) as UserResponseData;
-        
+
         if (u) {
           formik.setValues({
             firstName: u.firstName ?? "",
@@ -120,8 +120,8 @@ export const useUserForm = () => {
             whatsappNumber: u.whatsappNumber ?? "",
             address: u.address ?? "",
             role: u.role ?? "",
-            password: "",  
-            status: u.status ?? "active",  
+            password: "",
+            status: u.status ?? "active",
             passportStatus: u.passportStatus ?? "not",
             passportNo: u.passportNo ?? "",
             enquired: u.enquired ?? "no",
