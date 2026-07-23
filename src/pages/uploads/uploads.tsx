@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { SearchableSelect } from "../../components/UI/SearchableSelect";
+
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Filter,
-  Image as ImageIcon,
   FileText,
   ChevronLeft,
   ChevronRight,
   X,
-  Trash2
+  Trash2,
+  UploadCloud,
 } from "lucide-react";
 import { useUploads } from "./useUploads";
 import dayjs from "dayjs";
@@ -27,6 +29,11 @@ const Uploads = () => {
     totalPages,
     roleFilter,
     handleRoleChange,
+    userIdFilter,
+    handleUserChange,
+    roleUsers,
+  usersLoading,
+  setUserSearchTerm,
     fetchUploads
   } = useUploads();
   
@@ -98,20 +105,20 @@ const Uploads = () => {
       {/* Header Panel Control */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
-            <ImageIcon className="w-6 h-6 text-[#0D80F2]" /> User Uploads
+          <h1 className="text-2xl font-normal text-gray-800 tracking-tight flex items-center gap-2">
+            <UploadCloud className="w-6 h-6 text-[#0D80F2]" /> User Uploads
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             View and manage files uploaded by users
           </p>
         </div>
-
+         <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
           <Filter className="w-5 h-5 text-gray-400 ml-2" />
           <select
             value={roleFilter}
             onChange={handleRoleChange}
-            className="bg-transparent border-none outline-none text-sm font-bold text-gray-600 cursor-pointer pr-4"
+            className="bg-transparent capitalize border-none outline-none text-sm font-medium text-gray-600 cursor-pointer pr-4"
           >
             <option value="">All Roles</option>
             {VALID_ROLES.map((role) => (
@@ -121,8 +128,21 @@ const Uploads = () => {
             ))}
           </select>
         </div>
+       {roleFilter && (
+    <SearchableSelect
+      options={roleUsers.map((u) => ({
+        label: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
+        value: u._id,
+      }))}
+      value={userIdFilter}
+      onChange={handleUserChange}
+      onSearchChange={setUserSearchTerm}  
+      loading={usersLoading}              
+      placeholder="All Users in Role"
+    />
+  )}
       </div>
-
+</div>
       {/* Media Board Grid Area Boundaries */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

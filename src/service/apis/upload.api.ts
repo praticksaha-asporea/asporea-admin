@@ -13,7 +13,7 @@ export const getUploadsListApi: (
     params?: UploadListParams,
   ): Promise<AxiosResponse<ApiResponse<PaginatedData<UploadResponseData>>>> => {
     const res = await httpsCall.get("/admin/uploads", { params });
-    return res;
+    return res; 
   },
 );
 

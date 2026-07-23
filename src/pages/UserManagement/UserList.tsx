@@ -121,6 +121,7 @@ const UserList = () => {
 
   return (
     <CustomTable<UserResponseData>
+   
       title="User Management"
       subtitle="Manage your team members and their account permissions."
       addLabel="Add New User"
