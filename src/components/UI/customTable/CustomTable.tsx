@@ -93,7 +93,7 @@ function CustomTable<T extends { _id: number | string }>({
   const pageWindow = (() => {
     const half = 2;
     let start = Math.max(1, currentPage - half);
-    let end   = Math.min(totalPages, currentPage + half);
+    let end = Math.min(totalPages, currentPage + half);
     if (end - start < 4) {
       if (start === 1) end = Math.min(totalPages, start + 4);
       else start = Math.max(1, end - 4);
@@ -242,9 +242,8 @@ function CustomTable<T extends { _id: number | string }>({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                    page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
-                  }`}
+                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
+                    }`}
                 >
                   {page}
                 </button>
@@ -293,9 +292,9 @@ export function RoleBadge({ role }: { role: string }) {
 
 export function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, { dot: string; text: string }> = {
-    active:   { dot: "bg-green-500",  text: "text-green-600" },
+    active: { dot: "bg-green-500", text: "text-green-600" },
     inactive: { dot: "bg-orange-400", text: "text-orange-500" },
-    deleted:  { dot: "bg-red-500",    text: "text-red-600" },
+    deleted: { dot: "bg-red-500", text: "text-red-600" },
   };
   const c = colors[status] ?? { dot: "bg-gray-400", text: "text-gray-500" };
   return (

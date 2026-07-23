@@ -32,11 +32,11 @@ const Uploads = () => {
     userIdFilter,
     handleUserChange,
     roleUsers,
-  usersLoading,
-  setUserSearchTerm,
+    usersLoading,
+    setUserSearchTerm,
     fetchUploads
   } = useUploads();
-  
+
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -91,7 +91,7 @@ const Uploads = () => {
       const res = await deleteUploadApi(id);
       if (res?.success !== false) {
         toast.success("File deleted successfully.");
-        fetchUploads();  
+        fetchUploads();
       } else {
         toast.error(res?.message || "Failed to delete file.");
       }
@@ -112,37 +112,37 @@ const Uploads = () => {
             View and manage files uploaded by users
           </p>
         </div>
-         <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
-          <Filter className="w-5 h-5 text-gray-400 ml-2" />
-          <select
-            value={roleFilter}
-            onChange={handleRoleChange}
-            className="bg-transparent capitalize border-none outline-none text-sm font-medium text-gray-600 cursor-pointer pr-4"
-          >
-            <option value="">All Roles</option>
-            {VALID_ROLES.map((role) => (
-              <option key={role} value={role} className="capitalize">
-                {role.replace("_", " ")}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
+            <Filter className="w-5 h-5 text-gray-400 ml-2" />
+            <select
+              value={roleFilter}
+              onChange={handleRoleChange}
+              className="bg-transparent capitalize border-none outline-none text-sm font-medium text-gray-600 cursor-pointer pr-4"
+            >
+              <option value="">All Roles</option>
+              {VALID_ROLES.map((role) => (
+                <option key={role} value={role} className="capitalize">
+                  {role.replace("_", " ")}
+                </option>
+              ))}
+            </select>
+          </div>
+          {roleFilter && (
+            <SearchableSelect
+              options={roleUsers.map((u) => ({
+                label: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
+                value: u._id,
+              }))}
+              value={userIdFilter}
+              onChange={handleUserChange}
+              onSearchChange={setUserSearchTerm}
+              loading={usersLoading}
+              placeholder="All Users in Role"
+            />
+          )}
         </div>
-       {roleFilter && (
-    <SearchableSelect
-      options={roleUsers.map((u) => ({
-        label: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
-        value: u._id,
-      }))}
-      value={userIdFilter}
-      onChange={handleUserChange}
-      onSearchChange={setUserSearchTerm}  
-      loading={usersLoading}              
-      placeholder="All Users in Role"
-    />
-  )}
       </div>
-</div>
       {/* Media Board Grid Area Boundaries */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -230,7 +230,7 @@ const Uploads = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-[10px] font-black text-gray-600 shadow-sm z-10">
                     {dayjs(item.createdAt).format("DD MMM YYYY")}
                   </div>
