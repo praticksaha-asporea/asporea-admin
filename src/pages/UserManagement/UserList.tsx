@@ -13,7 +13,7 @@ import { useUserList } from "./useUserList";
 const columns: ColumnDef<UserResponseData>[] = [
   {
     header: "User Details",
-    accessor: (row) => <UserCell firstName={row.firstName} lastName={row.lastName} email={row.email} />,
+    accessor: (row) => <UserCell firstName={row.firstName} lastName={row.lastName} email={row.email} profilePic={row.profilePic} />,
   },
   {
     header: "Role",

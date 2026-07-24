@@ -7,7 +7,7 @@ import {
 import { getUsersApi } from "../../service/apis/user.api";
 import useDebounce from "../../utils/useDebounce";
 import type { UserResponseData } from "../../types/responses/user/user.responses";
-// ─── Filter config ────────────────────────────────────────────────────────────
+ 
 const filterConfigs: FilterConfig[] = [
   {
     key: "role",

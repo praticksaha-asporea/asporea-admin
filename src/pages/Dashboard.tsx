@@ -223,7 +223,7 @@ export default function Dashboard() {
               {roleBreakdown.map((r, i) => (
                 <div key={r.name} className="flex items-center gap-2 text-xs text-gray-500">
                   <span
-                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: ROLE_COLORS[i % ROLE_COLORS.length] }}
                   />
                   {r.name} &middot; {r.value}

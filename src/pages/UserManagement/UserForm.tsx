@@ -9,10 +9,12 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserForm } from "./useUserForm";
 // import ChangePasswordModal from "../../components/modals/ChangePasswordModal"; // reserved for later
-
+ 
+const rawApiUrl = import.meta.env.VITE_BACKEND_BASE_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const SERVER_ROOT_URL = rawApiUrl.replace(/\/api(\/v\d+)?\/?$/, "").replace(/\/$/, "");
 const UserForm = () => {
   const navigate = useNavigate();
-  const { formik, loading, fetching, isEdit } = useUserForm();
+  const { formik, loading, fetching, isEdit,profileImage } = useUserForm();
   const [showPasswordField, setShowPasswordField] = useState(false);
 
   // ── Fetch skeleton ─────────────────────────────────────────────────────────
@@ -64,13 +66,35 @@ const UserForm = () => {
 
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* ── Left: Personal Information ── */}
+         
           <div className="lg:col-span-2 space-y-8">
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
               <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-blue-50 text-[#0054a6] rounded-2xl"><UserPlus className="w-6 h-6" /></div>
+         <div className="w-12 h-12 bg-blue-50 text-[#0054a6] rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-blue-100/50">
+  {isEdit ? (
+    <img
+      src={
+        profileImage
+          ? profileImage.startsWith("data:") ||
+            profileImage.startsWith("http://") ||
+            profileImage.startsWith("https://")
+            ? profileImage
+            : `${SERVER_ROOT_URL}/${profileImage.replace(/^\//, "")}`
+          : "/avatar.png"
+      }
+      alt="User Profile"
+      className="w-full h-full object-cover"
+      onError={(e) => {
+      
+        (e.currentTarget as HTMLImageElement).src = "/avatar.png";
+      }}
+    />
+  ) : (
+    <UserPlus className="w-6 h-6" />
+  )}
+</div>
                 <h2 className="text-2xl font-medium tracking-wider text-gray-700">Personal Information</h2>
               </div>
 
@@ -185,7 +209,7 @@ const UserForm = () => {
                 {/* Address */}
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Full Address</label>
-                  <div className="relative group">
+                  <div className="relative group  ">
                     <MapPin className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
                     <input
                       type="text"
@@ -240,6 +264,7 @@ const UserForm = () => {
                     {(["yes", "no"] as const).map((val) => (
                       <label key={val} className="flex items-center gap-2 cursor-pointer">
                         <input
+                        disabled
                           type="radio"
                           name="enquired"
                           value={val}
@@ -269,7 +294,7 @@ const UserForm = () => {
             </div>
           </div>
 
-          {/* ── Right: Account Control + Notifications ── */}
+          
           <div className="space-y-8">
 
             {/* Account Control */}

@@ -14,6 +14,7 @@ import type {
     PopulatedUser,
     PopulatedSubOf
 } from "../../types/responses/externalSource/externalSource.responses";
+import type { ApiErrorResponse } from "../../types/responses/errorResponse/error.response";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -86,8 +87,12 @@ export const useSourceForm = () => {
                 } else {
                     toast.error(res?.data?.message || "Failed to process request");
                 }
-            } catch (error: any) {
-               console.error("Toggle Error:", error);
+            } catch (error: unknown) {
+              const errorObj = error as ApiErrorResponse;
+                
+                setError(
+                errorObj?.response?.data?.message ?? "Failed to load assignments."
+            );
             } finally {
                 setLoading(false);
             }
@@ -160,3 +165,7 @@ export const useSourceForm = () => {
 
     return { formik, loading, fetching, isEdit, parentSources };
 };
+
+function setError(_arg0: string) {
+    throw new Error("Function not implemented.");
+}
