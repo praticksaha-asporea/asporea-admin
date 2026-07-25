@@ -57,7 +57,7 @@ const BranchList = () => {
     { header: "Location & Timezone", accessor: (row) => <LocationCell location={row.location} timeZone={row.timeZone} /> },
     { header: "Counters", accessor: (row) => <span className="text-lg font-black text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100" > {row.counters ?? 0} </span> },
     { header: "Work Days", accessor: (row) => <WorkDaysCell workDays={row.workDays ?? []} /> },
-    { header: "Status", accessor: (row) => <StatusBadge status={row.status ?? "active"} /> },
+    { header: "Status", accessor: (row) => <StatusBadge status={row.status !== false ? "active" : "inactive"} /> },
   ];
 
   const { error, fetchBranches, navigate, branches, totalCount, page, PAGE_SIZE, setPage, search, handleSearch, filters, handleFilterChange, filterConfigs, loading, handleEdit } = useBranchList({ columns });

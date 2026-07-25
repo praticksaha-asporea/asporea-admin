@@ -1,32 +1,35 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./route/ProtectedRoute";
-import BranchList from "./pages/Branches/BranchList";
-import ShiftList from "./pages/Shifts/ShiftList";
-import ShiftForm from "./pages/Shifts/ShiftForm";
-import BranchForm from "./pages/Branches/BranchForm";
-import AdminLayout from "./layout/AdminLayout";
-import UserList from "./pages/UserManagement/UserList";
-import UserForm from "./pages/UserManagement/UserForm";
-import EmployeeAssignment from "./pages/Employees/EmployeeAssignment";
-import AssignmentForm from "./pages/Employees/AssignmentForm";
-import ProfileForm from "./pages/Profile/ProfileForm";
 import { Toaster } from "react-hot-toast";
-import TypesList from "./pages/Document/Types/TypesList";
-import TypeForm from "./pages/Document/Types/TypeForm";
-import PositionsList from "./pages/Positions/PositionsList";
-import PositionForm from "./pages/Positions/PositionForm";
-import GeneralSettings from "./pages/GeneralSettings/GeneralSettings";
-import QuestionList from "./pages/Assessment/Questions/QuestionList";
-import QuestionForm from "./pages/Assessment/Questions/QuestionForm";
-import SectionForm from "./pages/Assessment/Sections/SectionForm";
-import NotFound from "./pages/NotFound/NotFound"
-import Uploads from "./pages/uploads/uploads";
-import SectionList from "./pages/Assessment/Sections/SectionList";
-import EditSection from "./pages/Assessment/Sections/EditSection";
-import ExternalSources from "./pages/ExternalSources";
-import SourceForm from "./pages/ExternalSources/SourceForm";
+import { lazy } from "react";
+
+import ProtectedRoute from "./route/ProtectedRoute";
+
+import Login from "./pages/Login";
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const BranchList = lazy(() => import("./pages/Branches/BranchList"));
+const ShiftList = lazy(() => import("./pages/Shifts/ShiftList"));
+const ShiftForm = lazy(() => import("./pages/Shifts/ShiftForm"));
+const BranchForm = lazy(() => import("./pages/Branches/BranchForm"));
+const AdminLayout = lazy(() => import("./layout/AdminLayout"));
+const UserList = lazy(() => import("./pages/UserManagement/UserList"));
+const UserForm = lazy(() => import("./pages/UserManagement/UserForm"));
+const EmployeeAssignment = lazy(() => import("./pages/Employees/EmployeeAssignment"));
+const AssignmentForm = lazy(() => import("./pages/Employees/AssignmentForm"));
+const ProfileForm = lazy(() => import("./pages/Profile/ProfileForm"));
+const TypesList = lazy(() => import("./pages/Document/Types/TypesList"));
+const TypeForm = lazy(() => import("./pages/Document/Types/TypeForm"));
+const PositionsList = lazy(() => import("./pages/Positions/PositionsList"));
+const PositionForm = lazy(() => import("./pages/Positions/PositionForm"));
+const GeneralSettings = lazy(() => import("./pages/GeneralSettings/GeneralSettings"));
+const QuestionList = lazy(() => import("./pages/Assessment/Questions/QuestionList"));
+const QuestionForm = lazy(() => import("./pages/Assessment/Questions/QuestionForm"));
+const SectionForm = lazy(() => import("./pages/Assessment/Sections/SectionForm"));
+const NotFound = lazy(() => import("./pages/NotFound/NotFound"))
+const Uploads = lazy(() => import("./pages/uploads/uploads"));
+const SectionList = lazy(() => import("./pages/Assessment/Sections/SectionList"));
+const EditSection = lazy(() => import("./pages/Assessment/Sections/EditSection"));
+const ExternalSources = lazy(() => import("./pages/ExternalSources"));
+const SourceForm = lazy(() => import("./pages/ExternalSources/SourceForm"));
 
 function App() {
   return (
@@ -70,7 +73,7 @@ function App() {
             <Route path="/external-sources/add" element={<SourceForm />} />
             <Route path="/external-sources/edit/:id" element={<SourceForm />} />
 
-            
+
 
           </Route>
         </Route>

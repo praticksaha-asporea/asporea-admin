@@ -5,10 +5,10 @@ export interface BranchResponseData {
   timeZone: string;
   counters: number;
   workDays: string[];
-  status?: string;
+  status?: boolean;
   coordinates: {
     type: string;
-    coordinates: number[];  
+    coordinates: number[];
   };
   createdAt?: string;
   updatedAt?: string;

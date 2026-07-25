@@ -14,91 +14,46 @@ import {
   Building2,
   Briefcase,
   ClipboardList,
-  UploadCloud,
   Link2,
   ArrowUpRight,
   Clock,
+  type LucideProps,
 } from "lucide-react";
-
-// ---- Mock data (wire these up to your real endpoints) ----
-
-const statCards = [
-  {
-    label: "Total Users",
-    value: "24",
-    delta: "+3 this week",
-    trend: "up",
-    icon: Users,
-    tint: "bg-blue-50 text-blue-600",
-  },
-  {
-    label: "Active Branches",
-    value: "6",
-    sub: "of 7 total",
-    icon: Building2,
-    tint: "bg-purple-50 text-purple-600",
-  },
-  {
-    label: "Total Inquiries",
-    value: "164",
-    sub: "FY 2026-27",
-    icon: ClipboardList,
-    tint: "bg-emerald-50 text-emerald-600",
-  },
-  {
-    label: "Open Positions",
-    value: "3",
-    sub: "2 with mandatory docs",
-    icon: Briefcase,
-    tint: "bg-amber-50 text-amber-600",
-  },
-];
-
-const roleBreakdown = [
-  { name: "USER", value: 9 },
-  { name: "TAC", value: 6 },
-  { name: "TAC HEAD", value: 2 },
-  { name: "PCA", value: 4 },
-  { name: "ADMIN", value: 3 },
-];
-
-const ROLE_COLORS = ["#3B82F6", "#8B5CF6", "#F59E0B", "#10B981", "#EF4444"];
-
-const inquiriesByBranch = [
-  { branch: "Dubai", inquiries: 28 },
-  { branch: "Dehradun", inquiries: 41 },
-  { branch: "Guwahati", inquiries: 19 },
-  { branch: "Kalimpong", inquiries: 33 },
-  { branch: "Kolkata", inquiries: 43 },
-];
-
-const recentUploads = [
-  { name: "Pratik De...", role: "TAC", date: "23 Jul 2026" },
-  { name: "Anil Yadav", role: "USER", date: "23 Jul 2026" },
-  { name: "Pratick A...", role: "ADMIN", date: "23 Jul 2026" },
-];
-
-const externalSources = [
-  { name: "Arijit Singh", type: "PCA", status: "ACTIVE" },
-  { name: "vishal mishra", type: "PCA", status: "INACTIVE" },
-];
-
-const timelines = [
-  { label: "Escalation", hours: 3 },
-  { label: "Inq. Resolution", hours: 3 },
-  { label: "Pre-Counselling", hours: 3 },
-  { label: "Assessment", hours: 3 },
-];
-
-const branchStatus = [
-  { name: "Dubai", location: "Asia/Dubai", counters: 0, status: "ACTIVE" },
-  { name: "Dehradun", location: "Asia/Kolkata", counters: 1, status: "ACTIVE" },
-  { name: "Guwahati", location: "Asia/Kolkata", counters: 1, status: "ACTIVE" },
-];
+import { useDashboard } from "./useDashboard";
+import { CamelCase } from "../utils/common";
+import type { BranchStatus, DashboardStatCard, ExternalSource, RoleBreakdown, Timeline } from "../types/responses/dashboard/get-lists.responses";
+import type { ForwardRefExoticComponent, RefAttributes } from "react";
 
 // ---- Component ----
 
 export default function Dashboard() {
+  const { ROLE_COLORS, roleBreakdown, inquiriesByBranch, externalSources, timelines, branchStatus, statCards, generalSetting } = useDashboard();
+
+  const CARD_META = {
+    "Total Users": {
+      icon: Users,
+      tint: "bg-blue-50 text-blue-600",
+    },
+    "Active Branches": {
+      icon: Building2,
+      tint: "bg-purple-50 text-purple-600",
+    },
+    "Total Inquiries": {
+      icon: ClipboardList,
+      tint: "bg-emerald-50 text-emerald-600",
+    },
+    "Open Positions": {
+      icon: Briefcase,
+      tint: "bg-amber-50 text-amber-600",
+    },
+  };
+
+
+  const statCardsShow = statCards?.map((card: DashboardStatCard) => ({
+    ...card,
+    ...CARD_META[card.label as keyof typeof CARD_META],
+  }));
+
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -114,14 +69,14 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-400 bg-white border border-gray-100 rounded-full px-4 py-2">
             <Clock size={16} />
-            Last inquiry #164 &middot; FY 2026-27
+            Last inquiry #{generalSetting?.lastInq} &middot; FY {generalSetting?.lastFy}
           </div>
         </div>
 
         {/* Stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {statCards.map((card) => {
-            const Icon = card.icon;
+          {statCardsShow?.map((card: DashboardStatCard) => {
+            const Icon = card?.icon as ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
             return (
               <div
                 key={card.label}
@@ -144,7 +99,7 @@ export default function Dashboard() {
                     <p className="text-xs text-gray-400 mt-2">{card.sub}</p>
                   )}
                 </div>
-                <div className={`p-3 rounded-xl ${card.tint}`}>
+                <div className={`p-3 rounded-xl ${card?.tint}`}>
                   <Icon size={22} />
                 </div>
               </div>
@@ -193,7 +148,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold text-gray-800">
               Users by Role
             </h2>
-            <p className="text-sm text-gray-400 mb-2">24 total users</p>
+            <p className="text-sm text-gray-400 mb-2">{roleBreakdown?.reduce((a: number, b: RoleBreakdown) => a + b.value, 0)} total users</p>
             <div style={{ width: "100%", height: 200 }}>
               <ResponsiveContainer>
                 <PieChart>
@@ -205,7 +160,7 @@ export default function Dashboard() {
                     outerRadius={80}
                     paddingAngle={3}
                   >
-                    {roleBreakdown.map((entry, i) => (
+                    {roleBreakdown?.map((entry: RoleBreakdown, i: number) => (
                       <Cell key={entry.name} fill={ROLE_COLORS[i % ROLE_COLORS.length]} />
                     ))}
                   </Pie>
@@ -220,13 +175,13 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
             <div className="grid grid-cols-2 gap-2 mt-2">
-              {roleBreakdown.map((r, i) => (
+              {roleBreakdown?.map((r: RoleBreakdown, i: number) => (
                 <div key={r.name} className="flex items-center gap-2 text-xs text-gray-500">
                   <span
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: ROLE_COLORS[i % ROLE_COLORS.length] }}
                   />
-                  {r.name} &middot; {r.value}
+                  {CamelCase(r.name)} &middot; {r.value}
                 </div>
               ))}
             </div>
@@ -234,84 +189,58 @@ export default function Dashboard() {
         </div>
 
         {/* Lower row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Branch status */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Branch Status</h2>
               <Building2 size={18} className="text-gray-300" />
             </div>
             <div className="space-y-3">
-              {branchStatus.map((b) => (
+              {branchStatus?.map((b: BranchStatus) => (
                 <div
-                  key={b.name}
+                  key={b.title}
                   className="flex items-center justify-between border-b border-gray-50 last:border-0 pb-3 last:pb-0"
                 >
                   <div>
-                    <p className="text-sm font-medium text-gray-700">{b.name}</p>
+                    <p className="text-sm font-medium text-gray-700">{b.title}</p>
                     <p className="text-xs text-gray-400">{b.location}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-400">{b.counters} counters</p>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      {b.status}
-                    </span>
+                    {b.status !== false && (
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        {b.status}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Recent uploads */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Recent Uploads</h2>
-              <UploadCloud size={18} className="text-gray-300" />
-            </div>
-            <div className="space-y-3">
-              {recentUploads.map((u, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between border-b border-gray-50 last:border-0 pb-3 last:pb-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500">
-                      {u.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">{u.name}</p>
-                      <p className="text-xs text-gray-400">{u.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-400">{u.date}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* External sources + timelines */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-800">External Sources</h2>
               <Link2 size={18} className="text-gray-300" />
             </div>
             <div className="space-y-3 mb-5">
-              {externalSources.map((s) => (
+              {externalSources?.map((s: ExternalSource) => (
                 <div key={s.name} className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-700">{s.name}</p>
-                    <p className="text-xs text-gray-400">{s.type}</p>
+                    <p className="text-sm font-medium text-gray-700">{CamelCase(s.name)}</p>
+                    <p className="text-xs text-gray-400">{CamelCase(s.type)}</p>
                   </div>
                   <span
-                    className={`text-xs font-semibold inline-flex items-center gap-1 ${s.status === "ACTIVE" ? "text-emerald-600" : "text-orange-500"
+                    className={`text-xs font-semibold inline-flex items-center gap-1 ${s.status === "active" ? "text-emerald-600" : "text-orange-500"
                       }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${s.status === "ACTIVE" ? "bg-emerald-500" : "bg-orange-500"
+                      className={`w-1.5 h-1.5 rounded-full ${s.status === "active" ? "bg-emerald-500" : "bg-orange-500"
                         }`}
                     />
-                    {s.status}
+                    {CamelCase(s.status)}
                   </span>
                 </div>
               ))}
@@ -322,10 +251,10 @@ export default function Dashboard() {
                 Timelines (hrs)
               </p>
               <div className="grid grid-cols-2 gap-3">
-                {timelines.map((t) => (
-                  <div key={t.label} className="bg-gray-50 rounded-lg px-3 py-2">
-                    <p className="text-xs text-gray-400">{t.label}</p>
-                    <p className="text-sm font-semibold text-gray-700">{t.hours}h</p>
+                {timelines?.map((t: Timeline) => (
+                  <div key={t?.label} className="bg-gray-50 rounded-lg px-3 py-2">
+                    <p className="text-xs text-gray-400">{t?.label}</p>
+                    <p className="text-sm font-semibold text-gray-700">{t?.hours}h</p>
                   </div>
                 ))}
               </div>
