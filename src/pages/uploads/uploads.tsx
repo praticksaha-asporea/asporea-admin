@@ -7,7 +7,6 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  X,
   Trash2,
   UploadCloud,
 } from "lucide-react";
@@ -105,7 +104,7 @@ const Uploads = () => {
       {/* Header Panel Control */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-normal text-gray-800 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-gray-800 tracking-tight flex items-center gap-2">
             <UploadCloud className="w-6 h-6 text-[#0D80F2]" /> User Uploads
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -306,35 +305,34 @@ const Uploads = () => {
         </div>
       )}
 
-      {/* Media Overlay Box Lightbox Boundary */}
-      <AnimatePresence>
+      
+    <AnimatePresence>
         {previewImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setPreviewImage(null)}
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
+            className="fixed inset-0 z-9999 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="relative flex items-center justify-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative max-w-lg w-full mt-23 ml-45   rounded-3xl p-2    overflow-hidden flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                type="button"
-                onClick={() => setPreviewImage(null)}
-                className="absolute -top-12 right-0 text-white hover:text-gray-300 p-2 cursor-pointer transition-colors"
-              >
-                <X className="w-8 h-8" />
-              </button>
-              <img
-                src={previewImage}
-                alt="Full preview layout view"
-                className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-2xl shadow-2xl block mx-auto"
-              />
+            
+
+          
+              <div className="w-full flex items-center justify-center  overflow-hidden rounded-2xl">
+                <img
+                  src={previewImage}
+                  alt="Full preview"
+                  className="max-h-[75vh] w-auto max-w-full object-contain block rounded-xl"
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}

@@ -113,7 +113,7 @@ function CustomTable<T extends { _id: number | string }>({
         {onAdd && (
           <button
             onClick={onAdd}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#0D80F2] text-white rounded-xl font-bold shadow-lg shadow-blue-100 hover:scale-[1.02] transition-all whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#0D80F2] text-white rounded-xl font-bold shadow-lg shadow-blue-100 hover:scale-[1.02] transition-all whitespace-nowrap cursor-pointer"
           >
             <Plus className="w-5 h-5" /> {addLabel}
           </button>
@@ -200,7 +200,7 @@ function CustomTable<T extends { _id: number | string }>({
                               key={ai}
                               title={action.label}
                               onClick={() => action.onClick(row)}
-                              className={`p-2 text-gray-400 rounded-lg transition-all ${action.colorClass ?? "hover:bg-gray-100"}`}
+                              className={`p-2 text-gray-400 rounded-lg transition-all cursor-pointer ${action.colorClass ?? "hover:bg-gray-100"}`}
                             >
                               {action.icon}
                             </button>
@@ -234,7 +234,7 @@ function CustomTable<T extends { _id: number | string }>({
               <button
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all"
+                className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -242,8 +242,9 @@ function CustomTable<T extends { _id: number | string }>({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
-                    }`}
+                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
+                  }`}
                 >
                   {page}
                 </button>
@@ -251,7 +252,7 @@ function CustomTable<T extends { _id: number | string }>({
               <button
                 onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all"
+                className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 disabled:opacity-30 transition-all cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -267,14 +268,59 @@ export default CustomTable;
 
 // ─── Pre-built cell renderers ─────────────────────────────────────────────────
 
-export function UserCell({ firstName, lastName, email }: { firstName: string; lastName?: string; email: string }) {
+export interface UserCellProps {
+  firstName: string;
+  lastName?: string;
+  email: string;
+  profilePic?: { path?: string } | string | null;
+}
+
+export function UserCell({ firstName, lastName, email, profilePic }: UserCellProps) {
+  let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+  if (!BACKEND_BASE_URL || BACKEND_BASE_URL === "undefined") {
+    BACKEND_BASE_URL = "http://localhost:3000";
+  }
+
+  // Construct absolute file path
+  const getProfileSrc = (): string | null => {
+    if (!profilePic) return "/avatar.png";
+    if (typeof profilePic === "string") {
+      if (profilePic.startsWith("http") || profilePic.startsWith("data:")) return profilePic;
+      return `${BACKEND_BASE_URL}${profilePic.startsWith("/") ? "" : "/"}${profilePic}`;
+    }
+    if (typeof profilePic === "object" && profilePic?.path) {
+      const path = profilePic.path;
+      if (path.startsWith("http") || path.startsWith("data:")) return path;
+      return `${BACKEND_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+    }
+    return "/avatar.png";
+  };
+
+  const imgSrc = getProfileSrc();
+  const initial = firstName ? firstName.charAt(0).toUpperCase() : "U";
+
   return (
     <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-linear-to-brrom-blue-100 to-indigo-100 flex items-center justify-center text-[#0054a6] font-bold text-sm uppercase">
-        {firstName ? firstName.charAt(0) : "U"}
+      <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-100 to-indigo-100 shrink-0 border border-gray-100 flex items-center justify-center overflow-hidden">
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt={`${firstName} ${lastName || ""}`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
+          />
+        ) : (
+          <span className="text-[#0054a6] font-black text-sm uppercase">
+            {initial}
+          </span>
+        )}
       </div>
       <div>
-        <p className="text-sm font-bold text-gray-800">{firstName} {lastName}</p>
+        <p className="text-sm font-bold text-gray-800 capitalize">
+          {firstName} {lastName || ""}
+        </p>
         <p className="text-xs text-gray-500 font-medium">{email}</p>
       </div>
     </div>

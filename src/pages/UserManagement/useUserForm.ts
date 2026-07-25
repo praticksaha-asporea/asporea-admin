@@ -5,7 +5,6 @@ import * as yup from "yup";
 import { createUserApi, updateUserApi, getUserByIdApi } from "../../service/apis/user.api";
 import { toast } from "react-hot-toast";
 import type { UserPayload } from "../../types/payloads/user/user.payloads";
-import type { UserResponseData } from "../../types/responses/user/user.responses";
 
 
 export type UserFormValues = UserPayload & {
@@ -60,6 +59,7 @@ export const useUserForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const formik = useFormik<UserFormValues>({
     initialValues: emptyValues,
@@ -68,7 +68,7 @@ export const useUserForm = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        // TypeScript Magic: Separate internal UI keys from backend payload safely
+      
         const { _showPassword, ...cleanPayload } = values;
 
         if (isEdit && id) {
@@ -107,11 +107,20 @@ export const useUserForm = () => {
 
     const fetchUser = async () => {
       setFetching(true);
+      setProfileImage(null);
       try {
         const res = await getUserByIdApi(id);
-        const u = (res?.data?.user ?? res) as UserResponseData;
+const u = res?.data?.data?.user ?? res?.data?.user ?? res?.data ?? res;
+       if (u) {
+       
+          let imgPath: string | null = null;
+          if (typeof u.profilePic === "string") {
+            imgPath = u.profilePic;
+          } else if (typeof u.profilePic === "object" && u.profilePic !== null) {
+            imgPath = (u.profilePic as { path?: string })?.path ?? null;
+          }
 
-        if (u) {
+          setProfileImage(imgPath);
           formik.setValues({
             firstName: u.firstName ?? "",
             lastName: u.lastName ?? "",
@@ -144,5 +153,5 @@ export const useUserForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isEdit]);
 
-  return { formik, loading, fetching, isEdit };
+  return { formik, loading, fetching, isEdit,profileImage  };
 };

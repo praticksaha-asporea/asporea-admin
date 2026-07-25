@@ -43,6 +43,7 @@ export const getUniqueRolesApi: () => Promise<ApiResponse<string[]>> =
 export const getUserByIdApi: (id: string) => Promise<ApiResponse<any>> =
   catchAsync(async (id: string): Promise<AxiosResponse<ApiResponse<any>>> => {
     const res = await httpsCall.get(`/user/details?id=${id}`);
+    console.log("user data",res)
     return res;
   });
 
