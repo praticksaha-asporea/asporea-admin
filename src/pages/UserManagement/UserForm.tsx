@@ -330,10 +330,6 @@ const UserForm = () => {
                       <option value="foe">FOE</option>
                       <option value="finance">Finance</option>
                       <option value="coordinator">Coordinator</option>
-                      <option value="pca">PCA</option>
-                      <option value="sub_pca">Sub PCA</option>
-                      <option value="pcra">PCRA</option>
-                      <option value="institute">Institute</option>
                       <option value="branch_head">Branch Head</option>
                     </select>
                   </div>
@@ -342,20 +338,20 @@ const UserForm = () => {
                   )}
                 </div>
 
-                {/* Password / Change Password */}
+                
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                     Password {!isEdit && <span className="text-red-500">*</span>}
                   </label>
 
                   {isEdit ? (
-                    /* ── Edit mode: toggle to reveal inline password input ── */
+                    
                     <div className="space-y-3">
                       <button
                         type="button"
                         onClick={() => {
                           setShowPasswordField((prev) => !prev);
-                          // clear field when hiding so it doesn't get submitted
+                     
                           if (showPasswordField) formik.setFieldValue("password", "");
                         }}
                         className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"

@@ -30,6 +30,8 @@ const SectionList = lazy(() => import("./pages/Assessment/Sections/SectionList")
 const EditSection = lazy(() => import("./pages/Assessment/Sections/EditSection"));
 const ExternalSources = lazy(() => import("./pages/ExternalSources"));
 const SourceForm = lazy(() => import("./pages/ExternalSources/SourceForm"));
+const AllInquiriesList = lazy(() => import("./pages/Inquiries/AllInquiriesList"));
+const AdminCandidateDetail = lazy(() => import("./pages/Inquiries/AdminCandidateDetail"));
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/users" element={<UserList />} />
+            <Route path="/all-inquiries" element={<AllInquiriesList />} />
+             <Route path="/all-inquiries/:id" element={<AdminCandidateDetail />} />
             <Route path="/users/add" element={<UserForm />} />
             <Route path="/users/edit/:id" element={<UserForm />} />
             <Route path="/branches" element={<BranchList />} />

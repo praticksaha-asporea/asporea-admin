@@ -25,6 +25,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "User Management", icon: Users, path: "/users" },
     { name: "Uploads", icon: UploadCloud, path: "/uploads" },
+    { name: "All Inquiries", icon: ClipboardList, path: "/all-inquiries" },
 
     {
       name: "Branch & Shift",
