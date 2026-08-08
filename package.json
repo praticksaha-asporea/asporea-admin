@@ -19,6 +19,7 @@
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
     "i18next": "^26.0.8",
+    "js-cookie": "^3.0.8",
     "lottie-react": "^2.4.1",
     "lottie-web": "^5.13.0",
     "lucide-react": "^1.12.0",
