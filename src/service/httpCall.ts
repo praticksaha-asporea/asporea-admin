@@ -2,7 +2,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { store } from "../store/store";
 import { logOut } from "../store/auth.store";
-import Cookies from "js-cookie";
 
 function hasJwtExpired(obj: any, depth: number = 0, maxDepth: number = 10): boolean {
   if (depth > maxDepth) return false;
