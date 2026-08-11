@@ -2,8 +2,8 @@ import httpsCall from "../httpCall";
 import catchAsync from "../../utils/catchAsync";
 import type { AxiosResponse } from "axios";
 import type { ApiResponse } from "../../types/api/baseResponse";
-import type { PositionPayload } from "../../types/payloads/position/position.payloads";
-import type { PositionResponseData } from "../../types/responses/position/position.responses";
+import type { CountryPayload, PositionPayload } from "../../types/payloads/position/position.payloads";
+import type { CountryResponseData, PositionResponseData } from "../../types/responses/position/position.responses";
 import type { PaginatedData } from "../../types/responses/pagingData/common.responses";
 
 export const getPositionsApi: (
@@ -91,3 +91,38 @@ export const deletePositionApi: (id: string) => Promise<ApiResponse<any>> =
     const res = await httpsCall.delete(`/admin/position/delete?id=${id}`);
     return res;
   });
+
+
+  export const getCountriesApi: () => Promise<ApiResponse<any>> = catchAsync(
+  async (): Promise<AxiosResponse<ApiResponse<any>>> => {
+    const res = await httpsCall.get("admin/countries?active=true");
+    return res;
+  }
+);
+
+
+export const createCountryApi: (
+  data: CountryPayload
+) => Promise<ApiResponse<CountryResponseData>> = catchAsync(
+  async (data: CountryPayload): Promise<AxiosResponse<ApiResponse<CountryResponseData>>> => {
+    const res = await httpsCall.post("admin/countries", data);
+    return res;
+  }
+);
+
+export const updateCountryApi: (
+  id: string,
+  data: Partial<CountryPayload>
+) => Promise<ApiResponse<CountryResponseData>> = catchAsync(
+  async (id: string, data: Partial<CountryPayload>): Promise<AxiosResponse<ApiResponse<CountryResponseData>>> => {
+    const res = await httpsCall.put(`admin/countries/${id}`, data);
+    return res;
+  }
+);
+
+export const deleteCountryApi: (id: string) => Promise<ApiResponse<any>> = catchAsync(
+  async (id: string): Promise<AxiosResponse<ApiResponse<any>>> => {
+    const res = await httpsCall.delete(`admin/countries/${id}`);
+    return res;
+  }
+);

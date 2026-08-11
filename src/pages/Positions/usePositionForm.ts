@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
-import { createPositionApi, updatePositionApi, getPositionByIdApi } from "../../service/apis/position.api";
+import { createPositionApi, updatePositionApi, getPositionByIdApi,getCountriesApi } from "../../service/apis/position.api";
 import { getDocumentTypesApi } from "../../service/apis/documentType.api";
 import type { PositionPayload } from "../../types/payloads/position/position.payloads";
 import type { PositionResponseData } from "../../types/responses/position/position.responses";
@@ -16,12 +16,19 @@ export type DocTypeOption = {
   title: string;
   section: string;
 };
-
+export type CountryOption = {
+  _id: string;
+  name: string;
+  code?: string;
+};
 const emptyValues: PositionFormValues = {
   title: "",
   details: "",
   requiredDocuments: [],
   mandatoryDocuments: [],
+  programTypes: [],  
+  countries: [],     
+   
 };
 
 const validationSchema = Yup.object({
@@ -37,6 +44,7 @@ export const usePositionForm = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
   const [docTypes, setDocTypes] = useState<DocTypeOption[]>([]);
+  const [countriesList, setCountriesList] = useState<CountryOption[]>([]);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
   const [brochurePreview, setBrochurePreview] = useState<string>("");
 
@@ -68,7 +76,17 @@ export const usePositionForm = () => {
         // Safe silence non-fatal
       }
     };
+    const loadCountries = async () => {
+      try {
+        const res = await getCountriesApi();
+        const items = (res?.data as unknown as CountryOption[]) ?? [];
+        setCountriesList(items);
+      } catch {
+        // Safe silence non-fatal
+      }
+    };
     loadDocTypes();
+    loadCountries();
   }, []);
 
   const formik = useFormik<PositionFormValues>({
@@ -121,6 +139,10 @@ export const usePositionForm = () => {
             mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) =>
               typeof d === "string" ? d : d._id
             ),
+            programTypes: p.programTypes ?? [],
+            countries: (p.countries ?? []).map((c: any) =>
+              typeof c === "string" ? c : c.name || c._id
+            ),
           });
           if (p.positionBrochure) setBrochurePreview(p.positionBrochure);
         }
@@ -143,5 +165,5 @@ export const usePositionForm = () => {
     formik.setFieldValue(field, next);
   };
 
-  return { formik, loading, fetching, isEdit, docTypes, toggleDoc, brochureFile, brochurePreview, handleBrochureChange, clearBrochure };
+  return { formik, loading, fetching, isEdit, docTypes,countriesList, toggleDoc, brochureFile, brochurePreview, handleBrochureChange, clearBrochure };
 };

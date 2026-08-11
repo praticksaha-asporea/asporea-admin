@@ -44,6 +44,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       subItems: [
         { name: "Document Type", path: "/document-types" },
         { name: "Positions", path: "/positions" },
+        { name: "Countries", path: "/countries" }, 
       ],
     },
 
