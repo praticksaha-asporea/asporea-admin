@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Briefcase, FileText, ShieldCheck, Upload, X, FileCheck } from "lucide-react";
+import { ArrowLeft, Save, Briefcase, FileText, ShieldCheck, Upload, X, FileCheck, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePositionForm } from "./usePositionForm";
 import MultiSelectSearch, { type SelectOption } from "../../components/UI/multiSelect/MultiSelectSearch";
 
 const PositionForm = () => {
   const navigate = useNavigate();
-  const { formik, loading, fetching, isEdit, docTypes, brochureFile, brochurePreview, handleBrochureChange, clearBrochure } = usePositionForm();
+  const { formik, loading, fetching, isEdit, docTypes,countriesList, brochureFile, brochurePreview, handleBrochureChange, clearBrochure } = usePositionForm();
 
   if (fetching) {
     return (
@@ -24,6 +24,18 @@ const PositionForm = () => {
     value: d._id,
     label: d.title,
     meta:  d.section,
+  }));
+
+  const typeOptions: SelectOption[] = [
+    { value: "career", label: "Mobility - Career Pathway Program", meta: "Type" },
+    { value: "country", label: "Mobility - Country Pathway Program", meta: "Type" },
+    { value: "language", label: "Mobility – Language & Cultural Training Pathway", meta: "Type" },
+    { value: "skill", label: "Skill Development Pathway", meta: "Type" }
+  ];
+const countryOptions: SelectOption[] = countriesList.map((c) => ({
+    value: c.name,
+    label: c.name,
+    meta: c.code || "Country",
   }));
 
   return (
@@ -124,7 +136,45 @@ const PositionForm = () => {
               />
             </div>
           </div>
+        {/* 🟢 NEW SECTION: Position Classification (Types & Countries) ── */}
+          <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-[#10b981] rounded-l-3xl" />
 
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-emerald-50 text-[#10b981] rounded-2xl"><Layers className="w-6 h-6" /></div>
+              <h2 className="text-2xl font-medium tracking-wider text-gray-700">Classification</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Program Type Multi-Select */}
+              <div className="relative">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 mb-2 block">
+                  Program Type
+                </label>
+                <MultiSelectSearch
+                  options={typeOptions}
+                  value={formik.values.programTypes || []}
+                  onChange={(vals) => formik.setFieldValue("programTypes", vals)}
+                  placeholder="Select Program Types..."
+                  accentColor="bg-[#10b981]"
+                />
+              </div>
+
+              {/* Countries Multi-Select */}
+              <div className="relative">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 mb-2 block">
+                  Countries
+                </label>
+                <MultiSelectSearch
+                  options={countryOptions}
+                  value={formik.values.countries || []}
+                  onChange={(vals) => formik.setFieldValue("countries", vals)}
+                  placeholder="Select Countries..."
+                  accentColor="bg-[#10b981]"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* ── Right Side Layout: Summary, Mandatory & Brochures ── */}

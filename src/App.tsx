@@ -32,6 +32,7 @@ const ExternalSources = lazy(() => import("./pages/ExternalSources"));
 const SourceForm = lazy(() => import("./pages/ExternalSources/SourceForm"));
 const AllInquiriesList = lazy(() => import("./pages/Inquiries/AllInquiriesList"));
 const AdminCandidateDetail = lazy(() => import("./pages/Inquiries/AdminCandidateDetail"));
+import CountriesPage from "./pages/Positions/CountriesPage"; 
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
             <Route path="/external-sources" element={<ExternalSources />} />
             <Route path="/external-sources/add" element={<SourceForm />} />
             <Route path="/external-sources/edit/:id" element={<SourceForm />} />
+            <Route path="/countries" element={<CountriesPage />} />
 
 
 
