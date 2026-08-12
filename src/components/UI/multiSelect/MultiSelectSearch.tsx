@@ -83,7 +83,7 @@ const MultiSelectSearch = ({
       {/* Trigger box */}
       <div
         onClick={() => setOpen((p) => !p)}
-        className={`min-h-[54px] w-full px-4 py-3 bg-gray-50 border-2 rounded-2xl cursor-pointer transition-all flex flex-wrap gap-2 items-center ${
+        className={`min-h-13.5 w-full px-4 py-3 bg-gray-50 border-2 rounded-2xl cursor-pointer transition-all flex flex-wrap gap-2 items-center ${
           error
             ? "border-red-400"
             : open

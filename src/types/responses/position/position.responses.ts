@@ -19,14 +19,16 @@ export interface CountryResponseData {
 }
 
 export interface PositionResponseData {
-countries?: string[] | CountryRef[];
-programTypes?: string[];
-_id: string;
-title: string;
-details?: string;
-requiredDocuments: DocRef[];
-mandatoryDocuments: DocRef[];
-positionBrochure?: string;
-createdAt?: string;
-updatedAt?: string;
+  _id: string;
+  title: string;
+  details?: string;
+  requiredDocuments?: DocRef[];
+  mandatoryDocuments?: DocRef[];
+  positionBrochure?: string;
+  type: string[] | undefined;
+
+  programTypes?: string[];
+  country?: string | CountryRef; 
+  createdAt?: string;
+  updatedAt?: string;
 }

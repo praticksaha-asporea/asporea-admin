@@ -37,7 +37,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         { name: "General", path: "/general-settings" },
       ],
     },
-
+  
     {
       name: "Position & Docs",
       icon: HandCoins,
@@ -45,6 +45,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         { name: "Document Type", path: "/document-types" },
         { name: "Positions", path: "/positions" },
         { name: "Countries", path: "/countries" }, 
+        { name: "Pathways", path: "/pathways" }, 
       ],
     },
 

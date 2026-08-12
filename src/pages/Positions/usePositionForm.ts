@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
-import { createPositionApi, updatePositionApi, getPositionByIdApi,getCountriesApi } from "../../service/apis/position.api";
+import { createPositionApi, updatePositionApi, getPositionByIdApi, getCountriesApi } from "../../service/apis/position.api";
+import { getPathwaysApi } from "../../service/apis/pathway.api";
 import { getDocumentTypesApi } from "../../service/apis/documentType.api";
 import type { PositionPayload } from "../../types/payloads/position/position.payloads";
 import type { PositionResponseData } from "../../types/responses/position/position.responses";
 import type { DocumentTypeResponseData } from "../../types/responses/document/documentType.responses";
+import type { PathwayResponseData } from "../../types/responses/pathways/pathways.response";
 
 export type PositionFormValues = Omit<PositionPayload, "positionBrochure">;
 
@@ -26,9 +28,9 @@ const emptyValues: PositionFormValues = {
   details: "",
   requiredDocuments: [],
   mandatoryDocuments: [],
-  programTypes: [],  
-  countries: [],     
-   
+  programTypes: [],
+  country:"",
+
 };
 
 const validationSchema = Yup.object({
@@ -45,6 +47,7 @@ export const usePositionForm = () => {
   const [fetching, setFetching] = useState(isEdit);
   const [docTypes, setDocTypes] = useState<DocTypeOption[]>([]);
   const [countriesList, setCountriesList] = useState<CountryOption[]>([]);
+  const [pathwaysList, setPathwaysList] = useState<PathwayResponseData[]>([]);
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
   const [brochurePreview, setBrochurePreview] = useState<string>("");
 
@@ -76,6 +79,7 @@ export const usePositionForm = () => {
         // Safe silence non-fatal
       }
     };
+
     const loadCountries = async () => {
       try {
         const res = await getCountriesApi();
@@ -85,8 +89,18 @@ export const usePositionForm = () => {
         // Safe silence non-fatal
       }
     };
+    const loadPathways = async () => {
+      try {
+        const res = await getPathwaysApi();
+        const items = (res?.data as unknown as PathwayResponseData[]) ?? [];
+        setPathwaysList(items);
+      } catch {
+        // Safe silence non-fatal
+      }
+    };
     loadDocTypes();
     loadCountries();
+    loadPathways();
   }, []);
 
   const formik = useFormik<PositionFormValues>({
@@ -130,19 +144,16 @@ export const usePositionForm = () => {
           formik.setValues({
             title: p.title ?? "",
             details: p.details ?? "",
-            // requiredDocuments: (p.requiredDocuments ?? []).map((d) => d?._id ?? d),
-            // mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) => d?._id ?? d),
             requiredDocuments: (p.requiredDocuments ?? []).map((d) =>
               typeof d === "string" ? d : d._id
             ),
-
             mandatoryDocuments: (p.mandatoryDocuments ?? []).map((d) =>
               typeof d === "string" ? d : d._id
             ),
-            programTypes: p.programTypes ?? [],
-            countries: (p.countries ?? []).map((c: any) =>
-              typeof c === "string" ? c : c.name || c._id
+            programTypes: (p.type ?? p.programTypes ?? []).map((t: any) =>
+              typeof t === "string" ? t : t._id
             ),
+           country: typeof p.country === "string" ? p.country : p.country?._id ?? "",
           });
           if (p.positionBrochure) setBrochurePreview(p.positionBrochure);
         }
@@ -154,7 +165,6 @@ export const usePositionForm = () => {
     };
 
     fetchPosition();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isEdit]);
 
   const toggleDoc = (field: "requiredDocuments" | "mandatoryDocuments", docId: string) => {
@@ -165,5 +175,5 @@ export const usePositionForm = () => {
     formik.setFieldValue(field, next);
   };
 
-  return { formik, loading, fetching, isEdit, docTypes,countriesList, toggleDoc, brochureFile, brochurePreview, handleBrochureChange, clearBrochure };
+  return { formik, loading, fetching, isEdit, docTypes, countriesList, toggleDoc, brochureFile, brochurePreview, handleBrochureChange, clearBrochure, pathwaysList };
 };
