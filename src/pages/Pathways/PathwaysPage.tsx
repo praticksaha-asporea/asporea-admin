@@ -1,5 +1,5 @@
 import { usePathway } from "./usePathway";
-import { GitFork, Save, X, Edit2, Trash2, Power, Layers } from "lucide-react";
+import { GitFork, Save, X, Edit2, Trash2, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 
 const PathwaysPage = () => {
