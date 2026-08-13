@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { confirmToast } from "../../utils/confirmToast";
 import { toast } from "react-hot-toast";
 import {
     getCountriesApi,
@@ -76,27 +77,40 @@ export const useCountry = () => {
         setEditId(null);
         formik.resetForm();
     };
+const handleDelete = async (id: string, name?: string) => {
+    const confirmed = await confirmToast(
+      `Are you sure you want to delete ${name ? `"${name}"` : "this country"}?`
+    );
+    if (!confirmed) return;
 
-    const handleDelete = async (id: string) => {
-        if (!window.confirm("Are you sure you want to delete this country?")) return;
-        try {
-            await deleteCountryApi(id);
-            toast.success("Country deleted");
-            fetchCountries();
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || "Failed to delete");
-        }
-    };
+    try {
+      await deleteCountryApi(id);
+      toast.success("Country deleted");
+      fetchCountries();
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
-    const handleToggleStatus = async (id: string, currentStatus: boolean) => {
-        try {
-            await updateCountryApi(id, { isActive: !currentStatus });
-            toast.success("Status updated");
-            fetchCountries();
-        } catch (error) {
-            toast.error("Failed to update status");
-        }
-    };
+   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+    const nextStatus = !currentStatus;
+    
+    
+    setCountries((prev) =>
+      prev.map((item) => (item._id === id ? { ...item, isActive: nextStatus } : item))
+    );
+
+    try {
+      await updateCountryApi(id, { isActive: nextStatus });
+      toast.success(`Country ${nextStatus ? "activated" : "deactivated"}`);
+    } catch (error) {
+      
+      setCountries((prev) =>
+        prev.map((item) => (item._id === id ? { ...item, isActive: currentStatus } : item))
+      );
+      toast.error("Failed to update status");
+    }
+  };
 
     return {
         formik,

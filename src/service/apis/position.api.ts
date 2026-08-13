@@ -92,14 +92,14 @@ export const deletePositionApi: (id: string) => Promise<ApiResponse<any>> =
     return res;
   });
 
-
-  export const getCountriesApi: () => Promise<ApiResponse<any>> = catchAsync(
-  async (): Promise<AxiosResponse<ApiResponse<any>>> => {
-    const res = await httpsCall.get("admin/countries?active=true");
+export const getCountriesApi: (
+  params?: Record<string, string>
+) => Promise<ApiResponse<any>> = catchAsync(
+  async (params?: Record<string, string>): Promise<AxiosResponse<ApiResponse<any>>> => {
+    const res = await httpsCall.get("admin/countries", { params });
     return res;
   }
 );
-
 
 export const createCountryApi: (
   data: CountryPayload

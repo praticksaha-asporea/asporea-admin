@@ -9,6 +9,7 @@ import {
   deletePathwayApi,
 } from "../../service/apis/pathway.api";
 import type { PathwayPayload } from "../../types/payloads/pathways/pathway.types";
+import { confirmToast } from "../../utils/confirmToast"
 import type { PathwayResponseData } from "../../types/responses/pathways/pathways.response";
 
 
@@ -82,9 +83,12 @@ export const usePathway = () => {
     setEditId(null);
     formik.resetForm();
   };
+const handleDelete = async (id: string, title?: string) => {
+    const confirmed = await confirmToast(
+      `Are you sure? Deleting ${title ? `"${title}"` : "this pathway"} will also remove its sub-pathways.`
+    );
+    if (!confirmed) return;
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure? Deleting a parent category will also remove its sub-pathways.")) return;
     try {
       await deletePathwayApi(id);
       toast.success("Pathway deleted");
@@ -94,12 +98,21 @@ export const usePathway = () => {
     }
   };
 
-  const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+    const nextStatus = !currentStatus;
+
+     setPathways((prev) =>
+      prev.map((item) => (item._id === id ? { ...item, isActive: nextStatus } : item))
+    );
+
     try {
-      await updatePathwayApi(id, { isActive: !currentStatus });
-      toast.success("Status updated");
-      fetchPathways();
+      await updatePathwayApi(id, { isActive: nextStatus });
+      toast.success(`Pathway ${nextStatus ? "activated" : "deactivated"}`);
     } catch (error) {
+     
+      setPathways((prev) =>
+        prev.map((item) => (item._id === id ? { ...item, isActive: currentStatus } : item))
+      );
       toast.error("Failed to update status");
     }
   };

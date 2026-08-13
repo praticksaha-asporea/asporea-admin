@@ -212,8 +212,7 @@ function PositionCell({ title, details }: { title: string; details?: string }) {
     </div>
   );
 }
-
-function DocListCell({ docs, color }: { docs: DocRef[]; color: string }) {
+function DocListCell({ docs = [], color }: { docs?: DocRef[]; color: string }) {
   if (!docs?.length)
     return <span className="text-xs text-gray-300 font-bold">—</span>;
   return (

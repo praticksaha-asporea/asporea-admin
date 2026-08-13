@@ -172,18 +172,19 @@ const PathwaysPage = () => {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() =>
-                            handleToggleStatus(parent._id, parent.isActive)
-                          }
-                          className={`p-2 rounded-lg transition-all ${
-                            parent.isActive
-                              ? "text-orange-400 hover:bg-orange-50"
-                              : "text-emerald-500 hover:bg-emerald-50"
+                      <button
+                          type="button"
+                          onClick={() => handleToggleStatus(parent._id, parent.isActive)}
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            parent.isActive ? "bg-indigo-600" : "bg-gray-300"
                           }`}
-                          title="Toggle Status"
+                          title={parent.isActive ? "Deactivate Pathway" : "Activate Pathway"}
                         >
-                          <Power className="w-4 h-4" />
+                          <span
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                              parent.isActive ? "translate-x-5" : "translate-x-0"
+                            }`}
+                          />
                         </button>
                         <button
                           onClick={() => handleEdit(parent)}
@@ -219,17 +220,19 @@ const PathwaysPage = () => {
                             </span>
 
                             <div className="flex items-center gap-1.5">
-                              <button
-                                onClick={() =>
-                                  handleToggleStatus(child._id, child.isActive)
-                                }
-                                className={`p-1.5 rounded-md transition-all ${
-                                  child.isActive
-                                    ? "text-orange-400 hover:bg-orange-50"
-                                    : "text-emerald-500 hover:bg-emerald-50"
+                            <button
+                                type="button"
+                                onClick={() => handleToggleStatus(child._id, child.isActive)}
+                                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                  child.isActive ? "bg-indigo-600" : "bg-gray-300"
                                 }`}
+                                title={child.isActive ? "Deactivate Sub-Pathway" : "Activate Sub-Pathway"}
                               >
-                                <Power className="w-3.5 h-3.5" />
+                                <span
+                                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                                    child.isActive ? "translate-x-4" : "translate-x-0"
+                                  }`}
+                                />
                               </button>
                               <button
                                 onClick={() => handleEdit(child)}

@@ -107,8 +107,19 @@ const CountriesPage = () => {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleToggleStatus(country._id, country.isActive)} className={`p-2 rounded-lg transition-all ${country.isActive ? "text-orange-400 hover:bg-orange-50" : "text-emerald-500 hover:bg-emerald-50"}`} title="Toggle Status">
-                        <Power className="w-5 h-5" />
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(country._id, country.isActive)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          country.isActive ? "bg-emerald-500" : "bg-gray-300"
+                        }`}
+                        title={country.isActive ? "Deactivate Country" : "Activate Country"}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                            country.isActive ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
                       </button>
                       <button onClick={() => handleEdit(country)} className="p-2 text-blue-400 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
                         <Edit2 className="w-5 h-5" />
