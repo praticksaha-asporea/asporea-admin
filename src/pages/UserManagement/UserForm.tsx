@@ -9,12 +9,12 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserForm } from "./useUserForm";
 // import ChangePasswordModal from "../../components/modals/ChangePasswordModal"; // reserved for later
- 
+
 const rawApiUrl = import.meta.env.VITE_BACKEND_BASE_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const SERVER_ROOT_URL = rawApiUrl.replace(/\/api(\/v\d+)?\/?$/, "").replace(/\/$/, "");
 const UserForm = () => {
   const navigate = useNavigate();
-  const { formik, loading, fetching, isEdit,profileImage } = useUserForm();
+  const { formik, loading, fetching, isEdit, profileImage } = useUserForm();
   const [showPasswordField, setShowPasswordField] = useState(false);
 
   // ── Fetch skeleton ─────────────────────────────────────────────────────────
@@ -66,35 +66,35 @@ const UserForm = () => {
 
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-         
+
           <div className="lg:col-span-2 space-y-8">
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
               <div className="flex items-center gap-3 mb-8">
-         <div className="w-12 h-12 bg-blue-50 text-[#0054a6] rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-blue-100/50">
-  {isEdit ? (
-    <img
-      src={
-        profileImage
-          ? profileImage.startsWith("data:") ||
-            profileImage.startsWith("http://") ||
-            profileImage.startsWith("https://")
-            ? profileImage
-            : `${SERVER_ROOT_URL}/${profileImage.replace(/^\//, "")}`
-          : "/avatar.png"
-      }
-      alt="User Profile"
-      className="w-full h-full object-cover"
-      onError={(e) => {
-      
-        (e.currentTarget as HTMLImageElement).src = "/avatar.png";
-      }}
-    />
-  ) : (
-    <UserPlus className="w-6 h-6" />
-  )}
-</div>
+                <div className="w-12 h-12 bg-blue-50 text-[#0054a6] rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-blue-100/50">
+                  {isEdit ? (
+                    <img
+                      src={
+                        profileImage
+                          ? profileImage.startsWith("data:") ||
+                            profileImage.startsWith("http://") ||
+                            profileImage.startsWith("https://")
+                            ? profileImage
+                            : `${SERVER_ROOT_URL}/${profileImage.replace(/^\//, "")}`
+                          : "/avatar.png"
+                      }
+                      alt="User Profile"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+
+                        (e.currentTarget as HTMLImageElement).src = "/avatar.png";
+                      }}
+                    />
+                  ) : (
+                    <UserPlus className="w-6 h-6" />
+                  )}
+                </div>
                 <h2 className="text-2xl font-medium tracking-wider text-gray-700">Personal Information</h2>
               </div>
 
@@ -112,8 +112,8 @@ const UserForm = () => {
                       placeholder="John"
                       {...formik.getFieldProps("firstName")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.firstName && formik.errors.firstName
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
                         }`}
                     />
                   </div>
@@ -132,8 +132,8 @@ const UserForm = () => {
                       placeholder="Singh"
                       {...formik.getFieldProps("lastName")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.lastName && formik.errors.lastName
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
                         }`}
                     />
                   </div>
@@ -154,8 +154,8 @@ const UserForm = () => {
                       placeholder="john.singh@asporea.com"
                       {...formik.getFieldProps("email")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.email && formik.errors.email
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
                         }`}
                     />
                   </div>
@@ -175,8 +175,8 @@ const UserForm = () => {
                       pattern="[0-9]{10}$"
                       {...formik.getFieldProps("phoneNumber")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.phoneNumber && formik.errors.phoneNumber
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
                         }`}
                     />
                   </div>
@@ -196,8 +196,8 @@ const UserForm = () => {
                       pattern="[0-9]{10}$"
                       {...formik.getFieldProps("whatsappNumber")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${formik.touched.whatsappNumber && formik.errors.whatsappNumber
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
                         }`}
                     />
                   </div>
@@ -264,7 +264,7 @@ const UserForm = () => {
                     {(["yes", "no"] as const).map((val) => (
                       <label key={val} className="flex items-center gap-2 cursor-pointer">
                         <input
-                        disabled
+                          disabled
                           type="radio"
                           name="enquired"
                           value={val}
@@ -294,7 +294,7 @@ const UserForm = () => {
             </div>
           </div>
 
-          
+
           <div className="space-y-8">
 
             {/* Account Control */}
@@ -318,8 +318,8 @@ const UserForm = () => {
                     <select
                       {...formik.getFieldProps("role")}
                       className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 appearance-none cursor-pointer transition-all ${formik.touched.role && formik.errors.role
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
                         }`}
                     >
                       <option value="" disabled>Select access level...</option>
@@ -338,20 +338,20 @@ const UserForm = () => {
                   )}
                 </div>
 
-                
+
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                     Password {!isEdit && <span className="text-red-500">*</span>}
                   </label>
 
                   {isEdit ? (
-                    
+
                     <div className="space-y-3">
                       <button
                         type="button"
                         onClick={() => {
                           setShowPasswordField((prev) => !prev);
-                     
+
                           if (showPasswordField) formik.setFieldValue("password", "");
                         }}
                         className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
@@ -361,8 +361,8 @@ const UserForm = () => {
                           Change Password
                         </span>
                         <span className={`ml-auto text-xs font-bold px-3 py-1 rounded-full transition-colors ${showPasswordField
-                            ? "text-orange-500 bg-orange-50"
-                            : "text-[#0D80F2] bg-blue-50"
+                          ? "text-orange-500 bg-orange-50"
+                          : "text-[#0D80F2] bg-blue-50"
                           }`}>
                           {showPasswordField ? "Cancel" : "Update"}
                         </span>
@@ -384,8 +384,8 @@ const UserForm = () => {
                                 placeholder="New password"
                                 {...formik.getFieldProps("password")}
                                 className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
-                                    ? "border-red-400 focus:bg-white"
-                                    : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                                  ? "border-red-400 focus:bg-white"
+                                  : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
                                   }`}
                               />
                             </div>
@@ -406,8 +406,8 @@ const UserForm = () => {
                           placeholder="••••••••"
                           {...formik.getFieldProps("password")}
                           className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
-                              ? "border-red-400 focus:bg-white"
-                              : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                            ? "border-red-400 focus:bg-white"
+                            : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
                             }`}
                         />
                       </div>
@@ -430,7 +430,7 @@ const UserForm = () => {
                     <input
                       type="checkbox"
                       name={`notificationPreference.${channel}`}
-                     checked={formik.values.notificationPreference?.[channel] ?? false}
+                      checked={formik.values.notificationPreference?.[channel] ?? false}
                       onChange={formik.handleChange}
                       className="w-5 h-5 rounded text-[#fc7728] focus:ring-[#fc7728]"
                     />

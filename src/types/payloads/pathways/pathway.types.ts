@@ -1,6 +1,7 @@
 export interface PathwayPayload {
   title: string;
-  underPathway?: string;  
+  underPathway?: string;
   isActive?: boolean;
+  country?: string;
 }
 

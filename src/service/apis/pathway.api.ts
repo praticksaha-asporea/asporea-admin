@@ -4,6 +4,7 @@ import type { AxiosResponse } from "axios";
 import type { ApiResponse } from "../../types/api/baseResponse";
 import type { PathwayPayload } from "../../types/payloads/pathways/pathway.types";
 import type { PathwayResponseData } from "../../types/responses/pathways/pathways.response";
+import type { CountryResponseData } from "../../types/responses/position/position.responses";
 
 export const getPathwaysApi: (
   params?: Record<string, string>
@@ -50,3 +51,8 @@ export const deletePathwayApi: (
     return res;
   }
 );
+
+export const getCountriesAction = async (): Promise<AxiosResponse<ApiResponse<CountryResponseData[]>>> => {
+  const res = await httpsCall.get(`/countries`);
+  return res;
+};

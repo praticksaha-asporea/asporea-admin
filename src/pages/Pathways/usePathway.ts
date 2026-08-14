@@ -7,16 +7,23 @@ import {
   createPathwayApi,
   updatePathwayApi,
   deletePathwayApi,
+  getCountriesAction,
 } from "../../service/apis/pathway.api";
 import type { PathwayPayload } from "../../types/payloads/pathways/pathway.types";
 import { confirmToast } from "../../utils/confirmToast"
 import type { PathwayResponseData } from "../../types/responses/pathways/pathways.response";
+import type { CountryResponseData } from "../../types/responses/position/position.responses";
 
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Pathway title is required"),
   underPathway: Yup.string().optional(),
   isActive: Yup.boolean().optional(),
+  country: Yup.string().when('underPathway', {
+    is: (underPathway: string) => underPathway === "6a7bf3ee24a9e7871837720d",
+    then: () => Yup.string().required("Country is required"),
+    otherwise: () => Yup.string().optional(),
+  })
 });
 
 export const usePathway = () => {
@@ -24,6 +31,7 @@ export const usePathway = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [editId, setEditId] = useState<string | null>(null);
+  const [countyOptions, setCountryOptions] = useState<CountryResponseData[]>([]);
 
   const fetchPathways = async () => {
     setFetching(true);
@@ -37,8 +45,19 @@ export const usePathway = () => {
     }
   };
 
+  const fetchCountries = async () => {
+    try {
+      const response = await getCountriesAction();
+
+      if (response?.data?.data) setCountryOptions(response?.data?.data);
+    } catch (err) {
+      console.error("Country fetch error:", err);
+    }
+  };
+
   useEffect(() => {
     fetchPathways();
+    fetchCountries();
   }, []);
 
   // Filter top-level parents for dropdown
@@ -47,7 +66,7 @@ export const usePathway = () => {
   }, [pathways]);
 
   const formik = useFormik<PathwayPayload>({
-    initialValues: { title: "", underPathway: "", isActive: true },
+    initialValues: { title: "", underPathway: "", isActive: true, country: "" },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
@@ -83,7 +102,7 @@ export const usePathway = () => {
     setEditId(null);
     formik.resetForm();
   };
-const handleDelete = async (id: string, title?: string) => {
+  const handleDelete = async (id: string, title?: string) => {
     const confirmed = await confirmToast(
       `Are you sure? Deleting ${title ? `"${title}"` : "this pathway"} will also remove its sub-pathways.`
     );
@@ -98,10 +117,10 @@ const handleDelete = async (id: string, title?: string) => {
     }
   };
 
-   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+  const handleToggleStatus = async (id: string, currentStatus: boolean) => {
     const nextStatus = !currentStatus;
 
-     setPathways((prev) =>
+    setPathways((prev) =>
       prev.map((item) => (item._id === id ? { ...item, isActive: nextStatus } : item))
     );
 
@@ -109,7 +128,7 @@ const handleDelete = async (id: string, title?: string) => {
       await updatePathwayApi(id, { isActive: nextStatus });
       toast.success(`Pathway ${nextStatus ? "activated" : "deactivated"}`);
     } catch (error) {
-     
+
       setPathways((prev) =>
         prev.map((item) => (item._id === id ? { ...item, isActive: currentStatus } : item))
       );
@@ -128,5 +147,6 @@ const handleDelete = async (id: string, title?: string) => {
     handleCancelEdit,
     handleDelete,
     handleToggleStatus,
+    countyOptions
   };
 };

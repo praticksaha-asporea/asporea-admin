@@ -10,6 +10,7 @@ const PathwaysPage = () => {
     loading,
     fetching,
     editId,
+    countyOptions,
     handleEdit,
     handleCancelEdit,
     handleDelete,
@@ -102,6 +103,30 @@ const PathwaysPage = () => {
                   </p>
                 )}
               </div>
+              {/* Country code Static */}
+              {formik.values.underPathway && formik.values.underPathway === "6a7bf3ee24a9e7871837720d" && (
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 block mb-1">
+                    Choose Country
+                  </label>
+                  <select
+                    {...formik.getFieldProps("country")}
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent focus:border-indigo-500/40 rounded-xl outline-none font-bold text-gray-800 transition-all focus:bg-white cursor-pointer"
+                  >
+                    <option value="">-- None --</option>
+                    {countyOptions
+                      .filter((p) => p._id !== editId)
+                      .map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.name}
+                        </option>
+                      ))}
+                  </select>
+                  <p className="text-[10px] text-gray-400 font-medium mt-1 pl-2">
+                    Select "None" if creating a top-level category.
+                  </p>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex items-center gap-3 pt-4">
@@ -172,18 +197,16 @@ const PathwaysPage = () => {
                       </div>
 
                       <div className="flex items-center gap-2">
-                      <button
+                        <button
                           type="button"
                           onClick={() => handleToggleStatus(parent._id, parent.isActive)}
-                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                            parent.isActive ? "bg-indigo-600" : "bg-gray-300"
-                          }`}
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${parent.isActive ? "bg-indigo-600" : "bg-gray-300"
+                            }`}
                           title={parent.isActive ? "Deactivate Pathway" : "Activate Pathway"}
                         >
                           <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                              parent.isActive ? "translate-x-5" : "translate-x-0"
-                            }`}
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${parent.isActive ? "translate-x-5" : "translate-x-0"
+                              }`}
                           />
                         </button>
                         <button
@@ -209,29 +232,26 @@ const PathwaysPage = () => {
                         {children.map((child) => (
                           <div
                             key={child._id}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                              child.isActive
-                                ? "bg-white border-gray-100 hover:border-indigo-200"
-                                : "bg-gray-100/60 border-gray-200 opacity-60"
-                            }`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${child.isActive
+                              ? "bg-white border-gray-100 hover:border-indigo-200"
+                              : "bg-gray-100/60 border-gray-200 opacity-60"
+                              }`}
                           >
                             <span className="font-semibold text-gray-700 text-sm">
                               {child.title}
                             </span>
 
                             <div className="flex items-center gap-1.5">
-                            <button
+                              <button
                                 type="button"
                                 onClick={() => handleToggleStatus(child._id, child.isActive)}
-                                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                  child.isActive ? "bg-indigo-600" : "bg-gray-300"
-                                }`}
+                                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${child.isActive ? "bg-indigo-600" : "bg-gray-300"
+                                  }`}
                                 title={child.isActive ? "Deactivate Sub-Pathway" : "Activate Sub-Pathway"}
                               >
                                 <span
-                                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
-                                    child.isActive ? "translate-x-4" : "translate-x-0"
-                                  }`}
+                                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${child.isActive ? "translate-x-4" : "translate-x-0"
+                                    }`}
                                 />
                               </button>
                               <button
