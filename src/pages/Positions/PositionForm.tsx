@@ -113,9 +113,9 @@ const PositionForm = () => {
         onSubmit={formik.handleSubmit}
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
-        {/* ── Left Side Layout: Details & Rules ── */}
+        {/* ── Left Side Layout: Main Inputs ── */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Title + Details Content */}
+          {/* 1. Position Details */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
@@ -166,7 +166,7 @@ const PositionForm = () => {
             </div>
           </div>
 
-          {/* Required Documents Multi-Selection Dropdown wrapper */}
+          {/* 2. Documents Configuration (Required & Mandatory Combined) */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0D80F2] rounded-l-3xl" />
 
@@ -175,24 +175,47 @@ const PositionForm = () => {
                 <FileText className="w-6 h-6" />
               </div>
               <h2 className="text-2xl font-medium tracking-wider text-gray-700">
-                Required Documents
+                Document Requirements
               </h2>
             </div>
 
-            <div className="relative">
-              <MultiSelectSearch
-                options={docOptions}
-                value={formik.values.requiredDocuments}
-                onChange={(vals) =>
-                  formik.setFieldValue("requiredDocuments", vals)
-                }
-                placeholder="Search and select document types..."
-                accentColor="bg-[#0D80F2]"
-              />
+            {/* Grid for Required and Mandatory side-by-side on md screens */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Required Documents Dropdown */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-[#0D80F2]" /> Required Documents
+                </label>
+                <MultiSelectSearch
+                  options={docOptions}
+                  value={formik.values.requiredDocuments}
+                  onChange={(vals) =>
+                    formik.setFieldValue("requiredDocuments", vals)
+                  }
+                  placeholder="Search & select required docs..."
+                  accentColor="bg-[#0D80F2]"
+                />
+              </div>
+
+              {/* Mandatory Documents Dropdown */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#fc7728]" /> Mandatory Documents
+                </label>
+                <MultiSelectSearch
+                  options={docOptions}
+                  value={formik.values.mandatoryDocuments}
+                  onChange={(vals) =>
+                    formik.setFieldValue("mandatoryDocuments", vals)
+                  }
+                  placeholder="Search & select mandatory docs..."
+                  accentColor="bg-[#fc7728]"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Position Classification (Types & Country) ── */}
+          {/* 3. Position Classification (Types & Country) */}
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#10b981] rounded-l-3xl" />
 
@@ -222,7 +245,7 @@ const PositionForm = () => {
                 />
               </div>
 
-            
+              {/* Country Selection */}
               <div className="relative">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 mb-2 block">
                   Country
@@ -247,33 +270,9 @@ const PositionForm = () => {
           </div>
         </div>
 
+        {/* ── Right Side Layout: Overview & Attachments ── */}
         <div className="space-y-8">
-          {/* Mandatory Documents Control */}
-          <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative">
-            <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728] rounded-l-3xl" />
-
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-orange-50 text-[#fc7728] rounded-2xl">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h2 className="text-xl font-medium tracking-wider text-gray-700">
-                Mandatory
-              </h2>
-            </div>
-
-            <div className="relative">
-              <MultiSelectSearch
-                options={docOptions}
-                value={formik.values.mandatoryDocuments}
-                onChange={(vals) =>
-                  formik.setFieldValue("mandatoryDocuments", vals)
-                }
-                placeholder="Search must-have documents..."
-                accentColor="bg-[#fc7728]"
-              />
-            </div>
-          </div>
-
+          {/* Summary Card */}
           <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-3">
             <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
               Summary
@@ -300,6 +299,7 @@ const PositionForm = () => {
             </div>
           </div>
 
+          {/* Position Brochure Upload */}
           <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-gray-300" />
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">
