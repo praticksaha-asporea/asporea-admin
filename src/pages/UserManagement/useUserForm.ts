@@ -25,7 +25,22 @@ const emptyValues: UserFormValues = {
   passportNo: "",
   enquired: "no",
   notificationPreference: { sms: false, whatsapp: false, email: true },
-  _showPassword: false
+  _showPassword: false,
+  candidateProfile: {
+    nationality: "",
+    academic: "",
+    technicalQualification: "",
+    workExp: ""
+  },
+  tacProfile: {
+    designation: "",
+    mode: "both",
+    rating: 0,
+    areasOfExp: "",  
+    languagesKnown: "",
+    industryExp: "",
+    specialization: ""
+  }
 };
 
 // ─── Validation Schema ───────────────────────────────────────────────────────
@@ -61,22 +76,37 @@ export const useUserForm = () => {
   const [fetching, setFetching] = useState(isEdit);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const formik = useFormik<UserFormValues>({
+ const formik = useFormik<UserFormValues>({
     initialValues: emptyValues,
     validationSchema: buildSchema(isEdit),
     enableReinitialize: true,
     onSubmit: async (values) => {
       setLoading(true);
       try {
-      
         const { _showPassword, ...cleanPayload } = values;
 
+        if (!cleanPayload.password) {
+          delete cleanPayload.password;
+        }
+
+         
+        if (cleanPayload.role !== 'user') {
+          delete cleanPayload.candidateProfile;
+        }
+
+        if (cleanPayload.role !== 'tac' && cleanPayload.role !== 'tac_head') {
+          delete cleanPayload.tacProfile;
+        } else if (cleanPayload.tacProfile) {
+           
+          const parseArray = (val: any) => typeof val === 'string' ? val.split(',').map(s => s.trim()).filter(Boolean) : val;
+          cleanPayload.tacProfile.areasOfExp = parseArray(cleanPayload.tacProfile.areasOfExp);
+          cleanPayload.tacProfile.languagesKnown = parseArray(cleanPayload.tacProfile.languagesKnown);
+          cleanPayload.tacProfile.industryExp = parseArray(cleanPayload.tacProfile.industryExp);
+          cleanPayload.tacProfile.specialization = parseArray(cleanPayload.tacProfile.specialization);
+          delete (cleanPayload.tacProfile as any).rating;
+        }
+
         if (isEdit && id) {
-
-          if (!cleanPayload.password) {
-            delete cleanPayload.password;
-          }
-
           const res = await updateUserApi(id, cleanPayload);
           if (res?.success !== false) {
             toast.success("User updated successfully");
@@ -84,7 +114,6 @@ export const useUserForm = () => {
             toast.error(res?.message ?? "Failed to update user.");
           }
         } else {
-
           const res = await createUserApi(cleanPayload);
           if (res?.success !== false) {
             toast.success("User created successfully");
@@ -139,7 +168,22 @@ const u = res?.data?.data?.user ?? res?.data?.user ?? res?.data ?? res;
               whatsapp: false,
               email: true,
             },
-            _showPassword: false
+            _showPassword: false,
+            candidateProfile: {
+              nationality: u.candidateProfile?.nationality ?? "",
+              academic: u.candidateProfile?.academic ?? "",
+              technicalQualification: u.candidateProfile?.technicalQualification ?? "",
+              workExp: u.candidateProfile?.workExp ?? "",
+            },
+            tacProfile: {
+              designation: u.tacProfile?.designation ?? "",
+              mode: u.tacProfile?.mode ?? "both",
+              rating: u.tacProfile?.rating ?? 0,
+              areasOfExp: u.tacProfile?.areasOfExp?.join(', ') || "",
+              languagesKnown: u.tacProfile?.languagesKnown?.join(', ') || "",
+              industryExp: u.tacProfile?.industryExp?.join(', ') || "",
+              specialization: u.tacProfile?.specialization?.join(', ') || ""
+            }
           });
         }
       } catch (err: any) {

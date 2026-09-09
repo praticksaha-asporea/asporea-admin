@@ -5,6 +5,10 @@ import {
   Phone, MessageCircle, MapPin, FileText, Save,
   Briefcase, Lock, ShieldCheck,
   IdCardLanyard,
+  BookOpen,
+  Globe,
+  GraduationCap,
+  Award,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserForm } from "./useUserForm";
@@ -12,6 +16,7 @@ import { useUserForm } from "./useUserForm";
 
 const rawApiUrl = import.meta.env.VITE_BACKEND_BASE_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const SERVER_ROOT_URL = rawApiUrl.replace(/\/api(\/v\d+)?\/?$/, "").replace(/\/$/, "");
+
 const UserForm = () => {
   const navigate = useNavigate();
   const { formik, loading, fetching, isEdit, profileImage } = useUserForm();
@@ -57,17 +62,12 @@ const UserForm = () => {
           </div>
         </div>
 
-        {/* ── API error banner ── */}
-        {/* {apiError && (
-          <div className="mb-6 px-5 py-4 bg-red-50 border border-red-200 rounded-2xl text-sm font-bold text-red-600">
-            {apiError}
-          </div>
-        )} */}
-
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-
+          {/* LEFT COLUMN */}
           <div className="lg:col-span-2 space-y-8">
+            
+            {/* 1. PERSONAL INFORMATION CARD */}
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
 
@@ -87,7 +87,6 @@ const UserForm = () => {
                       alt="User Profile"
                       className="w-full h-full object-cover"
                       onError={(e) => {
-
                         (e.currentTarget as HTMLImageElement).src = "/avatar.png";
                       }}
                     />
@@ -236,28 +235,26 @@ const UserForm = () => {
                   </div>
                 </div>
 
-                {
-                  formik.values.passportStatus === "having" && (
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
-                      <div className="relative group">
-                        <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                        <input
-                          type="text"
-                          placeholder="K1234567"
-                          {...formik.getFieldProps("passportNo")}
-                          className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
-                        />
-                      </div>
-                      {formik.touched.passportNo && formik.errors.passportNo && (
-                        <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
-                      )}
+                {/* Passport Number */}
+                {formik.values.passportStatus === "having" && (
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
+                    <div className="relative group">
+                      <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
+                      <input
+                        type="text"
+                        placeholder="K1234567"
+                        {...formik.getFieldProps("passportNo")}
+                        className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
+                      />
                     </div>
-                  )
-                }
+                    {formik.touched.passportNo && formik.errors.passportNo && (
+                      <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
+                    )}
+                  </div>
+                )}
 
-
-                {/* Enquiry Status */}
+                {/* Enquiry Status (Moved Inside Personal Info Grid) */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Enquiry Status</label>
                   <div className="flex gap-6 p-4 mt-1 rounded-2xl border border-gray-100 bg-gray-50">
@@ -278,23 +275,136 @@ const UserForm = () => {
                   </div>
                 </div>
 
-              </div>
+              </div> 
+            </div> {/* END OF PERSONAL INFORMATION CARD */}
 
-              {/* Save button */}
-              <div className="mt-8 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex items-center gap-2 px-8 py-3.5 bg-[#0D80F2] text-white font-bold rounded-2xl hover:scale-105 hover:rotate-1 hover:shadow-lg disabled:opacity-70 transition-all duration-300"
+            {/* 2. CANDIDATE PROFILE CARD (Separated from Grid) */}
+            <AnimatePresence>
+              {formik.values.role === "user" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden"
                 >
-                  <Save className="w-4 h-4" />
-                  {loading ? "Saving..." : isEdit ? "Update User" : "Save User"}
-                </button>
-              </div>
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-[#10b981]" />
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="p-3 bg-emerald-50 text-[#10b981] rounded-2xl"><GraduationCap className="w-6 h-6" /></div>
+                    <h2 className="text-2xl font-medium tracking-wider text-gray-700">Candidate Profile</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Nationality</label>
+                      <div className="relative group">
+                        <Globe className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#10b981] transition-colors" />
+                        <select {...formik.getFieldProps("candidateProfile.nationality")} className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white">
+                          <option value="">Select Nationality</option>
+                          <option value="indian">Indian</option>
+                          <option value="nepalese">Nepalese</option>
+                          <option value="bhutanese">Bhutanese</option>
+                          <option value="tibetan">Tibetan</option>
+                          <option value="bangladeshi">Bangladeshi</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Academic Qualification</label>
+                      <div className="relative group">
+                        <BookOpen className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#10b981] transition-colors" />
+                        <select {...formik.getFieldProps("candidateProfile.academic")} className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white">
+                          <option value="">Select Qualification</option>
+                          <option value="secondary">Secondary</option>
+                          <option value="higher_secondary">Higher Secondary</option>
+                          <option value="graduate">Graduate</option>
+                          <option value="post_graduate">Post Graduate</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Technical Qualification</label>
+                      <input type="text" placeholder="e.g. B.Tech, ITI" {...formik.getFieldProps("candidateProfile.technicalQualification")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Work Experience</label>
+                      <input type="text" placeholder="e.g. 2 years in Sales" {...formik.getFieldProps("candidateProfile.workExp")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* 3. TAC PROFILE CARD (Separated from Grid) */}
+            <AnimatePresence>
+              {(formik.values.role === "tac" || formik.values.role === "tac_head") && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-[#8b5cf6]" />
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="p-3 bg-purple-50 text-[#8b5cf6] rounded-2xl"><Award className="w-6 h-6" /></div>
+                    <h2 className="text-2xl font-medium tracking-wider text-gray-700">TAC Profile Details</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Designation</label>
+                      <input type="text" placeholder="e.g. Senior Assessor" {...formik.getFieldProps("tacProfile.designation")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Working Mode</label>
+                      <select {...formik.getFieldProps("tacProfile.mode")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white">
+                        <option value="both">Both (Online & Offline)</option>
+                        <option value="online">Online Only</option>
+                        <option value="offline">Offline Only</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Areas of Experience <span className="text-[10px] lowercase text-gray-400">(Comma separated)</span></label>
+                      <input type="text" placeholder="e.g. IT, Mechanical, Electrical" {...formik.getFieldProps("tacProfile.areasOfExp")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Industry Experience <span className="text-[10px] lowercase text-gray-400">(Comma separated)</span></label>
+                      <input type="text" placeholder="e.g. Construction, Healthcare" {...formik.getFieldProps("tacProfile.industryExp")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Languages Known <span className="text-[10px] lowercase text-gray-400">(Comma separated)</span></label>
+                      <input type="text" placeholder="e.g. English, Hindi" {...formik.getFieldProps("tacProfile.languagesKnown")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Specialization <span className="text-[10px] lowercase text-gray-400">(Comma separated)</span></label>
+                      <input type="text" placeholder="e.g. Quality Control, Safety" {...formik.getFieldProps("tacProfile.specialization")} className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#8b5cf6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white" />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Save button */}
+            <div className="mt-8 flex justify-end">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex items-center gap-2 px-8 py-3.5 bg-[#0D80F2] text-white font-bold rounded-2xl hover:scale-105 hover:rotate-1 hover:shadow-lg disabled:opacity-70 transition-all duration-300"
+              >
+                <Save className="w-4 h-4" />
+                {loading ? "Saving..." : isEdit ? "Update User" : "Save User"}
+              </button>
             </div>
           </div>
 
-
+          {/* RIGHT COLUMN */}
           <div className="space-y-8">
 
             {/* Account Control */}
@@ -338,20 +448,17 @@ const UserForm = () => {
                   )}
                 </div>
 
-
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
                     Password {!isEdit && <span className="text-red-500">*</span>}
                   </label>
 
                   {isEdit ? (
-
                     <div className="space-y-3">
                       <button
                         type="button"
                         onClick={() => {
                           setShowPasswordField((prev) => !prev);
-
                           if (showPasswordField) formik.setFieldValue("password", "");
                         }}
                         className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
@@ -397,7 +504,6 @@ const UserForm = () => {
                       </AnimatePresence>
                     </div>
                   ) : (
-                    /* ── Add mode: password input always visible ── */
                     <>
                       <div className="relative group">
                         <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
@@ -445,14 +551,6 @@ const UserForm = () => {
           </div>
         </form>
       </motion.div>
-
-      {/* ── Change Password Modal — reserved for later ── */}
-      {/* {isEdit && (
-      <ChangePasswordModal
-        isOpen={isChangePasswordOpen}
-        onClose={() => setIsChangePasswordOpen(false)}
-      />
-    )} */}
     </>
   );
 };

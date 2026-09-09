@@ -16,7 +16,23 @@ export interface UserPayload {
     whatsapp: boolean;
     email: boolean;
   };
+  candidateProfile?: {
+    technicalQualification?: string;
+    academic?: string;
+    nationality?: string;
+    workExp?: string;
+  };
+  tacProfile?: {
+    designation?: string;
+    areasOfExp?: string[] | string; 
+    languagesKnown?: string[] | string;
+    industryExp?: string[] | string;
+    specialization?: string[] | string;
+    mode?: string;
+    rating?: number;
+  };
 }
+
 
 export interface ProfilePayload {
   firstName: string;
