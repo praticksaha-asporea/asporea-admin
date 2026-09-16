@@ -32,6 +32,7 @@ const ExternalSources = lazy(() => import("./pages/ExternalSources"));
 const SourceForm = lazy(() => import("./pages/ExternalSources/SourceForm"));
 const AllInquiriesList = lazy(() => import("./pages/Inquiries/AllInquiriesList"));
 const AdminCandidateDetail = lazy(() => import("./pages/Inquiries/AdminCandidateDetail"));
+const RemindersList = lazy(() => import("./pages/Reminders/RemindersList"));
 import CountriesPage from "./pages/Positions/CountriesPage"; 
 import PathwaysPage from "./pages/Pathways/PathwaysPage";
 function App() {
@@ -79,6 +80,7 @@ function App() {
             <Route path="/external-sources/edit/:id" element={<SourceForm />} />
             <Route path="/countries" element={<CountriesPage />} />
             <Route path="/pathways" element={<PathwaysPage />} />
+            <Route path="/reminders" element={<RemindersList />} />
 
 
           </Route>

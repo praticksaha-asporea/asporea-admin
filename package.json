@@ -18,6 +18,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.4",
     "axios": "^1.15.2",
+    "date-fns": "^4.4.0",
     "dayjs": "^1.11.21",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",

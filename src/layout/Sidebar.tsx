@@ -9,6 +9,7 @@ import {
   ClipboardList,
   UploadCloud,
   Link2,
+  Bell,
 } from "lucide-react";
 import logo from "../assets/asporeaLogo.png";
 
@@ -58,7 +59,9 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       ],
     },
     { name: "External Sources", icon: Link2, path: "/external-sources" },
+    { name: "Reminders", icon: Bell, path: "/reminders" },
   ];
+  
 
   useEffect(() => {
     if (
