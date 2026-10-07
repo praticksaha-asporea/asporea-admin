@@ -146,10 +146,10 @@ export const useGeneralSettings = () => {
               fullMarks: s.technical?.fullMarks ?? "",
               passingMarks: s.technical?.passingMarks ?? "",
             },
-            inquiryBrochures: s.inquiryBrochures?.map((b) => ({
+            inquiryBrochures: s.inquiryBrochures?.map((b:any) => ({
               name: b.name,
               uploadId: b.uploadId?._id,
-              path: b.uploadId?.path,
+             path: b.uploadId?.url || b.uploadId?.path,
             })) || [],
           });
 

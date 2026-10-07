@@ -35,7 +35,6 @@ const BACKEND_URL =
   import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3000";
 const getFileUrl = (pathStr?: string) => {
   if (!pathStr) return "";
-
   if (
     pathStr.startsWith("data:") ||
     pathStr.startsWith("http://") ||
@@ -44,8 +43,20 @@ const getFileUrl = (pathStr?: string) => {
     return pathStr;
   }
 
-  const cleanPath = pathStr.startsWith("/") ? pathStr : `/${pathStr}`;
-  return `${BACKEND_URL}${cleanPath}`;
+  const cleanPath = pathStr.startsWith("/") ? pathStr.slice(1) : pathStr;
+
+   
+  if (cleanPath.startsWith("api/files/")) {
+    return `${BACKEND_URL}/${cleanPath}`;
+  }
+
+ 
+  if (cleanPath.startsWith("uploads/")) {
+    return `${BACKEND_URL}/${cleanPath}`;
+  }
+
+  
+  return `${BACKEND_URL}/api/files/${cleanPath}`;
 };
 const isPdfFile = (src?: string) => {
   if (!src) return false;

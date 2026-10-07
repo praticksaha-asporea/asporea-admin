@@ -68,9 +68,10 @@ const Uploads = () => {
     if (!path || typeof path !== "string") return false;
     return /\.pdf$/i.test(path);
   };
-
-  const resolveFileSrc = (path: string | undefined): string => {
+const resolveFileSrc = (path: string | undefined): string => {
     if (!path) return "";
+    
+   
     if (
       path.startsWith("data:") ||
       path.startsWith("http://") ||
@@ -78,8 +79,16 @@ const Uploads = () => {
     ) {
       return path;
     }
-    const safePath = path.startsWith("/") ? path : `/${path}`;
-    return `${BACKEND_BASE_URL}${safePath}`;
+
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+    
+    if (cleanPath.startsWith("uploads/")) {
+      return `${BACKEND_BASE_URL}/${cleanPath}`;
+    }
+
+    
+    return `${BACKEND_BASE_URL}/api/files/${cleanPath}`;
   };
 
   const handleDeleteClick = async (id: string) => {

@@ -45,14 +45,29 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
     navigate(path);
   };
 
-  const getProfilePicUrl = (path?: string) => {
-    if (!path) return "";
-    if (path.startsWith("data:image") || path.startsWith("http")) {
-      return path;  
-    }
-    return `${BACKEND_BASE_URL}${path}`;  
-  };
+ const getProfilePicUrl = (path?: string) => {
+  if (!path) return "";
 
+   
+  if (
+    path.startsWith("data:image") ||
+    path.startsWith("http://") ||
+    path.startsWith("https://")
+  ) {
+    return path;
+  }
+
+   
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+   
+  if (cleanPath.startsWith("uploads/")) {
+    return `${BACKEND_BASE_URL}/${cleanPath}`;
+  }
+
+   
+  return `${BACKEND_BASE_URL}/api/files/${cleanPath}`;
+};
   return (
     <>
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-6 lg:px-8 z-30 sticky top-0">
