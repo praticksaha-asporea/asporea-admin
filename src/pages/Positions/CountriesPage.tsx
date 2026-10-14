@@ -1,5 +1,5 @@
 import { useCountry } from "./useCountry"; 
-import { Globe, Save, X, Edit2, Trash2, Power } from "lucide-react";
+import { Globe, Save, X, Edit2, Trash2,  } from "lucide-react";
 import { motion } from "framer-motion";
 
 const CountriesPage = () => {
