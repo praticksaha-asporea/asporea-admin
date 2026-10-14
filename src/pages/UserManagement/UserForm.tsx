@@ -66,7 +66,7 @@ const UserForm = () => {
 
           {/* LEFT COLUMN */}
           <div className="lg:col-span-2 space-y-8">
-            
+
             {/* 1. PERSONAL INFORMATION CARD */}
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0054a6]" />
@@ -275,7 +275,7 @@ const UserForm = () => {
                   </div>
                 </div>
 
-              </div> 
+              </div>
             </div> {/* END OF PERSONAL INFORMATION CARD */}
 
             {/* 2. CANDIDATE PROFILE CARD (Separated from Grid) */}

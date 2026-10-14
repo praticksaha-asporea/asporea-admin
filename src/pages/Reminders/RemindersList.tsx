@@ -29,8 +29,8 @@ import {
   Collapse,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import { format } from "date-fns";
 import { useRemindersList } from "./useRemindersList";
+import dayjs from "dayjs";
 
 const ROLE_OPTIONS = [
   { label: "Candidate (User)", value: "user" },
@@ -240,75 +240,75 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
           </Select>
 
           {/* Grid / List View Toggle */}
-        <Box className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-gray-200 shadow-sm">
-  {/* Grid View Button */}
-  <IconButton
-    size="small"
-    onClick={() => setViewMode("grid")}
-    sx={{
-      width: 34,
-      height: 34,
-      borderRadius: "50%",
-      backgroundColor: viewMode === "grid" ? "#0D80F2" : "#F3F4F6",
-      color: viewMode === "grid" ? "#FFFFFF" : "#6B7280",
-      boxShadow:
-        viewMode === "grid" ? "0 2px 8px rgba(13, 128, 242, 0.35)" : "none",
-      transition: "all 0.15s ease-in-out",
-      "&:hover": {
-        backgroundColor: viewMode === "grid" ? "#0B6ECC" : "#E5E7EB",
-        color: viewMode === "grid" ? "#FFFFFF" : "#111827",
-      },
-    }}
-  >
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth="2"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-      />
-    </svg>
-  </IconButton>
+          <Box className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-gray-200 shadow-sm">
+            {/* Grid View Button */}
+            <IconButton
+              size="small"
+              onClick={() => setViewMode("grid")}
+              sx={{
+                width: 34,
+                height: 34,
+                borderRadius: "50%",
+                backgroundColor: viewMode === "grid" ? "#0D80F2" : "#F3F4F6",
+                color: viewMode === "grid" ? "#FFFFFF" : "#6B7280",
+                boxShadow:
+                  viewMode === "grid" ? "0 2px 8px rgba(13, 128, 242, 0.35)" : "none",
+                transition: "all 0.15s ease-in-out",
+                "&:hover": {
+                  backgroundColor: viewMode === "grid" ? "#0B6ECC" : "#E5E7EB",
+                  color: viewMode === "grid" ? "#FFFFFF" : "#111827",
+                },
+              }}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+            </IconButton>
 
-  {/* List View Button */}
-  <IconButton
-    size="small"
-    onClick={() => setViewMode("list")}
-    sx={{
-      width: 34,
-      height: 34,
-      borderRadius: "50%",
-      backgroundColor: viewMode === "list" ? "#0D80F2" : "#F3F4F6",
-      color: viewMode === "list" ? "#FFFFFF" : "#6B7280",
-      boxShadow:
-        viewMode === "list" ? "0 2px 8px rgba(13, 128, 242, 0.35)" : "none",
-      transition: "all 0.15s ease-in-out",
-      "&:hover": {
-        backgroundColor: viewMode === "list" ? "#0B6ECC" : "#E5E7EB",
-        color: viewMode === "list" ? "#FFFFFF" : "#111827",
-      },
-    }}
-  >
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth="2"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 6h16M4 12h16M4 18h16"
-      />
-    </svg>
-  </IconButton>
-</Box>
+            {/* List View Button */}
+            <IconButton
+              size="small"
+              onClick={() => setViewMode("list")}
+              sx={{
+                width: 34,
+                height: 34,
+                borderRadius: "50%",
+                backgroundColor: viewMode === "list" ? "#0D80F2" : "#F3F4F6",
+                color: viewMode === "list" ? "#FFFFFF" : "#6B7280",
+                boxShadow:
+                  viewMode === "list" ? "0 2px 8px rgba(13, 128, 242, 0.35)" : "none",
+                transition: "all 0.15s ease-in-out",
+                "&:hover": {
+                  backgroundColor: viewMode === "list" ? "#0B6ECC" : "#E5E7EB",
+                  color: viewMode === "list" ? "#FFFFFF" : "#111827",
+                },
+              }}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </IconButton>
+          </Box>
         </Box>
       </Box>
 
@@ -337,7 +337,7 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
             const senderName = isSentFromYou
               ? "You"
               : `${row.sentFrom?.firstName || ""} ${row.sentFrom?.lastName || ""}`.trim() ||
-                "System";
+              "System";
 
             const { cleanText, inqRef } = parseMessage(row.message);
 
@@ -468,7 +468,7 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                       <Typography className="text-[12px] font-semibold text-gray-900 leading-tight truncate">
                         {isSentFromYou ? "You" : senderName}
                       </Typography>
-                     
+
                     </Box>
                   </Box>
                 </Box>
@@ -480,80 +480,80 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                   <Box className="flex items-center gap-1 text-gray-500 min-w-0 flex-1">
                     <i className="ri-calendar-line text-[13px] shrink-0" />
                     <Typography className="text-[10.5px] font-medium truncate">
-                      {format(new Date(row.createdAt), "dd MMM, hh:mm a")}
+                      {dayjs(new Date(row.createdAt)).format("dd MMM, hh:mm a")}
                     </Typography>
                   </Box>
-{/* Action Buttons Container (Using MUI sx prop for guaranteed background & icon colors) */}
-<Box className="flex items-center gap-1.5 shrink-0 min-w-max">
-  {/* View Details Button */}
-  <Tooltip title="View Details" placement="top">
-    <IconButton
-      size="small"
-      onClick={() => setSelectedReminder(row)}
-      sx={{
-       
-        color: "#0D80F2", // Theme Blue
-        "&:hover": { backgroundColor: "#DBEAFE" }, // Blue 100
-        width: 28,
-        height: 28,
-        borderRadius: "8px",
-        padding: 0,
-        transition: "all 0.2s ease-in-out",
-      }}
-    >
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        strokeWidth="2"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-        />
-      </svg>
-    </IconButton>
-  </Tooltip>
+                  {/* Action Buttons Container (Using MUI sx prop for guaranteed background & icon colors) */}
+                  <Box className="flex items-center gap-1.5 shrink-0 min-w-max">
+                    {/* View Details Button */}
+                    <Tooltip title="View Details" placement="top">
+                      <IconButton
+                        size="small"
+                        onClick={() => setSelectedReminder(row)}
+                        sx={{
 
-   
-  <Tooltip title="Delete Reminder" placement="top">
-    <IconButton
-      size="small"
-      onClick={() => setDeleteId(row._id)}
-      sx={{
-        
-        color: "#DC2626",  
-        "&:hover": { backgroundColor: "#FEE2E2" }, 
-        width: 28,
-        height: 28,
-        borderRadius: "8px",
-        padding: 0,
-        transition: "all 0.2s ease-in-out",
-      }}
-    >
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        strokeWidth="2"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-        />
-      </svg>
-    </IconButton>
-  </Tooltip>
-</Box>
+                          color: "#0D80F2", // Theme Blue
+                          "&:hover": { backgroundColor: "#DBEAFE" }, // Blue 100
+                          width: 28,
+                          height: 28,
+                          borderRadius: "8px",
+                          padding: 0,
+                          transition: "all 0.2s ease-in-out",
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      </IconButton>
+                    </Tooltip>
+
+
+                    <Tooltip title="Delete Reminder" placement="top">
+                      <IconButton
+                        size="small"
+                        onClick={() => setDeleteId(row._id)}
+                        sx={{
+
+                          color: "#DC2626",
+                          "&:hover": { backgroundColor: "#FEE2E2" },
+                          width: 28,
+                          height: 28,
+                          borderRadius: "8px",
+                          padding: 0,
+                          transition: "all 0.2s ease-in-out",
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                 </Box>
               </Card>
             );
@@ -563,7 +563,7 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
         /* ── LIST VIEW (TABLE) ── */
         <TableContainer
           component={Paper}
-           
+
           className="shadow-2xl  rounded-2xl overflow-hidden bg-white"
         >
           <Table>
@@ -621,7 +621,7 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                 const senderName = isSentFromYou
                   ? "You"
                   : `${row.sentFrom?.firstName || ""} ${row.sentFrom?.lastName || ""}`.trim() ||
-                    "System";
+                  "System";
                 const { cleanText } = parseMessage(row.message);
 
                 return (
@@ -657,7 +657,7 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                           {isSentFromYou ? "You" : senderName}
                         </Typography>
                       </Box>
-                    
+
                     </TableCell>
 
                     <TableCell align="center" className="max-w-37.5">
@@ -685,76 +685,76 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                       align="center"
                       className="text-[12px] text-gray-500 whitespace-nowrap"
                     >
-                      {format(new Date(row.createdAt), "dd MMM yyyy, hh:mm a")}
+                      {dayjs(new Date(row.createdAt)).format("dd MMM yyyy, hh:mm a")}
                     </TableCell>
 
                     <TableCell align="center">
-                   <Box className="flex items-center justify-center gap-1.5">
-  {/* View Details Button */}
-  <IconButton
-    size="small"
-    onClick={() => setSelectedReminder(row)}
-    sx={{
-     
-      color: "#0D80F2", // Theme Blue
-      "&:hover": { backgroundColor: "#DBEAFE" }, // Blue 100
-      width: 32,
-      height: 32,
-      borderRadius: "8px",
-      padding: 0,
-      transition: "all 0.2s ease-in-out",
-    }}
-  >
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth="2"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-      />
-    </svg>
-  </IconButton>
+                      <Box className="flex items-center justify-center gap-1.5">
+                        {/* View Details Button */}
+                        <IconButton
+                          size="small"
+                          onClick={() => setSelectedReminder(row)}
+                          sx={{
 
-  {/* Delete Reminder Button */}
-  <IconButton
-    size="small"
-    onClick={() => setDeleteId(row._id)}
-    sx={{
-      
-      color: "#DC2626", // Red 600
-      "&:hover": { backgroundColor: "#FEE2E2" }, // Red 100
-      width: 32,
-      height: 32,
-      borderRadius: "8px",
-      padding: 0,
-      transition: "all 0.2s ease-in-out",
-    }}
-  >
-    <svg
-      className="w-4 h-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth="2"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-      />
-    </svg>
-  </IconButton>
-</Box>
+                            color: "#0D80F2", // Theme Blue
+                            "&:hover": { backgroundColor: "#DBEAFE" }, // Blue 100
+                            width: 32,
+                            height: 32,
+                            borderRadius: "8px",
+                            padding: 0,
+                            transition: "all 0.2s ease-in-out",
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                        </IconButton>
+
+                        {/* Delete Reminder Button */}
+                        <IconButton
+                          size="small"
+                          onClick={() => setDeleteId(row._id)}
+                          sx={{
+
+                            color: "#DC2626", // Red 600
+                            "&:hover": { backgroundColor: "#FEE2E2" }, // Red 100
+                            width: 32,
+                            height: 32,
+                            borderRadius: "8px",
+                            padding: 0,
+                            transition: "all 0.2s ease-in-out",
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );
@@ -780,10 +780,10 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
       {/* ── CREATE REMINDER MODAL ── */}
       <Dialog
         open={isCreateOpen}
-       onClose={(_, reason) => {
-    if (reason === "backdropClick") return; 
-    setIsCreateOpen(false);
-  }}
+        onClose={(_, reason) => {
+          if (reason === "backdropClick") return;
+          setIsCreateOpen(false);
+        }}
         maxWidth="md"
         fullWidth
         slotProps={{
@@ -884,11 +884,10 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
                       <Box
                         key={t.id}
                         onClick={() => toggleTargetSelect(t.id)}
-                        className={`relative cursor-pointer p-3 rounded-xl flex flex-col items-center text-center transition-all duration-200 ${
-                          isSelected
-                            ? "shadow-xl  bg-green-50/40"
-                            : "bg-white hover:border-blue-300 shadow-2xl hover:shadow-sm"
-                        }`}
+                        className={`relative cursor-pointer p-3 rounded-xl flex flex-col items-center text-center transition-all duration-200 ${isSelected
+                          ? "shadow-xl  bg-green-50/40"
+                          : "bg-white hover:border-blue-300 shadow-2xl hover:shadow-sm"
+                          }`}
                       >
                         {isSelected && (
                           <Box className="absolute top-2 right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-sm">
@@ -1024,10 +1023,10 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
       {/* ── DETAIL MODAL ── */}
       <Dialog
         open={Boolean(selectedReminder)}
-      onClose={(_, reason) => {
-    if (reason === "backdropClick") return;  
-    setSelectedReminder(null);
-  }}
+        onClose={(_, reason) => {
+          if (reason === "backdropClick") return;
+          setSelectedReminder(null);
+        }}
         maxWidth="sm"
         fullWidth
         slotProps={{
@@ -1091,10 +1090,10 @@ const RemindersList: React.FC<RemindersListProps> = ({ currentUserId }) => {
       {/* ── DELETE DIALOG ── */}
       <Dialog
         open={Boolean(deleteId)}
-      onClose={(_, reason) => {
-    if (reason === "backdropClick") return;  
-    setDeleteId(null);
-  }}
+        onClose={(_, reason) => {
+          if (reason === "backdropClick") return;
+          setDeleteId(null);
+        }}
         slotProps={{
           paper: {
             className: "rounded-2xl shadow-2xl",
