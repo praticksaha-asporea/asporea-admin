@@ -15,7 +15,7 @@ const ShiftForm = () => {
   const {
     formik, loading, fetching, isEdit,
     currentSchedule, setCurrentSchedule, editingIndex,
-    toggleScheduleDay, addOrUpdateSchedule,
+    addOrUpdateSchedule,
     editSchedule, removeSchedule, cancelEditSchedule,
   } = useShiftForm();
 

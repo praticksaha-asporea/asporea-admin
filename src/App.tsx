@@ -37,7 +37,7 @@ import CountriesPage from "./pages/Positions/CountriesPage";
 import PathwaysPage from "./pages/Pathways/PathwaysPage";
 function App() {
   return (
-    <BrowserRouter>
+   <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
