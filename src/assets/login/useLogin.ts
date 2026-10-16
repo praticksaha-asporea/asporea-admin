@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { loginApi } from "../../service/apis/auth.api";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/auth.store";
@@ -15,12 +15,23 @@ export const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const loginFormik = useFormik<LoginPayload>({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: yup.object({
+  const [captchaCode, setCaptchaCode] = useState("");
+
+  const generateCaptcha = useCallback(() => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptchaCode(code);
+  }, []);
+
+  useEffect(() => {
+    generateCaptcha();
+  }, [generateCaptcha]);
+
+  const validationSchema = useMemo(() => {
+    return yup.object({
       email: yup
         .string()
         .email("Please enter a valid email address")
@@ -29,38 +40,70 @@ export const useLogin = () => {
         .string()
         .trim()
         .min(8, "Must be 8 or more than 8 characters")
-        .required("Password field is Required")
-        .matches(/\w/, "Please enter valid password"),
-    }),
-    onSubmit: async (values) => {
-  setLoading(true);
-  try {
-    
-    const res = await loginApi(values);
+        .required("Password field is required"),
+      captcha: yup
+        .string()
+        .trim()
+        .required("CAPTCHA verification is required")
+        .test(
+          "captcha-match",
+          "Incorrect CAPTCHA code!",
+          (value) => value?.trim() === captchaCode // ⚡ Exact Case Sensitive Match
+        ),
+    });
+  }, [captchaCode]);
 
-    if (res.success) {
-      setLoading(false);
-      const access = res.data?.tokens?.accessToken;
-      const refresh = res.data?.tokens?.refreshToken;
-
-      if (access) {
-        localStorage.setItem("access_token", access);
-        localStorage.setItem("refresh_token", refresh);
-        
-        
-        dispatch(setUser(res.data.admin));
-        navigate("/dashboard");
-      } else {
-        console.log("Token missing ❌");
+  const loginFormik = useFormik<LoginPayload & { captcha: string }>({
+    initialValues: {
+      email: "",
+      password: "",
+      captcha: "",
+    },
+    validationSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, { setFieldError }) => {
+      // ⚡ HARD SECURITY GUARD: Exact match check before API call
+      if (values.captcha.trim() !== captchaCode) {
+        toast.error("Incorrect CAPTCHA code!");
+        setFieldError("captcha", "Incorrect CAPTCHA code!");
+        generateCaptcha();
+        loginFormik.setFieldValue("captcha", "");
+        return; // ⛔ Stop execution here! API will not be called.
       }
-    } else {
-      setLoading(false);
-      toast.error(res.message || "Something went wrong");
-    }
-  } catch (error) {        
-    setLoading(false);
-  }
-}
+
+      setLoading(true);
+      try {
+        const res = await loginApi({
+          email: values.email,
+          password: values.password,
+        });
+
+        if (res.success) {
+          setLoading(false);
+          const access = res.data?.tokens?.accessToken;
+          const refresh = res.data?.tokens?.refreshToken;
+
+          if (access) {
+            localStorage.setItem("access_token", access);
+            localStorage.setItem("refresh_token", refresh);
+
+            dispatch(setUser(res.data.admin));
+            navigate("/dashboard");
+          } else {
+            console.log("Token missing ❌");
+          }
+        } else {
+          setLoading(false);
+          toast.error(res.message || "Something went wrong");
+          generateCaptcha();
+          loginFormik.setFieldValue("captcha", "");
+        }
+      } catch (error) {
+        setLoading(false);
+        generateCaptcha();
+        loginFormik.setFieldValue("captcha", "");
+      }
+    },
   });
 
   return {
@@ -68,5 +111,7 @@ export const useLogin = () => {
     loading,
     rememberMe,
     setRememberMe,
+    captchaCode,
+    generateCaptcha,
   };
 };

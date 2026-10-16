@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   Eye,
   EyeOff,
+  ShieldAlert,
 } from "lucide-react";
 
 import { useLottie } from "lottie-react";
@@ -15,7 +16,7 @@ import loginAnimation from "../loginAnimation.json";
 import secondAnimation from "../secondAnimation.json";
 import asporeaLogo from "../../assets/asporeaLogo.png";
 import LoadingSpinner from "../../components/UI/loadingSpinner/LoadingSpinner";
-
+import { CaptchaBox } from "../../components/UI/CaptchaBox";   
 const LottiePlayer = ({ animationData }: { animationData: any }) => {
   const { View } = useLottie({
     animationData: animationData,
@@ -26,7 +27,7 @@ const LottiePlayer = ({ animationData }: { animationData: any }) => {
 };
 
 const Login = () => {
-  const { loginFormik, loading } = useLogin();//, rememberMe, setRememberMe 
+  const { loginFormik, loading,captchaCode,generateCaptcha } = useLogin();//, rememberMe, setRememberMe 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -166,63 +167,118 @@ const Login = () => {
                 />
               </div>
 
-              <form onSubmit={loginFormik.handleSubmit} className="space-y-5">
-                {/* Email Input */}
-                <div className="group relative">
-                  <Mail className="absolute left-5 top-5 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Admin Email"
-                    value={loginFormik.values.email}
-                    onChange={loginFormik.handleChange}
-                    className={`w-full pl-14 pr-6 py-4 bg-gray-50 border-2 outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm ${loginFormik.touched.email && loginFormik.errors.email ? 'border-red-500 bg-white' : 'border-transparent focus:border-[#0D80F2]/30 focus:bg-white'}`}
-                  />
-                </div>
+           <form onSubmit={loginFormik.handleSubmit} className="space-y-4">
+  {/* Email Input */}
+  <div>
+    <div className="group relative">
+      <Mail className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
+      <input
+        type="email"
+        name="email"
+        placeholder="Admin Email"
+        value={loginFormik.values.email}
+        onChange={loginFormik.handleChange}
+        onBlur={loginFormik.handleBlur}
+        className={`w-full pl-14 pr-6 py-3.5 bg-gray-50 border-2 outline-none rounded-2xl transition-all font-bold text-sm ${
+          loginFormik.touched.email && loginFormik.errors.email
+            ? "border-red-500 bg-white"
+            : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+        }`}
+      />
+    </div>
+    {loginFormik.touched.email && loginFormik.errors.email && (
+      <p className="text-red-500 text-xs font-semibold px-2 mt-1">
+        {loginFormik.errors.email}
+      </p>
+    )}
+  </div>
 
-                {/* Password Input */}
-                <div className="group relative">
-                  <Lock className="absolute left-5 top-5 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Password"
-                    value={loginFormik.values.password}
-                    onChange={loginFormik.handleChange}
-                    className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 outline-none rounded-2xl md:rounded-3xl transition-all font-bold text-sm [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${loginFormik.touched.password && loginFormik.errors.password ? 'border-red-500 bg-white' : 'border-transparent focus:border-[#0D80F2]/30 focus:bg-white'}`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-5 top-5 text-gray-400 hover:text-[#0D80F2] transition-colors"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-                <div className="flex justify-end px-2">
-                  <button
-                    type="button"
-                    onClick={() => {
+  {/* Password Input */}
+  <div>
+    <div className="group relative">
+      <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0D80F2] transition-colors" />
+      <input
+        type={showPassword ? "text" : "password"}
+        name="password"
+        placeholder="Password"
+        value={loginFormik.values.password}
+        onChange={loginFormik.handleChange}
+        onBlur={loginFormik.handleBlur}
+        className={`w-full pl-14 pr-14 py-3.5 bg-gray-50 border-2 outline-none rounded-2xl transition-all font-bold text-sm [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
+          loginFormik.touched.password && loginFormik.errors.password
+            ? "border-red-500 bg-white"
+            : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+        }`}
+      />
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="absolute right-5 top-4 text-gray-400 hover:text-[#0D80F2] transition-colors"
+      >
+        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+      </button>
+    </div>
+    {loginFormik.touched.password && loginFormik.errors.password && (
+      <p className="text-red-500 text-xs font-semibold px-2 mt-1">
+        {loginFormik.errors.password}
+      </p>
+    )}
+  </div>
 
-                      console.log("Forgot password clicked");
-                    }}
-                    className="text-[13px] font-bold text-gray-500 hover:text-[#0D80F2] transition-colors cursor-pointer"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
+  {/* CAPTCHA SECTION */}
+  <div className="space-y-1 pt-1">
+  <div className="flex items-center justify-between gap-2">
+    {/* CAPTCHA Box Wrapper */}
+    <div className="shrink-0">
+      <CaptchaBox code={captchaCode} onRefresh={generateCaptcha} />
+    </div>
 
-                {/* Submit Button */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={loading}
-                  className="flex items-center gap-4 px-12 py-4  mt-24 translate-x-30 bg-[#0D80F2] text-white rounded-2xl font-bold transition-all shadow-xl"
-                >
-                  {loading ? "Authenticating..." : "Login"}
-                </motion.button>
-              </form>
+    {/* Input Box Wrapper */}
+    <div className="group relative flex-1 min-w-0">
+      <ShieldAlert className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#0D80F2]" />
+      <input
+        type="text"
+        name="captcha"
+        placeholder="Enter CAPTCHA"
+        value={loginFormik.values.captcha}
+        onChange={loginFormik.handleChange}
+        onBlur={loginFormik.handleBlur}
+        className={`w-full pl-9 pr-3 py-3.5 bg-gray-50  shadow-2xl outline-none rounded-2xl transition-all font-bold text-xs tracking-wider placeholder:tracking-normal placeholder:font-semibold ${
+          loginFormik.touched.captcha && loginFormik.errors.captcha
+            ? "border-red-500 bg-white"
+            : "border-transparent focus:border-[#0D80F2]/30 focus:bg-white"
+        }`}
+      />
+    </div>
+    </div>
+    {loginFormik.touched.captcha && loginFormik.errors.captcha && (
+      <p className="text-red-500 text-xs font-semibold px-2 mt-1">
+        {loginFormik.errors.captcha}
+      </p>
+    )}
+  </div>
+
+  <div className="flex justify-end px-2 pt-1">
+    <button
+      type="button"
+      onClick={() => console.log("Forgot password clicked")}
+      className="text-[12px] font-bold text-gray-500 hover:text-[#0D80F2] transition-colors cursor-pointer"
+    >
+      Forgot password?
+    </button>
+  </div>
+
+ 
+  <motion.button
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+    type="submit"
+    disabled={loading}
+    className="w-full py-3.5 bg-[#0D80F2] text-white rounded-2xl font-bold transition-all shadow-xl cursor-pointer"
+  >
+    {loading ? "Authenticating..." : "Login"}
+  </motion.button>
+</form>
             </motion.div>
           )}
         </AnimatePresence>
