@@ -46,7 +46,7 @@ export const useAssessmentFormSection = (
     }),
     onSubmit: async (values, { setSubmitting }) => {
       if (!assessAssign?._id) {
-        toast.error("No assessment assignment found");
+        console.error("No assessment assignment found");
         setSubmitting(false);
         return;
       }
@@ -157,7 +157,7 @@ export const useAssessmentFormSection = (
       });
       if (status === "queued") setIsPreLocked(false);
     } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Update failed");
+      console.error(err?.response?.data?.message ?? "Update failed");
     }
   };
 

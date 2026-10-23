@@ -213,7 +213,7 @@
 //       setTotalCount((c) => c - 1);
 //       toast.success("Document type deleted.");
 //     } catch (err: any) {
-//       toast.error(err?.response?.data?.message ?? "Failed to delete.");
+//       console.error(err?.response?.data?.message ?? "Failed to delete.");
 //     }
 //   };
 

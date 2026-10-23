@@ -80,7 +80,7 @@ export const useGeneralSettings = () => {
         if (res?.success !== false) {
           toast.success(res?.message ?? "Settings updated successfully.");
         } else {
-          toast.error(res?.message ?? "Failed to update settings.");
+          console.error(res?.message ?? "Failed to update settings.");
         }
       } catch (err: any) {
         console.error(err);

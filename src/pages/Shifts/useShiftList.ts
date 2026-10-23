@@ -73,7 +73,7 @@ export const useShiftList = () => {
       toast.success(res?.message || "Shift deleted successfully");
     } catch (err: unknown) {
       const errorObj = err as ApiErrorResponse;
-      toast.error(
+      console.error(
         errorObj?.response?.data?.message ?? "Failed to delete shift."
       );
     }

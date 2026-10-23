@@ -86,13 +86,13 @@ export const useCandidateDocumentsSection = (candidate: any) => {
   const hasPendingFiles = Object.values(selectedFilesMap).flat().length > 0;
 
   const handleUploadMissing = async () => {
-    if (!hasPendingFiles) return toast.error("No files selected");
+    if (!hasPendingFiles) return console.error("No files selected");
     setIsSaving(true);
     try {
       toast.success("Documents updated successfully.");
       setSelectedFilesMap({});
     } catch {
-      toast.error("An error occurred during upload");
+      console.error("An error occurred during upload");
     } finally {
       setIsSaving(false);
     }

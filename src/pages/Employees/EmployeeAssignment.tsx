@@ -148,7 +148,7 @@
 //       setTotalCount((c) => c - 1);
 //       toast.success("Assignment removed.");
 //     } catch (err: any) {
-//       toast.error(err?.response?.data?.message ?? "Failed to delete assignment.");
+//       console.error(err?.response?.data?.message ?? "Failed to delete assignment.");
 //     }
 //   };
 

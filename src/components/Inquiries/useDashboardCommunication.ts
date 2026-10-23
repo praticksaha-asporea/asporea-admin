@@ -20,14 +20,14 @@ export const useDashboardCommunication = ({
 
   const handleSend = async () => {
     if (!message.trim()) {
-      return toast.error("Please enter a message before sending.");
+      return console.error("Please enter a message before sending.");
     }
     if (!candidate) return;
 
     if (isChat) {
       const targetNumber = candidate.contact?.whatsapp;
       if (!targetNumber) {
-        return toast.error("Candidate's WhatsApp or Phone number is missing.");
+        return console.error("Candidate's WhatsApp or Phone number is missing.");
       }
 
       let cleanNumber = targetNumber.replace(/\D/g, "");
@@ -54,10 +54,10 @@ export const useDashboardCommunication = ({
           onClose();
           setMessage("");
         } else {
-          toast.error(res?.data?.message || "Failed to send email");
+          console.error(res?.data?.message || "Failed to send email");
         }
       } catch (error) {
-        toast.error("An error occurred while sending email.");
+        console.error("An error occurred while sending email.");
       } finally {
         setLoading(false);
       }

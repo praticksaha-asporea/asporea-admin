@@ -39,7 +39,7 @@ const handleDelete = async (id: string) => {
         toast.success(res.message || "Section deleted successfully!");
         fetchSections();  
       } else {
-        toast.error(res?.message || "Failed to delete section.");
+        console.error(res?.message || "Failed to delete section.");
       }
     } catch (error) {
       console.error("Delete failed:", error);

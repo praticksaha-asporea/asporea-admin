@@ -6,7 +6,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useShiftForm } from "./useShiftForm";
 import TimePicker from "../../components/UI/timePicker/TimePicker";
-import { toast } from "react-hot-toast";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -32,11 +31,11 @@ const ShiftForm = () => {
 
   const handleAddSchedule = () => {
     if (!currentSchedule.startTime || !currentSchedule.endTime || currentSchedule.days.length === 0) {
-      toast.error("Please select at least one day and fill Start / End time.");
+      console.error("Please select at least one day and fill Start / End time.");
       return;
     }
     if (currentSchedule.endTime <= currentSchedule.startTime) {
-      toast.error("End time must be after start time. Overnight shifts are not allowed.");
+      console.error("End time must be after start time. Overnight shifts are not allowed.");
       return;
     }
     addOrUpdateSchedule();

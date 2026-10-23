@@ -57,7 +57,7 @@ export const useCountry = () => {
                 setEditId(null);
                 fetchCountries();
             } catch (error: any) {
-                toast.error(error?.response?.data?.message || "Something went wrong");
+                console.error(error?.response?.data?.message || "Something went wrong");
             } finally {
                 setLoading(false);
             }
@@ -108,7 +108,7 @@ const handleDelete = async (id: string, name?: string) => {
       setCountries((prev) =>
         prev.map((item) => (item._id === id ? { ...item, isActive: currentStatus } : item))
       );
-      toast.error("Failed to update status");
+      console.error("Failed to update status");
     }
   };
 

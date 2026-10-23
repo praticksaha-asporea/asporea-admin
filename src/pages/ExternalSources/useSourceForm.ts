@@ -85,7 +85,7 @@ export const useSourceForm = () => {
                     toast.success(`Source ${isEdit ? 'updated' : 'created'} successfully!`);
                     navigate("/external-sources");
                 } else {
-                    toast.error(res?.data?.message || "Failed to process request");
+                    console.error(res?.data?.message || "Failed to process request");
                 }
             } catch (error: unknown) {
               const errorObj = error as ApiErrorResponse;
@@ -134,7 +134,7 @@ export const useSourceForm = () => {
                             });
                         }
                     } else {
-                        toast.error("Invalid data format received");
+                        console.error("Invalid data format received");
                     }
                 } catch (error) {
                     console.error(error)

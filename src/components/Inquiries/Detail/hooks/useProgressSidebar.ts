@@ -31,7 +31,7 @@ export const useProgressSidebar = (
         resetForm();
         setEscalateTo("");
       } catch (err: any) {
-        toast.error(
+        console.error(
           err?.response?.data?.message || "Failed to submit escalation."
         );
       } finally {

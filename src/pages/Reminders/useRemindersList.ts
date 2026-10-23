@@ -68,7 +68,7 @@ export const useRemindersList = (currentUserId?: string) => {
         setTotalCount(paginatedData?.total || 0);
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to fetch reminders");
+      console.error(error?.response?.data?.message || "Failed to fetch reminders");
     } finally {
       setLoading(false);
     }
@@ -86,10 +86,10 @@ export const useRemindersList = (currentUserId?: string) => {
       if (res && res.success) {
         setSelectedReminder(res.data);
       } else {
-        toast.error(res?.message || "Failed to fetch reminder details");
+        console.error(res?.message || "Failed to fetch reminder details");
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Error fetching reminder details");
+      console.error(error?.response?.data?.message || "Error fetching reminder details");
     } finally {
       setDetailLoading(false);
     }
@@ -130,7 +130,7 @@ export const useRemindersList = (currentUserId?: string) => {
         fetchReminders();
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to delete reminder");
+      console.error(error?.response?.data?.message || "Failed to delete reminder");
     } finally {
       setDeleting(false);
     }
@@ -151,10 +151,10 @@ export const useRemindersList = (currentUserId?: string) => {
         if (res && res.success) {
           setTargets(res.data || []);
         } else {
-          toast.error(res?.message || "Failed to fetch target users");
+          console.error(res?.message || "Failed to fetch target users");
         }
       } catch (error: any) {
-        toast.error(error?.response?.data?.message || "Failed to fetch targets");
+        console.error(error?.response?.data?.message || "Failed to fetch targets");
       } finally {
         setTargetsLoading(false);
       }
@@ -171,7 +171,7 @@ export const useRemindersList = (currentUserId?: string) => {
         return prev.filter((item) => item !== id);
       }
       if (prev.length >= 20) {
-        toast.error("You can select a maximum of 20 recipients at a time");
+        console.error("You can select a maximum of 20 recipients at a time");
         return prev;
       }
       return [...prev, id];
@@ -186,7 +186,7 @@ export const useRemindersList = (currentUserId?: string) => {
       const capped = targets.slice(0, 20).map((t) => t.id);
       setSelectedTargetIds(capped);
       if (targets.length > 20) {
-        toast("Selected first 20 recipients (Max limit applied)", { icon: "ℹ️" });
+        console.error("Selected first 20 recipients (Max limit applied)");
       }
     }
   };
@@ -194,11 +194,11 @@ export const useRemindersList = (currentUserId?: string) => {
   // Send Bulk Reminder Submit
   const handleSendReminder = async () => {
     if (selectedTargetIds.length === 0) {
-      toast.error("Please select at least one recipient");
+      console.error("Please select at least one recipient");
       return;
     }
     if (!heading.trim() || !message.trim()) {
-      toast.error("Heading and message are required");
+      console.error("Heading and message are required");
       return;
     }
 
@@ -223,7 +223,7 @@ export const useRemindersList = (currentUserId?: string) => {
         fetchReminders();
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to send reminders");
+      console.error(error?.response?.data?.message || "Failed to send reminders");
     } finally {
       setIsSending(false);
     }

@@ -111,7 +111,7 @@ export const useUserForm = () => {
           if (res?.success !== false) {
             toast.success("User updated successfully");
           } else {
-            toast.error(res?.message ?? "Failed to update user.");
+            console.error(res?.message ?? "Failed to update user.");
           }
         } else {
           const res = await createUserApi(cleanPayload);
@@ -119,7 +119,7 @@ export const useUserForm = () => {
             toast.success("User created successfully");
             navigate("/users");
           } else {
-            toast.error(res?.message ?? "Failed to create user.");
+            console.error(res?.message ?? "Failed to create user.");
           }
         }
       } catch (err: any) {

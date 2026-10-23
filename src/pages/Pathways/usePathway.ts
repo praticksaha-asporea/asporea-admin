@@ -82,7 +82,7 @@ export const usePathway = () => {
         setEditId(null);
         fetchPathways();
       } catch (error: any) {
-        toast.error(error?.response?.data?.message || "Something went wrong");
+        console.error(error?.response?.data?.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -113,7 +113,7 @@ export const usePathway = () => {
       toast.success("Pathway deleted");
       fetchPathways();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to delete");
+      console.error(error?.response?.data?.message || "Failed to delete");
     }
   };
 
@@ -132,7 +132,7 @@ export const usePathway = () => {
       setPathways((prev) =>
         prev.map((item) => (item._id === id ? { ...item, isActive: currentStatus } : item))
       );
-      toast.error("Failed to update status");
+      console.error("Failed to update status");
     }
   };
 

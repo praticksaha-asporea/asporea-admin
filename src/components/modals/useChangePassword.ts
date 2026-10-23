@@ -50,7 +50,7 @@ export const useChangePassword = (userId: string, onClose: () => void) => {
           resetForm();
           setTimeout(onClose, 1500);
         } else {
-          toast.error(res?.message ?? "Failed to update password.");
+          console.error(res?.message ?? "Failed to update password.");
         }
       } catch (err: any) {
         console.error("API Error:", err);

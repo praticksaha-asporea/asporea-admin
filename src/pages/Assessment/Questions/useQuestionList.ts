@@ -60,7 +60,7 @@ export const useQuestionList = () => {
         toast.success(res.message || "Option deleted successfully!");
         fetchQuestions();
       } else {
-        toast.error(res?.message || "Failed to delete");
+        console.error(res?.message || "Failed to delete");
       }
     } catch (error) {
       console.error("Delete failed:", error);
@@ -78,7 +78,7 @@ export const useQuestionList = () => {
         toast.success(res.message || "Option restored successfully!");
         fetchQuestions();
       } else {
-        toast.error(res?.message || "Failed to restore");
+        console.error(res?.message || "Failed to restore");
       }
     } catch (error) {
       console.error("Restore failed:", error);

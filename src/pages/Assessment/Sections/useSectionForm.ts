@@ -88,7 +88,7 @@ useEffect(() => {
           toast.success(res.message || "Section created successfully!");
           navigate("/assessment-sections");
         } else {
-          toast.error(res?.message || "Failed to create section");
+          console.error(res?.message || "Failed to create section");
         }
       } catch (error) {
         console.error("Error creating section:", error);

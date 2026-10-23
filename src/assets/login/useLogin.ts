@@ -5,7 +5,6 @@ import { setUser } from "../../store/auth.store";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast } from "react-hot-toast";
 
 import type { LoginPayload } from "../../types/payloads/auth/auth.payloads";
 
@@ -62,13 +61,13 @@ export const useLogin = () => {
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values, { setFieldError }) => {
-      // ⚡ HARD SECURITY GUARD: Exact match check before API call
+     
       if (values.captcha.trim() !== captchaCode) {
-        toast.error("Incorrect CAPTCHA code!");
+        console.error("Incorrect CAPTCHA code!");
         setFieldError("captcha", "Incorrect CAPTCHA code!");
         generateCaptcha();
         loginFormik.setFieldValue("captcha", "");
-        return; // ⛔ Stop execution here! API will not be called.
+        return;  
       }
 
       setLoading(true);
@@ -94,7 +93,7 @@ export const useLogin = () => {
           }
         } else {
           setLoading(false);
-          toast.error(res.message || "Something went wrong");
+          console.error(res.message || "Something went wrong");
           generateCaptcha();
           loginFormik.setFieldValue("captcha", "");
         }

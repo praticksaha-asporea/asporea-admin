@@ -209,7 +209,7 @@ export const useDashboardView = () => {
 
         setSlots(fetchedSlots);
       } catch {
-        toast.error("Failed to fetch slots");
+        console.error("Failed to fetch slots");
         setSlots([]);
       } finally {
         setSlotsLoading(false);
@@ -268,12 +268,12 @@ const handleBookSlot = async () => {
         setModalOpen(false);
         fetchCandidates();
       } else {
-        toast.error(
+        console.error(
           res?.data?.message || res?.message || "Failed to book slot"
         );
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to book slot");
+      console.error(err?.response?.data?.message || "Failed to book slot");
     } finally {
       setBookingLoading(false);
     }

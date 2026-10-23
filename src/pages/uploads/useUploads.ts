@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getUploadsListApi } from "../../service/apis/upload.api";
 import { getUsersApi } from "../../service/apis/user.api";
 import useDebounce from "../../utils/useDebounce";  
-import { toast } from "react-hot-toast";
 
 // Centralized Type Imports
 import type { UploadResponseData } from "../../types/responses/upload/upload.responses";
@@ -73,7 +72,7 @@ useEffect(() => {
         setData(finalArray);
         setTotalPages(pages);
       } else {
-        toast.error(res?.message ?? "Failed to fetch uploads");
+        console.error(res?.message ?? "Failed to fetch uploads");
       }
     } catch (error: any) {
       console.error(error)    } finally {

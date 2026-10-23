@@ -104,7 +104,7 @@ export const useProfileForm = () => {
     if (!file) return;
 
     if (file.size > 800 * 1024) {
-      toast.error("File is too large! Please choose an image under 800KB.");
+      console.error("File is too large! Please choose an image under 800KB.");
       return;
     }
 
@@ -148,7 +148,7 @@ export const useProfileForm = () => {
       setCropModalOpen(false);
       toast.success("Image cropped successfully!");
     } catch (err) {
-      toast.error("Failed to crop image.");
+      console.error("Failed to crop image.");
     }
   };
 
@@ -198,7 +198,7 @@ export const useProfileForm = () => {
           dispatch(setUser(syncedReduxUser));
           setFileInput("");
         } else {
-          toast.error(res?.message ?? "Failed to update profile.");
+          console.error(res?.message ?? "Failed to update profile.");
         }
       } catch (err: any) {
         console.error(err);

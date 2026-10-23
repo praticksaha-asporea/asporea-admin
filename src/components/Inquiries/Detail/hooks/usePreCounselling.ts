@@ -109,7 +109,7 @@ export const usePreCounselling = (
     }),
     onSubmit: async (values, { setSubmitting }) => {
       if (!inqAssign?._id) {
-        toast.error("No pre-counselling assignment found");
+        console.error("No pre-counselling assignment found");
         setSubmitting(false);
         return;
       }
@@ -147,7 +147,7 @@ export const usePreCounselling = (
         }
         toast.success("Status Updated successfully");
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Save failed");
+        console.error(err?.response?.data?.message ?? "Save failed");
       } finally {
         setSubmitting(false);
       }
@@ -193,7 +193,7 @@ export const usePreCounselling = (
       });
       if (status === "queued") setIsPreLocked(false);
     } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Update failed");
+      console.error(err?.response?.data?.message ?? "Update failed");
     }
   };
 

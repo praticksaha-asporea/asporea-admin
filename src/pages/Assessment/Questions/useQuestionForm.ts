@@ -53,7 +53,7 @@ const fetchQuestionData = async (questionId: string) => {
           order: item.order || 0,
         });
       } else {
-        toast.error(res?.message || "Error fetching details");
+        console.error(res?.message || "Error fetching details");
       }
     } catch (error) {
       console.error("Error fetching question details from DB:", error);
@@ -87,7 +87,7 @@ const handleChange = (
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.section.trim()) {
-      return toast.error("Title and Section are required!");
+      return console.error("Title and Section are required!");
     }
 
     setIsLoading(true);
@@ -107,7 +107,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         toast.success(res.message || `Question ${isEdit ? 'updated' : 'created'} successfully!`);
         navigate("/questions");
       } else {
-        toast.error(res?.message || "Something went wrong");
+        console.error(res?.message || "Something went wrong");
       }
     } catch (error) {
       console.error("Error during submit", error);

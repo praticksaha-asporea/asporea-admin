@@ -101,10 +101,10 @@ const resolveFileSrc = (path: string | undefined): string => {
         toast.success("File deleted successfully.");
         fetchUploads();
       } else {
-        toast.error(res?.message || "Failed to delete file.");
+        console.error(res?.message || "Failed to delete file.");
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Something went wrong.");
+      console.error(err?.response?.data?.message || "Something went wrong.");
     }
   };
 

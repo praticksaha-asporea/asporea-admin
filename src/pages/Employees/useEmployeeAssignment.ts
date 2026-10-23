@@ -86,7 +86,7 @@ export const useEmployeeAssignment = () => {
             toast.success("Assignment removed.");
         } catch (err: unknown) {
             const errorObj = err as ApiErrorResponse;
-            toast.error(
+            console.error(
                 errorObj?.response?.data?.message ?? "Failed to delete assignment."
             );
         }

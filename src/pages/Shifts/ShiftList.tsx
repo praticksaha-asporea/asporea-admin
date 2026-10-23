@@ -118,7 +118,7 @@
 //       setTotalCount((c) => c - 1);
 //       toast.success(res?.message || "Shift deleted successfully");
 //     } catch (err: any) {
-//       toast.error(err?.response?.data?.message ?? "Failed to delete shift.");
+//       console.error(err?.response?.data?.message ?? "Failed to delete shift.");
 //     }
 //   };
 

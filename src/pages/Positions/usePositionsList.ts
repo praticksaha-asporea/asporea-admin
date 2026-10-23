@@ -73,7 +73,7 @@ export const usePositionsList = () => {
             toast.success("Position deleted.");
         } catch (err: unknown) {
             const errorObj = err as ApiErrorResponse;
-            toast.error(errorObj?.response?.data?.message ?? "Failed to delete.");
+            console.error(errorObj?.response?.data?.message ?? "Failed to delete.");
         }
     };
 

@@ -43,7 +43,7 @@ const [isLoading, setIsLoading] = useState(false);
             maxScore: currentSection.maxScore ? String(currentSection.maxScore) : "",
           });
         } else {
-          toast.error(detailRes?.message || "Failed to load section detail");
+          console.error(detailRes?.message || "Failed to load section detail");
         }
       } catch (error) {
         console.error("Error fetching section detail", error);
@@ -107,7 +107,7 @@ const [isLoading, setIsLoading] = useState(false);
           toast.success(res.message || "Section updated successfully!");
           navigate("/assessment-sections");
         } else {
-          toast.error(res?.message || "Failed to update section");
+          console.error(res?.message || "Failed to update section");
         }
       } catch (error) {
         console.error("Error updating section", error);

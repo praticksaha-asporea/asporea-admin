@@ -85,7 +85,7 @@ const ExternalSourcesList = () => {
     const targetStatus = isCurrentlyActive ? "inactive" : "active";
     const isParentInactive = typeof source.subOf === 'object' && source.subOf !== null && (source.subOf as any).status === 'inactive';
     if (!isCurrentlyActive && isParentInactive) {
-      toast.error("Parent account is inactive.Please activate the parent before the sub-account",{
+      console.error("Parent account is inactive.Please activate the parent before the sub-account",{
         id: "parent-inactive-warning",
       });
       return;
@@ -98,7 +98,7 @@ const ExternalSourcesList = () => {
       toast.success(`Source ${isCurrentlyActive ? 'deactivated' : 'activated'} successfully`);
       fetchSources(); 
     } catch (err: any) {
-    //   toast.error(err?.response?.data?.message || "Failed to update status");
+    //   console.error(err?.response?.data?.message || "Failed to update status");
     }
   };
 

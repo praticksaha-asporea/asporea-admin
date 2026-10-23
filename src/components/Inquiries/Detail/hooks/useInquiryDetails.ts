@@ -49,7 +49,7 @@ export const useInquiryDetails = (candidate: CandidateLead) => {
         await updateLeadAction({ id: candidate._id, ...values });
         toast.success("Inquiry details updated");
       } catch (err: any) {
-        toast.error(err?.response?.data?.message ?? "Update failed");
+        console.error(err?.response?.data?.message ?? "Update failed");
       } finally {
         setSubmitting(false);
       }

@@ -141,7 +141,7 @@
 //       setTotalCount((c) => c - 1);
 //       toast.success("Position deleted.");
 //     } catch (err: any) {
-//       toast.error(err?.response?.data?.message ?? "Failed to delete.");
+//       console.error(err?.response?.data?.message ?? "Failed to delete.");
 //     }
 //   };
 
