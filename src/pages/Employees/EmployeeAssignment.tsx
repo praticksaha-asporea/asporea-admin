@@ -209,8 +209,12 @@ import type { AssignmentResponseData } from "../../types/responses/assignment/as
 
 function EmployeeCell({ assignment }: { assignment: AssignmentResponseData }) {
   const emp = assignment.employeeId;
-  const name = typeof emp === "object" ? `${emp?.firstName} ${emp?.lastName}` : emp;
-  const role = typeof emp === "object" ? emp?.role : assignment.role;
+  const isObj = typeof emp === "object" && emp !== null;
+ const name = isObj
+    ? `${emp.firstName || ""} ${emp.lastName || ""}`.trim() || "N/A"
+    : emp || "Deleted Employee";
+    
+  const role = isObj ? emp.role : assignment.role;
   return (
     <div>
       <p className="text-sm font-bold text-gray-800">{name}</p>
@@ -220,14 +224,19 @@ function EmployeeCell({ assignment }: { assignment: AssignmentResponseData }) {
 }
 
 function LocationShiftCell({ assignment }: { assignment: AssignmentResponseData }) {
+  const branch = assignment.branchId;
+  const shift = assignment.shiftId;
+
+   
   const branchName =
-    typeof assignment.branchId === "object"
-      ? assignment.branchId.title
-      : assignment.branchId;
+    typeof branch === "object" && branch !== null
+      ? branch.title || "N/A"
+      : branch || "N/A";
+
   const shiftName =
-    typeof assignment.shiftId === "object"
-      ? assignment.shiftId.shiftName
-      : assignment.shiftId;
+    typeof shift === "object" && shift !== null
+      ? shift.shiftName || "N/A"
+      : shift || "N/A";
   return (
     <div className="space-y-1">
       <p className="text-sm font-bold text-gray-700 flex items-center gap-1.5">
