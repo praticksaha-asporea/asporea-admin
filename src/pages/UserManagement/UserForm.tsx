@@ -433,7 +433,7 @@ const UserForm = () => {
                         }`}
                     >
                       <option value="" disabled>Select access level...</option>
-                      <option value="admin">System Admin</option>
+                      {/* <option value="admin">System Admin</option> */}
                       <option value="user">Regular User</option>
                       <option value="tac">TAC</option>
                       <option value="tac_head">TAC Head</option>
@@ -531,7 +531,7 @@ const UserForm = () => {
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
               <p className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest">Notification Channels</p>
               <div className="flex flex-col gap-3">
-                {(["email", "sms", "whatsapp"] as const).map((channel) => (
+                {(["email",   "whatsapp"] as const).map((channel) => (
                   <label key={channel} className="flex items-center gap-3 cursor-pointer group">
                     <input
                       type="checkbox"
