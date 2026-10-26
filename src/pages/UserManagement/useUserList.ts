@@ -13,7 +13,7 @@ const filterConfigs: FilterConfig[] = [
     key: "role",
     placeholder: "All Roles",
     options: [
-      { label: "Admin", value: "admin" },
+      // { label: "Admin", value: "admin" },
       { label: "User", value: "user" },
       { label: "TAC", value: "tac" },
       { label: "TAC Head", value: "tac_head" },

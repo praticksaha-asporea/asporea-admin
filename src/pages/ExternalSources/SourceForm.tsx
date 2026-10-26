@@ -10,12 +10,16 @@ import {
   Briefcase,
   Lock,
   Link,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSourceForm } from "./useSourceForm";
+import { useState } from "react";
 
 const SourceForm = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const { formik, loading, fetching, isEdit, parentSources } = useSourceForm();
 
   if (fetching) {
@@ -296,29 +300,41 @@ const SourceForm = () => {
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
-                  Password {!isEdit && <span className="text-red-500">*</span>}
-                </label>
-                <div className="relative group">
-                  <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    {...formik.getFieldProps("password")}
-                    className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${
-                      formik.touched.password && formik.errors.password
-                        ? "border-red-400 focus:bg-white"
-                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                    }`}
-                  />
-                </div>
-                {formik.touched.password && formik.errors.password && (
-                  <p className="text-red-500 text-xs font-bold mt-1 pl-2">
-                    {formik.errors.password}
-                  </p>
-                )}
-              </div>
+            <div className="space-y-2">
+  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
+    Password {!isEdit && <span className="text-red-500">*</span>}
+  </label>
+  <div className="relative group">
+    <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+    <input
+      type={showPassword ? "text" : "password"}
+      placeholder="••••••••"
+      {...formik.getFieldProps("password")}
+      className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
+        formik.touched.password && formik.errors.password
+          ? "border-red-400 focus:bg-white"
+          : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+      }`}
+    />
+    <button
+      type="button"
+      onClick={() => setShowPassword((prev) => !prev)}
+      className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+      tabIndex={-1}
+    >
+      {showPassword ? (
+        <EyeOff className="w-5 h-5" />
+      ) : (
+        <Eye className="w-5 h-5" />
+      )}
+    </button>
+  </div>
+  {formik.touched.password && formik.errors.password && (
+    <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+      {formik.errors.password}
+    </p>
+  )}
+</div>
             </div>
           </div>
 
@@ -328,7 +344,7 @@ const SourceForm = () => {
               Notification Channels
             </p>
             <div className="flex flex-col gap-3">
-              {(["email", "sms", "whatsapp"] as const).map((channel) => (
+              {(["email","whatsapp"] as const).map((channel) => (
                 <label
                   key={channel}
                   className="flex items-center gap-3 cursor-pointer group"
