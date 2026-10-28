@@ -45,17 +45,17 @@ const getFileUrl = (pathStr?: string) => {
 
   const cleanPath = pathStr.startsWith("/") ? pathStr.slice(1) : pathStr;
 
-   
+
   if (cleanPath.startsWith("api/files/")) {
     return `${BACKEND_URL}/${cleanPath}`;
   }
 
- 
+
   if (cleanPath.startsWith("uploads/")) {
     return `${BACKEND_URL}/${cleanPath}`;
   }
 
-  
+
   return `${BACKEND_URL}/api/files/${cleanPath}`;
 };
 const isPdfFile = (src?: string) => {
@@ -182,25 +182,22 @@ const GeneralSettings = () => {
                     onClick={() =>
                       formik.setFieldValue("tacAssignmentType", mode)
                     }
-                    className={`flex flex-col gap-2 p-5 rounded-2xl   text-left transition-all ${
-                      isSelected
-                        ? "border-[#0054a6] bg-blue-50"
-                        : "border-gray-100 bg-gray-50 hover:border-gray-200"
-                    }`}
+                    className={`flex flex-col gap-2 p-5 rounded-2xl   text-left transition-all ${isSelected
+                      ? "border-[#0054a6] bg-blue-50"
+                      : "border-gray-100 bg-gray-50 hover:border-gray-200"
+                      }`}
                   >
                     <div
-                      className={`w-4 h-4 rounded-full  shadow-2xl flex items-center justify-center ${
-                        isSelected ? "border-[#0054a6]" : "border-gray-300"
-                      }`}
+                      className={`w-4 h-4 rounded-full  shadow-2xl flex items-center justify-center ${isSelected ? "border-[#0054a6]" : "border-gray-300"
+                        }`}
                     >
                       {isSelected && (
                         <div className="w-2 h-2 rounded-full bg-[#0054a6]" />
                       )}
                     </div>
                     <p
-                      className={`text-sm font-black capitalize ${
-                        isSelected ? "text-[#0054a6]" : "text-gray-600"
-                      }`}
+                      className={`text-sm font-black capitalize ${isSelected ? "text-[#0054a6]" : "text-gray-600"
+                        }`}
                     >
                       {mode === "counterwise" ? "Counter-wise" : "Random"}
                     </p>
@@ -215,7 +212,7 @@ const GeneralSettings = () => {
             </div>
           </div>
 
-           
+
           <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#fc7728]" />
 
@@ -233,27 +230,25 @@ const GeneralSettings = () => {
               </div>
             </div>
 
-           
+
             <div className="flex p-1 bg-gray-50 rounded-xl mb-6  shadow-2xl">
               <button
                 type="button"
                 onClick={() => setActiveFormatTab("inquiry")}
-                className={`flex-1 py-2.5 text-xs sm:text-lg font-medium tracking-wide rounded-lg transition-all ${
-                  activeFormatTab === "inquiry"
-                    ? "bg-white text-orange-500 shadow-2xl "
-                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
-                }`}
+                className={`flex-1 py-2.5 text-xs sm:text-lg font-medium tracking-wide rounded-lg transition-all ${activeFormatTab === "inquiry"
+                  ? "bg-white text-orange-500 shadow-2xl "
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
+                  }`}
               >
                 Inquiry No Format
               </button>
               <button
                 type="button"
                 onClick={() => setActiveFormatTab("appointment")}
-                className={`flex-1 py-2.5 text-xs sm:text-lg   font-medium tracking-wide rounded-lg transition-all ${
-                  activeFormatTab === "appointment"
-                    ? "bg-white text-blue-400 shadow-2xl "
-                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
-                }`}
+                className={`flex-1 py-2.5 text-xs sm:text-lg   font-medium tracking-wide rounded-lg transition-all ${activeFormatTab === "appointment"
+                  ? "bg-white text-blue-400 shadow-2xl "
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
+                  }`}
               >
                 Appointment No Format
               </button>
@@ -273,24 +268,22 @@ const GeneralSettings = () => {
                       type="text"
                       placeholder="ASP-INQ-00000"
                       {...formik.getFieldProps("inquiryNumberFormat")}
-                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-black text-gray-800 tracking-widest transition-all ${
-                        formik.touched.inquiryNumberFormat &&
+                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-black text-gray-800 tracking-widest transition-all ${formik.touched.inquiryNumberFormat &&
                         formik.errors.inquiryNumberFormat
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                      }`}
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                        }`}
                     />
                   ) : (
                     <input
                       type="text"
                       placeholder="ASP-APMNT-00000"
                       {...formik.getFieldProps("appointmentNumberFormat")}
-                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-black text-gray-800 tracking-widest transition-all ${
-                        formik.touched.appointmentNumberFormat &&
+                      className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-black text-gray-800 tracking-widest transition-all ${formik.touched.appointmentNumberFormat &&
                         formik.errors.appointmentNumberFormat
-                          ? "border-red-400 focus:bg-white"
-                          : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                      }`}
+                        ? "border-red-400 focus:bg-white"
+                        : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                        }`}
                     />
                   )}
                 </div>
@@ -317,11 +310,10 @@ const GeneralSettings = () => {
                   Preview
                 </span>
                 <span
-                  className={`text-sm font-medium tracking-widest transition-colors duration-200 ${
-                    activeFormatTab === "inquiry"
-                      ? "text-orange-500"
-                      : "text-blue-400"
-                  }`}
+                  className={`text-sm font-medium tracking-widest transition-colors duration-200 ${activeFormatTab === "inquiry"
+                    ? "text-orange-500"
+                    : "text-blue-400"
+                    }`}
                 >
                   {activeFormatTab === "inquiry"
                     ? formik.values.inquiryNumberFormat || "—"
@@ -488,8 +480,8 @@ const GeneralSettings = () => {
             <div className="space-y-4">
               {(
                 [
-                  { field: "escalationTimelineHours", label: "Escalation" },
-                  { field: "inqResTimelineHours", label: "Inq. Resolution" },
+                  { field: "inqResTimelineHours", label: "Inq. Followup" },
+                  { field: "escalationTimelineHours", label: "Head Followup" },
                   {
                     field: "preCounsellingTimelineHours",
                     label: "Pre-Counselling",
