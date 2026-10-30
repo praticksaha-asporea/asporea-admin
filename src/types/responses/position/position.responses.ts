@@ -1,7 +1,7 @@
 export interface DocRef {
-_id: string;
-title: string;
-section: string;
+  _id: string;
+  title: string;
+  section: string;
 }
 export interface CountryRef {
   _id: string;
@@ -26,9 +26,10 @@ export interface PositionResponseData {
   mandatoryDocuments?: DocRef[];
   positionBrochure?: string;
   type: string[] | undefined;
+  status: boolean;
 
   programTypes?: string[];
-  country?: string | CountryRef; 
+  country?: string | CountryRef;
   createdAt?: string;
   updatedAt?: string;
 }
