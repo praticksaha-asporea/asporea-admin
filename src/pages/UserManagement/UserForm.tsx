@@ -220,62 +220,65 @@ const UserForm = () => {
                     />
                   </div>
                 </div>
+{formik.values.role === "user" && (
+  <>
+    {/* Passport Status */}
+    <div className="space-y-2">
+      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Status</label>
+      <div className="relative group">
+        <FileText className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+        <select
+          {...formik.getFieldProps("passportStatus")}
+          className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-400 transition-all focus:bg-white"
+        >
+          <option value="not">Not Having</option>
+          <option value="having">Having Passport</option>
+          <option value="applied">Applied</option>
+        </select>
+      </div>
+    </div>
 
-                {/* Passport Status */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Status</label>
-                  <div className="relative group">
-                    <FileText className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-                    <select
-                      {...formik.getFieldProps("passportStatus")}
-                      className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-400 transition-all focus:bg-white"
-                    >
-                      <option value="not">Not Having</option>
-                      <option value="having">Having Passport</option>
-                      <option value="applied">Applied</option>
-                    </select>
-                  </div>
-                </div>
+    {/* Passport Number */}
+    {formik.values.passportStatus === "having" && (
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
+        <div className="relative group">
+          <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
+          <input
+            type="text"
+            placeholder="K1234567"
+            {...formik.getFieldProps("passportNo")}
+            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
+          />
+        </div>
+        {formik.touched.passportNo && formik.errors.passportNo && (
+          <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
+        )}
+      </div>
+    )}
 
-                {/* Passport Number */}
-                {formik.values.passportStatus === "having" && (
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
-                    <div className="relative group">
-                      <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                      <input
-                        type="text"
-                        placeholder="K1234567"
-                        {...formik.getFieldProps("passportNo")}
-                        className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
-                      />
-                    </div>
-                    {formik.touched.passportNo && formik.errors.passportNo && (
-                      <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
-                    )}
-                  </div>
-                )}
-
-                {/* Enquiry Status (Moved Inside Personal Info Grid) */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Enquiry Status</label>
-                  <div className="flex gap-6 p-4 mt-1 rounded-2xl border border-gray-100 bg-gray-50">
-                    {(["yes", "no"] as const).map((val) => (
-                      <label key={val} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          disabled
-                          type="radio"
-                          name="enquired"
-                          value={val}
-                          checked={formik.values.enquired === val}
-                          onChange={formik.handleChange}
-                          className="w-5 h-5 text-[#0054a6] focus:ring-[#0054a6]"
-                        />
-                        <span className="text-sm font-bold text-gray-500 capitalize">{val}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+    {/* Enquiry Status */}
+    <div className="space-y-2">
+      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Enquiry Status</label>
+      <div className="flex gap-6 p-4 mt-1 rounded-2xl border border-gray-100 bg-gray-50">
+        {(["yes", "no"] as const).map((val) => (
+          <label key={val} className="flex items-center gap-2 cursor-pointer">
+            <input
+              disabled
+              type="radio"
+              name="enquired"
+              value={val}
+              checked={formik.values.enquired === val}
+              onChange={formik.handleChange}
+              className="w-5 h-5 text-[#0054a6] focus:ring-[#0054a6]"
+            />
+            <span className="text-sm font-bold text-gray-500 capitalize">{val}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  </>
+)}
 
               </div>
             </div> {/* END OF PERSONAL INFORMATION CARD */}
