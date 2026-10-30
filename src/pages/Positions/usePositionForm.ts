@@ -29,7 +29,8 @@ const emptyValues: PositionFormValues = {
   requiredDocuments: [],
   mandatoryDocuments: [],
   programTypes: [],
-  country:"",
+  country: "",
+  status: true,
 
 };
 
@@ -153,7 +154,8 @@ export const usePositionForm = () => {
             programTypes: (p.type ?? p.programTypes ?? []).map((t: any) =>
               typeof t === "string" ? t : t._id
             ),
-           country: typeof p.country === "string" ? p.country : p.country?._id ?? "",
+            country: typeof p.country === "string" ? p.country : p.country?._id ?? "",
+            status: p.status ? true : false
           });
           if (p.positionBrochure) setBrochurePreview(p.positionBrochure);
         }

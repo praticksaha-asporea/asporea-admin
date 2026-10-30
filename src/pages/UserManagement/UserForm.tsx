@@ -9,6 +9,8 @@ import {
   Globe,
   GraduationCap,
   Award,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUserForm } from "./useUserForm";
@@ -21,7 +23,7 @@ const UserForm = () => {
   const navigate = useNavigate();
   const { formik, loading, fetching, isEdit, profileImage } = useUserForm();
   const [showPasswordField, setShowPasswordField] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   // ── Fetch skeleton ─────────────────────────────────────────────────────────
   if (fetching) {
     return (
@@ -339,7 +341,7 @@ const UserForm = () => {
 
             {/* 3. TAC PROFILE CARD (Separated from Grid) */}
             <AnimatePresence>
-              {(formik.values.role === "tac" || formik.values.role === "tac_head") && (
+              {(formik.values.role === "tac" ) && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -448,81 +450,114 @@ const UserForm = () => {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
-                    Password {!isEdit && <span className="text-red-500">*</span>}
-                  </label>
+               <div className="space-y-2">
+  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
+    Password {!isEdit && <span className="text-red-500">*</span>}
+  </label>
 
-                  {isEdit ? (
-                    <div className="space-y-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowPasswordField((prev) => !prev);
-                          if (showPasswordField) formik.setFieldValue("password", "");
-                        }}
-                        className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
-                      >
-                        <ShieldCheck className="w-5 h-5 text-gray-400 group-hover:text-[#fc7728] transition-colors shrink-0" />
-                        <span className="text-sm font-bold text-gray-500 group-hover:text-gray-700 transition-colors">
-                          Change Password
-                        </span>
-                        <span className={`ml-auto text-xs font-bold px-3 py-1 rounded-full transition-colors ${showPasswordField
-                          ? "text-orange-500 bg-orange-50"
-                          : "text-[#0D80F2] bg-blue-50"
-                          }`}>
-                          {showPasswordField ? "Cancel" : "Update"}
-                        </span>
-                      </button>
+  {isEdit ? (
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={() => {
+          setShowPasswordField((prev) => !prev);
+          if (showPasswordField) formik.setFieldValue("password", "");
+        }}
+        className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
+      >
+        <ShieldCheck className="w-5 h-5 text-gray-400 group-hover:text-[#fc7728] transition-colors shrink-0" />
+        <span className="text-sm font-bold text-gray-500 group-hover:text-gray-700 transition-colors">
+          Change Password
+        </span>
+        <span
+          className={`ml-auto text-xs font-bold px-3 py-1 rounded-full transition-colors ${
+            showPasswordField
+              ? "text-orange-500 bg-orange-50"
+              : "text-[#0D80F2] bg-blue-50"
+          }`}
+        >
+          {showPasswordField ? "Cancel" : "Update"}
+        </span>
+      </button>
 
-                      <AnimatePresence>
-                        {showPasswordField && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="relative group">
-                              <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-                              <input
-                                type="password"
-                                placeholder="New password"
-                                {...formik.getFieldProps("password")}
-                                className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
-                                  ? "border-red-400 focus:bg-white"
-                                  : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                                  }`}
-                              />
-                            </div>
-                            {formik.touched.password && formik.errors.password && (
-                              <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.password}</p>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="relative group">
-                        <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-                        <input
-                          type="password"
-                          placeholder="••••••••"
-                          {...formik.getFieldProps("password")}
-                          className={`w-full pl-14 pr-4 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
-                            ? "border-red-400 focus:bg-white"
-                            : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                            }`}
-                        />
-                      </div>
-                      {formik.touched.password && formik.errors.password && (
-                        <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.password}</p>
-                      )}
-                    </>
-                  )}
-                </div>
+      <AnimatePresence>
+        {showPasswordField && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="relative group">
+              <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="New password"
+                {...formik.getFieldProps("password")}
+                className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
+                  formik.touched.password && formik.errors.password
+                    ? "border-red-400 focus:bg-white"
+                    : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+            {formik.touched.password && formik.errors.password && (
+              <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+                {formik.errors.password}
+              </p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  ) : (
+    <>
+      <div className="relative group">
+        <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="••••••••"
+          {...formik.getFieldProps("password")}
+          className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
+            formik.touched.password && formik.errors.password
+              ? "border-red-400 focus:bg-white"
+              : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+          }`}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+          tabIndex={-1}
+        >
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
+        </button>
+      </div>
+      {formik.touched.password && formik.errors.password && (
+        <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+          {formik.errors.password}
+        </p>
+      )}
+    </>
+  )}
+</div>
 
               </div>
             </div>

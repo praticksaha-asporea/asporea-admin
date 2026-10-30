@@ -138,11 +138,10 @@ const PositionForm = () => {
                   type="text"
                   placeholder="e.g. Cashier"
                   {...formik.getFieldProps("title")}
-                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${
-                    formik.touched.title && formik.errors.title
-                      ? "border-red-400 focus:bg-white"
-                      : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
-                  }`}
+                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 transition-all ${formik.touched.title && formik.errors.title
+                    ? "border-red-400 focus:bg-white"
+                    : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+                    }`}
                 />
                 {formik.touched.title && formik.errors.title && (
                   <p className="text-red-500 text-xs font-bold pl-2">
@@ -296,6 +295,41 @@ const PositionForm = () => {
               <span className="text-xs font-black text-[#10b981] bg-emerald-50 px-3 py-1 rounded-full">
                 {formik.values.programTypes?.length || 0} selected
               </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-gray-500">
+                Status
+              </span>
+
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="true"
+                    checked={formik.values.status === true}
+                    onChange={() => formik.setFieldValue("status", true)}
+                    className="accent-emerald-500"
+                  />
+                  <span className="text-xs font-bold text-emerald-600">
+                    Active
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="false"
+                    checked={formik.values.status === false}
+                    onChange={() => formik.setFieldValue("status", false)}
+                    className="accent-orange-500"
+                  />
+                  <span className="text-xs font-bold text-orange-500">
+                    Inactive
+                  </span>
+                </label>
+              </div>
             </div>
           </div>
 
