@@ -242,9 +242,8 @@ function CustomTable<T extends { _id: number | string }>({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
-                  }`}
+                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
+                    }`}
                 >
                   {page}
                 </button>
@@ -319,7 +318,7 @@ export function UserCell({ firstName, lastName, email, profilePic }: UserCellPro
       </div>
       <div>
         <p className="text-sm font-bold text-gray-800 capitalize">
-          {firstName} {lastName || ""}
+          {[firstName, lastName].filter(Boolean).join(" ")}
         </p>
         <p className="text-xs text-gray-500 font-medium">{email}</p>
       </div>

@@ -4,8 +4,9 @@ export interface PositionPayload {
   requiredDocuments: string[];
   mandatoryDocuments: string[];
   programTypes?: string[];
-  country?: string;   
+  country?: string;
   positionBrochure?: string;
+  status: boolean;
 }
 
 
