@@ -68,10 +68,10 @@ const Uploads = () => {
     if (!path || typeof path !== "string") return false;
     return /\.pdf$/i.test(path);
   };
-const resolveFileSrc = (path: string | undefined): string => {
+  const resolveFileSrc = (path: string | undefined): string => {
     if (!path) return "";
-    
-   
+
+
     if (
       path.startsWith("data:") ||
       path.startsWith("http://") ||
@@ -82,12 +82,12 @@ const resolveFileSrc = (path: string | undefined): string => {
 
     const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 
-    
-    if (cleanPath.startsWith("uploads/")) {
-      return `${BACKEND_BASE_URL}/${cleanPath}`;
-    }
 
-    
+    // if (cleanPath.startsWith("uploads/")) {
+    //   return `${BACKEND_BASE_URL}/${cleanPath}`;
+    // }
+
+
     return `${BACKEND_BASE_URL}/api/files/${cleanPath}`;
   };
 
@@ -314,8 +314,8 @@ const resolveFileSrc = (path: string | undefined): string => {
         </div>
       )}
 
-      
-    <AnimatePresence>
+
+      <AnimatePresence>
         {previewImage && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -332,9 +332,9 @@ const resolveFileSrc = (path: string | undefined): string => {
               className="relative max-w-lg w-full mt-23 ml-45   rounded-3xl p-2    overflow-hidden flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-            
 
-          
+
+
               <div className="w-full flex items-center justify-center  overflow-hidden rounded-2xl">
                 <img
                   src={previewImage}

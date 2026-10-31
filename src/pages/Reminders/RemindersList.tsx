@@ -56,7 +56,7 @@ const getAvatarUrl = (picPath?: string | null) => {
     return picPath;
   }
 
-  const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL || "";
+  const baseUrl = import.meta.env.VITE_ASSETS_URL || "";
   const cleanPath = picPath.startsWith("/") ? picPath : `/${picPath}`;
   return `${baseUrl}${cleanPath}`;
 };

@@ -242,9 +242,8 @@ function CustomTable<T extends { _id: number | string }>({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
-                  }`}
+                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${page === currentPage ? "bg-[#0D80F2] text-white" : "text-gray-500 hover:bg-gray-100"
+                    }`}
                 >
                   {page}
                 </button>
@@ -276,9 +275,9 @@ export interface UserCellProps {
 }
 
 export function UserCell({ firstName, lastName, email, profilePic }: UserCellProps) {
-  let BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
-  if (!BACKEND_BASE_URL || BACKEND_BASE_URL === "undefined") {
-    BACKEND_BASE_URL = "http://localhost:3000";
+  let VITE_ASSETS_URL = import.meta.env.VITE_ASSETS_URL;
+  if (!VITE_ASSETS_URL || VITE_ASSETS_URL === "undefined") {
+    VITE_ASSETS_URL = "http://localhost:3000";
   }
 
   // Construct absolute file path
@@ -286,12 +285,12 @@ export function UserCell({ firstName, lastName, email, profilePic }: UserCellPro
     if (!profilePic) return "/avatar.png";
     if (typeof profilePic === "string") {
       if (profilePic.startsWith("http") || profilePic.startsWith("data:")) return profilePic;
-      return `${BACKEND_BASE_URL}${profilePic.startsWith("/") ? "" : "/"}${profilePic}`;
+      return `${VITE_ASSETS_URL}${profilePic.startsWith("/") ? "" : "/"}${profilePic}`;
     }
     if (typeof profilePic === "object" && profilePic?.path) {
       const path = profilePic.path;
       if (path.startsWith("http") || path.startsWith("data:")) return path;
-      return `${BACKEND_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+      return `${VITE_ASSETS_URL}${path.startsWith("/") ? "" : "/"}${path}`;
     }
     return "/avatar.png";
   };
@@ -319,7 +318,7 @@ export function UserCell({ firstName, lastName, email, profilePic }: UserCellPro
       </div>
       <div>
         <p className="text-sm font-bold text-gray-800 capitalize">
-          {firstName} {lastName || ""}
+          {[firstName, lastName].filter(Boolean).join(" ")}
         </p>
         <p className="text-xs text-gray-500 font-medium">{email}</p>
       </div>

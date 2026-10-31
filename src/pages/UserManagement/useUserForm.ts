@@ -92,6 +92,9 @@ export const useUserForm = () => {
          
         if (cleanPayload.role !== 'user') {
           delete cleanPayload.candidateProfile;
+          delete cleanPayload.passportStatus;
+          delete cleanPayload.passportNo;
+          delete cleanPayload.enquired;
         }
 
         if (cleanPayload.role !== 'tac' && cleanPayload.role !== 'tac_head') {

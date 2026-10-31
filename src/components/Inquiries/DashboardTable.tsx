@@ -26,7 +26,7 @@ import {
   User2,
 } from "lucide-react";
 import { CamelCase } from "../../utils/common";
-import type{ CandidateRow } from "../../types/object.types";
+import type { CandidateRow } from "../../types/object.types";
 import { useDashboardTable } from "./useDashboardTable";
 
 dayjs.extend(relativeTime);
@@ -58,7 +58,7 @@ const resolveFileSrc = (path?: string) => {
   )
     return path;
   const BACKEND_BASE =
-    import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_ASSETS_URL || "http://localhost:3000";
   return `${BACKEND_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 };
 
@@ -102,8 +102,8 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                     head === "Status" || head === "Token"
                       ? "center"
                       : head === "Actions"
-                      ? "right"
-                      : "left"
+                        ? "right"
+                        : "left"
                   }
                   className="py-3 px-2 font-semibold bg-(--mui-palette-primary) text-(--mui-palette-secondary-main) text-[12px] leading-tight"
                 >
@@ -240,8 +240,8 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                     className="resp-cell py-2! px-2!"
                     data-label="Actions"
                   >
-                   <Box className="flex gap-1 md:justify-end items-center">
-                  
+                    <Box className="flex gap-1 md:justify-end items-center">
+
                       <IconButton
                         size="small"
                         title="Chat via WhatsApp"
@@ -250,7 +250,7 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                         <MessageCircle size={18} className="text-gray-500" />
                       </IconButton>
 
-                       
+
                       <IconButton
                         size="small"
                         title="Send Email"
@@ -259,7 +259,7 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                         <Mail size={18} className="text-gray-500" />
                       </IconButton>
 
-               
+
                       {candidate.status === "inquiry_submitted" && (
                         <IconButton
                           size="small"
@@ -272,21 +272,21 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                         </IconButton>
                       )}
 
-                 
+
                       {(candidate.status === "pre_not_responded" ||
                         preRescheduleStatuses.includes(candidate.status)) && (
-                        <IconButton
-                          size="small"
-                          title="Reschedule Pre-Counselling"
-                          onClick={() =>
-                            openScheduleModal(candidate, true, "pre")
-                          }
-                        >
-                          <CalendarClock size={18} className="text-orange-500" />
-                        </IconButton>
-                      )}
+                          <IconButton
+                            size="small"
+                            title="Reschedule Pre-Counselling"
+                            onClick={() =>
+                              openScheduleModal(candidate, true, "pre")
+                            }
+                          >
+                            <CalendarClock size={18} className="text-orange-500" />
+                          </IconButton>
+                        )}
 
-                      
+
                       {assessScheduleStatuses.includes(candidate.status) && (
                         <IconButton
                           size="small"
@@ -299,7 +299,7 @@ const DashboardTable: React.FC<DashboardTableProps> = ({
                         </IconButton>
                       )}
 
-                     
+
                       <IconButton
                         size="small"
                         title="View Candidate Details"

@@ -17,11 +17,12 @@ const resolveFileSrc = (path?: string) => {
   )
     return path;
   const BACKEND_BASE =
-    import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_ASSETS_URL || "http://localhost:3000";
   return `${BACKEND_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 };
 
 const CandidateHeader: React.FC<CandidateHeaderProps> = ({ candidate, onBack }) => {
+
   const profilePicUrl = resolveFileSrc(candidate?.profilePic);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -77,12 +78,12 @@ const CandidateHeader: React.FC<CandidateHeaderProps> = ({ candidate, onBack }) 
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
         maxWidth="md"
-       slotProps={{
-    paper: {
-      style: { backgroundColor: "transparent", boxShadow: "none" },
-    },
-  }}
->   
+        slotProps={{
+          paper: {
+            style: { backgroundColor: "transparent", boxShadow: "none" },
+          },
+        }}
+      >
         <Box className="relative">
           <IconButton
             onClick={() => setPreviewOpen(false)}
