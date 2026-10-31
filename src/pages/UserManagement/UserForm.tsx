@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUserForm } from "./useUserForm";
 // import ChangePasswordModal from "../../components/modals/ChangePasswordModal"; // reserved for later
 
-const rawApiUrl = import.meta.env.VITE_BACKEND_BASE_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const rawApiUrl = import.meta.env.VITE_ASSETS_URL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const SERVER_ROOT_URL = rawApiUrl.replace(/\/api(\/v\d+)?\/?$/, "").replace(/\/$/, "");
 
 const UserForm = () => {
@@ -220,65 +220,65 @@ const UserForm = () => {
                     />
                   </div>
                 </div>
-{formik.values.role === "user" && (
-  <>
-    {/* Passport Status */}
-    <div className="space-y-2">
-      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Status</label>
-      <div className="relative group">
-        <FileText className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-        <select
-          {...formik.getFieldProps("passportStatus")}
-          className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-400 transition-all focus:bg-white"
-        >
-          <option value="not">Not Having</option>
-          <option value="having">Having Passport</option>
-          <option value="applied">Applied</option>
-        </select>
-      </div>
-    </div>
+                {formik.values.role === "user" && (
+                  <>
+                    {/* Passport Status */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Status</label>
+                      <div className="relative group">
+                        <FileText className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+                        <select
+                          {...formik.getFieldProps("passportStatus")}
+                          className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-400 transition-all focus:bg-white"
+                        >
+                          <option value="not">Not Having</option>
+                          <option value="having">Having Passport</option>
+                          <option value="applied">Applied</option>
+                        </select>
+                      </div>
+                    </div>
 
-    {/* Passport Number */}
-    {formik.values.passportStatus === "having" && (
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
-        <div className="relative group">
-          <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-          <input
-            type="text"
-            placeholder="K1234567"
-            {...formik.getFieldProps("passportNo")}
-            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
-          />
-        </div>
-        {formik.touched.passportNo && formik.errors.passportNo && (
-          <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
-        )}
-      </div>
-    )}
+                    {/* Passport Number */}
+                    {formik.values.passportStatus === "having" && (
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Passport Number</label>
+                        <div className="relative group">
+                          <IdCardLanyard className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
+                          <input
+                            type="text"
+                            placeholder="K1234567"
+                            {...formik.getFieldProps("passportNo")}
+                            className="w-full pl-14 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-[#0054a6]/30 rounded-2xl outline-none font-bold text-gray-700 transition-all focus:bg-white"
+                          />
+                        </div>
+                        {formik.touched.passportNo && formik.errors.passportNo && (
+                          <p className="text-red-500 text-xs font-bold mt-1 pl-2">{formik.errors.passportNo}</p>
+                        )}
+                      </div>
+                    )}
 
-    {/* Enquiry Status */}
-    <div className="space-y-2">
-      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Enquiry Status</label>
-      <div className="flex gap-6 p-4 mt-1 rounded-2xl border border-gray-100 bg-gray-50">
-        {(["yes", "no"] as const).map((val) => (
-          <label key={val} className="flex items-center gap-2 cursor-pointer">
-            <input
-              disabled
-              type="radio"
-              name="enquired"
-              value={val}
-              checked={formik.values.enquired === val}
-              onChange={formik.handleChange}
-              className="w-5 h-5 text-[#0054a6] focus:ring-[#0054a6]"
-            />
-            <span className="text-sm font-bold text-gray-500 capitalize">{val}</span>
-          </label>
-        ))}
-      </div>
-    </div>
-  </>
-)}
+                    {/* Enquiry Status */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">Enquiry Status</label>
+                      <div className="flex gap-6 p-4 mt-1 rounded-2xl border border-gray-100 bg-gray-50">
+                        {(["yes", "no"] as const).map((val) => (
+                          <label key={val} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              disabled
+                              type="radio"
+                              name="enquired"
+                              value={val}
+                              checked={formik.values.enquired === val}
+                              onChange={formik.handleChange}
+                              className="w-5 h-5 text-[#0054a6] focus:ring-[#0054a6]"
+                            />
+                            <span className="text-sm font-bold text-gray-500 capitalize">{val}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
 
               </div>
             </div> {/* END OF PERSONAL INFORMATION CARD */}
@@ -344,7 +344,7 @@ const UserForm = () => {
 
             {/* 3. TAC PROFILE CARD (Separated from Grid) */}
             <AnimatePresence>
-              {(formik.values.role === "tac" ) && (
+              {(formik.values.role === "tac") && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -453,114 +453,111 @@ const UserForm = () => {
                   )}
                 </div>
 
-               <div className="space-y-2">
-  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
-    Password {!isEdit && <span className="text-red-500">*</span>}
-  </label>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
+                    Password {!isEdit && <span className="text-red-500">*</span>}
+                  </label>
 
-  {isEdit ? (
-    <div className="space-y-3">
-      <button
-        type="button"
-        onClick={() => {
-          setShowPasswordField((prev) => !prev);
-          if (showPasswordField) formik.setFieldValue("password", "");
-        }}
-        className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
-      >
-        <ShieldCheck className="w-5 h-5 text-gray-400 group-hover:text-[#fc7728] transition-colors shrink-0" />
-        <span className="text-sm font-bold text-gray-500 group-hover:text-gray-700 transition-colors">
-          Change Password
-        </span>
-        <span
-          className={`ml-auto text-xs font-bold px-3 py-1 rounded-full transition-colors ${
-            showPasswordField
-              ? "text-orange-500 bg-orange-50"
-              : "text-[#0D80F2] bg-blue-50"
-          }`}
-        >
-          {showPasswordField ? "Cancel" : "Update"}
-        </span>
-      </button>
+                  {isEdit ? (
+                    <div className="space-y-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowPasswordField((prev) => !prev);
+                          if (showPasswordField) formik.setFieldValue("password", "");
+                        }}
+                        className="w-full flex items-center gap-3 px-5 py-4 bg-gray-50 border-2 border-transparent hover:border-[#fc7728]/30 hover:bg-white rounded-2xl transition-all group"
+                      >
+                        <ShieldCheck className="w-5 h-5 text-gray-400 group-hover:text-[#fc7728] transition-colors shrink-0" />
+                        <span className="text-sm font-bold text-gray-500 group-hover:text-gray-700 transition-colors">
+                          Change Password
+                        </span>
+                        <span
+                          className={`ml-auto text-xs font-bold px-3 py-1 rounded-full transition-colors ${showPasswordField
+                              ? "text-orange-500 bg-orange-50"
+                              : "text-[#0D80F2] bg-blue-50"
+                            }`}
+                        >
+                          {showPasswordField ? "Cancel" : "Update"}
+                        </span>
+                      </button>
 
-      <AnimatePresence>
-        {showPasswordField && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="relative group">
-              <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="New password"
-                {...formik.getFieldProps("password")}
-                className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
-                  formik.touched.password && formik.errors.password
-                    ? "border-red-400 focus:bg-white"
-                    : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
-                tabIndex={-1}
-              >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
-              </button>
-            </div>
-            {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-xs font-bold mt-1 pl-2">
-                {formik.errors.password}
-              </p>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  ) : (
-    <>
-      <div className="relative group">
-        <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder="••••••••"
-          {...formik.getFieldProps("password")}
-          className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${
-            formik.touched.password && formik.errors.password
-              ? "border-red-400 focus:bg-white"
-              : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
-          }`}
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
-          tabIndex={-1}
-        >
-          {showPassword ? (
-            <EyeOff className="w-5 h-5" />
-          ) : (
-            <Eye className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-      {formik.touched.password && formik.errors.password && (
-        <p className="text-red-500 text-xs font-bold mt-1 pl-2">
-          {formik.errors.password}
-        </p>
-      )}
-    </>
-  )}
-</div>
+                      <AnimatePresence>
+                        {showPasswordField && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="relative group">
+                              <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="New password"
+                                {...formik.getFieldProps("password")}
+                                className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
+                                    ? "border-red-400 focus:bg-white"
+                                    : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                                  }`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+                                tabIndex={-1}
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
+                              </button>
+                            </div>
+                            {formik.touched.password && formik.errors.password && (
+                              <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+                                {formik.errors.password}
+                              </p>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative group">
+                        <Lock className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#fc7728] transition-colors" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          {...formik.getFieldProps("password")}
+                          className={`w-full pl-14 pr-14 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all [&::-ms-reveal]:hidden [&::-ms-clear]:hidden ${formik.touched.password && formik.errors.password
+                              ? "border-red-400 focus:bg-white"
+                              : "border-transparent focus:border-[#fc7728]/30 focus:bg-white"
+                            }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="absolute right-5 top-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
+                      {formik.touched.password && formik.errors.password && (
+                        <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+                          {formik.errors.password}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
 
               </div>
             </div>
@@ -569,7 +566,7 @@ const UserForm = () => {
             <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.04)] border border-gray-100">
               <p className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest">Notification Channels</p>
               <div className="flex flex-col gap-3">
-                {(["email",   "whatsapp"] as const).map((channel) => (
+                {(["email", "whatsapp"] as const).map((channel) => (
                   <label key={channel} className="flex items-center gap-3 cursor-pointer group">
                     <input
                       type="checkbox"

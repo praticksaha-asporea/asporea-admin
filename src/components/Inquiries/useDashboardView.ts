@@ -85,7 +85,7 @@ export const useDashboardView = () => {
     setLoading(true);
     setError(null);
     try {
-       const payload= {
+      const payload = {
         page,
         limit: LIMIT,
         search: search || undefined,
@@ -116,7 +116,7 @@ export const useDashboardView = () => {
     fetchCandidates();
   }, [fetchCandidates]);
 
-   const openScheduleModal = async (
+  const openScheduleModal = async (
     candidate: any,
     _isReschedule = false,
     phase: "pre" | "assess" = "pre"
@@ -131,7 +131,7 @@ export const useDashboardView = () => {
         ? (rawBranch?._id || rawBranch?.id)?.toString()
         : rawBranch?.toString() || "";
 
-     
+
     const extractTacId = (val: any): string => {
       if (!val) return "";
       if (typeof val === "string") return val.trim();
@@ -141,7 +141,7 @@ export const useDashboardView = () => {
       return String(val).trim();
     };
 
-    
+
     const prevTacId =
       extractTacId(candidate?.consultantId) ||
       extractTacId(candidate?.preferences?.consultantId);
@@ -159,7 +159,7 @@ export const useDashboardView = () => {
         if (fetchedList.length > 0) {
           setTacList(fetchedList);
 
-    
+
           const matchedTac = prevTacId
             ? fetchedList.find((t) => String(t._id).trim() === prevTacId)
             : null;
@@ -167,7 +167,7 @@ export const useDashboardView = () => {
           if (matchedTac) {
             setSelectedTac(String(matchedTac._id));
           } else {
-          
+
             setSelectedTac(String(fetchedList[0]._id));
           }
         } else {
@@ -184,7 +184,7 @@ export const useDashboardView = () => {
     }
   };
 
-  
+
   useEffect(() => {
     const loadSlots = async () => {
       const tacId =
@@ -203,7 +203,7 @@ export const useDashboardView = () => {
           date,
         });
 
-        
+
         const rawSlots = res?.data?.data ?? res?.data ?? res;
         const fetchedSlots: Slot[] = Array.isArray(rawSlots) ? rawSlots : [];
 
@@ -219,7 +219,7 @@ export const useDashboardView = () => {
     loadSlots();
   }, [selectedTac, date, modalOpen]);
 
-const handleBookSlot = async () => {
+  const handleBookSlot = async () => {
     const tacId =
       typeof selectedTac === "object"
         ? (selectedTac as any)?._id
@@ -249,7 +249,7 @@ const handleBookSlot = async () => {
         res = await scheduleAssessmentAction(payload);
       }
 
-       
+
       const isSuccess =
         res?.data?.success === true ||
         res?.success === true ||
@@ -259,8 +259,7 @@ const handleBookSlot = async () => {
       const serverMessage =
         res?.data?.message ||
         res?.message ||
-        `${
-          schedulePhase === "pre" ? "Pre-Counselling" : "Assessment"
+        `${schedulePhase === "pre" ? "Pre-Counselling" : "Assessment"
         } session scheduled successfully!`;
 
       if (isSuccess) {

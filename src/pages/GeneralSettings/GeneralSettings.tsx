@@ -51,9 +51,9 @@ const getFileUrl = (pathStr?: string) => {
   }
 
 
-  if (cleanPath.startsWith("uploads/")) {
-    return `${BACKEND_URL}/${cleanPath}`;
-  }
+  // if (cleanPath.startsWith("uploads/")) {
+  //   return `${BACKEND_URL}/${cleanPath}`;
+  // }
 
 
   return `${BACKEND_URL}/api/files/${cleanPath}`;
