@@ -40,7 +40,7 @@ const resolveFileSrc = (path?: string | null) => {
     return path;
   }
   const BACKEND_BASE =
-    import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_ASSETS_URL || "http://localhost:3000";
   return `${BACKEND_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 };
 
@@ -105,12 +105,12 @@ const PreCounsellingForm: React.FC<PreCounsellingFormProps> = ({
                   onChange={(e, value) => {
                     setIsPreLocked(
                       !(preForm.isSubmitting || isWithinSchedule(inqAssign)) &&
-                        (value === "completed" ||
-                          value === "rejected" ||
-                          value === "queued") &&
-                        inqAssign?.status !== "completed" &&
-                        inqAssign?.status !== "rejected" &&
-                        inqAssign?.status !== "queued",
+                      (value === "completed" ||
+                        value === "rejected" ||
+                        value === "queued") &&
+                      inqAssign?.status !== "completed" &&
+                      inqAssign?.status !== "rejected" &&
+                      inqAssign?.status !== "queued",
                     );
                     return preForm.handleChange(e);
                   }}
@@ -202,8 +202,7 @@ const PreCounsellingForm: React.FC<PreCounsellingFormProps> = ({
                 disabled
                 value={
                   consultantId?.firstName
-                    ? `${consultantId.firstName} ${
-                        consultantId.lastName ?? ""
+                    ? `${consultantId.firstName} ${consultantId.lastName ?? ""
                       }`.trim()
                     : "—"
                 }
@@ -281,9 +280,9 @@ const PreCounsellingForm: React.FC<PreCounsellingFormProps> = ({
                 value={
                   inqAssign?.schedule?.from
                     ? inqAssign.schedule.from +
-                      (inqAssign.schedule.to
-                        ? " – " + inqAssign.schedule.to
-                        : "")
+                    (inqAssign.schedule.to
+                      ? " – " + inqAssign.schedule.to
+                      : "")
                     : "—"
                 }
               />
@@ -339,157 +338,156 @@ const PreCounsellingForm: React.FC<PreCounsellingFormProps> = ({
             {["completed", "rejected", "queued"].includes(
               preForm?.values?.preStatus,
             ) && (
-              <>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                  <Typography className="text-[13px] font-semibold mb-1.5">
-                    Additional Details of Candidate
-                  </Typography>
-                  <TextField
-                    multiline
-                    rows={3}
-                    fullWidth
-                    name="additionalDetails"
-                    value={preForm.values.additionalDetails}
-                    onChange={preForm.handleChange}
-                    onBlur={preForm.handleBlur}
-                    error={
-                      preForm.submitCount > 0 &&
-                      Boolean(preForm.errors.additionalDetails)
-                    }
-                    helperText={
-                      preForm.submitCount > 0
-                        ? (preForm.errors.additionalDetails as string)
-                        : undefined
-                    }
-                    slotProps={{ input: { className: "text-[14px]" } }}
-                    disabled={isPreLocked}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                  <Typography className="text-[13px] font-semibold mb-1.5">
-                    Specific Notes (During Pre-Counselling)
-                  </Typography>
-                  <TextField
-                    multiline
-                    rows={3}
-                    fullWidth
-                    name="specificNotes"
-                    value={preForm.values.specificNotes}
-                    onChange={preForm.handleChange}
-                    onBlur={preForm.handleBlur}
-                    slotProps={{ input: { className: "text-[14px]" } }}
-                    disabled={isPreLocked}
-                  />
-                </Grid>
-                <Grid size={12}>
-                  <Typography className="text-[13px] font-semibold mb-1.5">
-                    Advice
-                  </Typography>
-                  <TextField
-                    multiline
-                    rows={3}
-                    fullWidth
-                    name="advice"
-                    value={preForm.values.advice}
-                    onChange={preForm.handleChange}
-                    onBlur={preForm.handleBlur}
-                    slotProps={{ input: { className: "text-[13px]" } }}
-                    disabled={isPreLocked}
-                  />
-                </Grid>
-
-                <Grid size={{ xs: 12, lg: 6 }} id="resumeFile">
-                  <Typography className="text-[12px] font-semibold mb-1.5">
-                    Upload Resume
-                  </Typography>
-                  <Box
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all h-55 ${
-                      isDragging
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-300 hover:bg-[--mui-palette-secondary-lightOpacity]"
-                    }`}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      hidden
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={onFileInputChange}
+                <>
+                  <Grid size={{ xs: 12, lg: 6 }}>
+                    <Typography className="text-[13px] font-semibold mb-1.5">
+                      Additional Details of Candidate
+                    </Typography>
+                    <TextField
+                      multiline
+                      rows={3}
+                      fullWidth
+                      name="additionalDetails"
+                      value={preForm.values.additionalDetails}
+                      onChange={preForm.handleChange}
+                      onBlur={preForm.handleBlur}
+                      error={
+                        preForm.submitCount > 0 &&
+                        Boolean(preForm.errors.additionalDetails)
+                      }
+                      helperText={
+                        preForm.submitCount > 0
+                          ? (preForm.errors.additionalDetails as string)
+                          : undefined
+                      }
+                      slotProps={{ input: { className: "text-[14px]" } }}
                       disabled={isPreLocked}
                     />
-                    <i className="ri-upload-cloud-2-line text-4xl text-blue-500 mb-3" />
-                    <Typography className="font-semibold text-sm">
-                      Drag & Drop Resume
-                    </Typography>
-                    <Typography className="text-xs text-gray-500 mt-1">
-                      PDF, JPG, JPEG, PNG
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                {previewUrl && (
+                  </Grid>
                   <Grid size={{ xs: 12, lg: 6 }}>
+                    <Typography className="text-[13px] font-semibold mb-1.5">
+                      Specific Notes (During Pre-Counselling)
+                    </Typography>
+                    <TextField
+                      multiline
+                      rows={3}
+                      fullWidth
+                      name="specificNotes"
+                      value={preForm.values.specificNotes}
+                      onChange={preForm.handleChange}
+                      onBlur={preForm.handleBlur}
+                      slotProps={{ input: { className: "text-[14px]" } }}
+                      disabled={isPreLocked}
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <Typography className="text-[13px] font-semibold mb-1.5">
+                      Advice
+                    </Typography>
+                    <TextField
+                      multiline
+                      rows={3}
+                      fullWidth
+                      name="advice"
+                      value={preForm.values.advice}
+                      onChange={preForm.handleChange}
+                      onBlur={preForm.handleBlur}
+                      slotProps={{ input: { className: "text-[13px]" } }}
+                      disabled={isPreLocked}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, lg: 6 }} id="resumeFile">
                     <Typography className="text-[12px] font-semibold mb-1.5">
-                      Resume Preview
+                      Upload Resume
                     </Typography>
                     <Box
-                      onClick={() => setIsPreviewOpen(true)}
-                      className="rounded-xl h-55 bg-gray-50 overflow-hidden relative cursor-pointer group  transition-all"
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all h-55 ${isDragging
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-300 hover:bg-[--mui-palette-secondary-lightOpacity]"
+                        }`}
                     >
-                      {isPdf ? (
-                        <Box className="w-full h-full pointer-events-none relative">
-                          <iframe
-                            src={fullPreviewUrl}
-                            className="w-full h-full "
-                          />
-                          <Box className="absolute inset-0 bg-transparent group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                            <Box className="bg-white/90 text-blue-600 px-3 py-1.5 rounded-lg shadow-sm font-semibold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                              Click to view document
-                            </Box>
-                          </Box>
-                        </Box>
-                      ) : (
-                        <Box className="w-full h-full flex items-center justify-center bg-white relative">
-                          <img
-                            src={fullPreviewUrl} // 🚀 Updated here
-                            alt="Resume Preview"
-                            className="w-full h-full object-contain"
-                          />
-                          <Box className="absolute inset-0 bg-transparent group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                            <Box className="bg-white/90 text-blue-600 px-3 py-1.5 rounded-lg shadow-sm font-semibold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                              Click to view image
-                            </Box>
-                          </Box>
-                        </Box>
-                      )}
+                      <input
+                        ref={fileInputRef}
+                        hidden
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={onFileInputChange}
+                        disabled={isPreLocked}
+                      />
+                      <i className="ri-upload-cloud-2-line text-4xl text-blue-500 mb-3" />
+                      <Typography className="font-semibold text-sm">
+                        Drag & Drop Resume
+                      </Typography>
+                      <Typography className="text-xs text-gray-500 mt-1">
+                        PDF, JPG, JPEG, PNG
+                      </Typography>
                     </Box>
                   </Grid>
-                )}
-              </>
-            )}
+
+                  {previewUrl && (
+                    <Grid size={{ xs: 12, lg: 6 }}>
+                      <Typography className="text-[12px] font-semibold mb-1.5">
+                        Resume Preview
+                      </Typography>
+                      <Box
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="rounded-xl h-55 bg-gray-50 overflow-hidden relative cursor-pointer group  transition-all"
+                      >
+                        {isPdf ? (
+                          <Box className="w-full h-full pointer-events-none relative">
+                            <iframe
+                              src={fullPreviewUrl}
+                              className="w-full h-full "
+                            />
+                            <Box className="absolute inset-0 bg-transparent group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                              <Box className="bg-white/90 text-blue-600 px-3 py-1.5 rounded-lg shadow-sm font-semibold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                Click to view document
+                              </Box>
+                            </Box>
+                          </Box>
+                        ) : (
+                          <Box className="w-full h-full flex items-center justify-center bg-white relative">
+                            <img
+                              src={fullPreviewUrl} // 🚀 Updated here
+                              alt="Resume Preview"
+                              className="w-full h-full object-contain"
+                            />
+                            <Box className="absolute inset-0 bg-transparent group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                              <Box className="bg-white/90 text-blue-600 px-3 py-1.5 rounded-lg shadow-sm font-semibold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                Click to view image
+                              </Box>
+                            </Box>
+                          </Box>
+                        )}
+                      </Box>
+                    </Grid>
+                  )}
+                </>
+              )}
           </Grid>
 
           {["completed", "rejected", "queued"].includes(
             preForm?.values?.preStatus,
           ) && (
-            <Box className="flex justify-end gap-3 mt-4 pt-6">
-              <Button
-                variant="contained"
-                type="submit"
-                disabled 
-               >
-                {preForm.isSubmitting ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  "Send As Prescription"
-                )}
-              </Button>
-            </Box>
-          )}
+              <Box className="flex justify-end gap-3 mt-4 pt-6">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled
+                >
+                  {preForm.isSubmitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    "Send As Prescription"
+                  )}
+                </Button>
+              </Box>
+            )}
         </Stack>
       </form>
 

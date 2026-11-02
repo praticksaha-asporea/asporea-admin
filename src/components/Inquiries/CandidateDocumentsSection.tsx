@@ -24,7 +24,7 @@ import {
   type UploadedDoc,
 } from "./Detail/hooks/useCandidateDocumentsSection";
 
- 
+
 const resolveFileSrc = (path?: string | null) => {
   if (!path) return "";
   if (
@@ -36,7 +36,7 @@ const resolveFileSrc = (path?: string | null) => {
     return path;
   }
   const BACKEND_BASE =
-    import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_ASSETS_URL || "http://localhost:3000";
   return `${BACKEND_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 };
 
@@ -82,13 +82,12 @@ const UploadedFileCard: React.FC<{
         </Typography>
         {doc.status !== "uploaded" && (
           <Box
-            className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${
-              doc.status === "verified"
-                ? "bg-green-100 text-green-700"
-                : doc.status === "rejected"
+            className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${doc.status === "verified"
+              ? "bg-green-100 text-green-700"
+              : doc.status === "rejected"
                 ? "bg-red-100 text-red-600"
                 : "bg-blue-100 text-blue-700"
-            }`}
+              }`}
           >
             {CamelCase(doc.status)}
           </Box>
@@ -171,8 +170,8 @@ const CandidateDocumentsSection: React.FC<CandidateDocumentsSectionProps> = ({
                     previewDoc?.status === "verified"
                       ? "text-green-600 font-semibold"
                       : previewDoc?.status === "rejected"
-                      ? "text-red-500 font-semibold"
-                      : "text-blue-600 font-semibold"
+                        ? "text-red-500 font-semibold"
+                        : "text-blue-600 font-semibold"
                   }
                 >
                   {CamelCase(previewDoc?.status ?? "")}
