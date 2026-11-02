@@ -159,28 +159,28 @@ const SourceForm = () => {
 
               {/* Phone Number */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <div className="relative mt-2 group">
-                  <Phone className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
-                  <input
-                    type="text"
-                    placeholder="9876543210"
-                    {...formik.getFieldProps("phoneNumber")}
-                    className={`w-full pl-14 pr-4 py-4 bg-gray-100 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${
-                      formik.touched.phoneNumber && formik.errors.phoneNumber
-                        ? "border-red-400 focus:bg-white"
-                        : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
-                    }`}
-                  />
-                </div>
-                {formik.touched.phoneNumber && formik.errors.phoneNumber && (
-                  <p className="text-red-500 text-xs font-bold mt-1 pl-2">
-                    {formik.errors.phoneNumber}
-                  </p>
-                )}
-              </div>
+  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
+    Phone Number {/* <span className="text-red-500">*</span> */}
+  </label>
+  <div className="relative mt-2 group">
+    <Phone className="absolute left-5 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#0054a6] transition-colors" />
+    <input
+      type="text"
+      placeholder="9876543210 (Optional)"
+      {...formik.getFieldProps("phoneNumber")}
+      className={`w-full pl-14 pr-4 py-4 bg-gray-100 border-2 rounded-2xl outline-none font-bold text-gray-700 transition-all ${
+        formik.touched.phoneNumber && formik.errors.phoneNumber
+          ? "border-red-400 focus:bg-white"
+          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+      }`}
+    />
+  </div>
+  {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+    <p className="text-red-500 text-xs font-bold mt-1 pl-2">
+      {formik.errors.phoneNumber}
+    </p>
+  )}
+</div>
 
               {/* WhatsApp Number */}
               <div className="space-y-2">

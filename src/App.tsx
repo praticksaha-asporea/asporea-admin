@@ -1,9 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { lazy } from "react";
-
 import ProtectedRoute from "./route/ProtectedRoute";
-
 import Login from "./pages/Login";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const BranchList = lazy(() => import("./pages/Branches/BranchList"));

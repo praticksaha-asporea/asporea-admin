@@ -9,6 +9,7 @@ import {
   X,
   FileCheck,
   Layers,
+  ChevronDown,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePositionForm } from "./usePositionForm";
@@ -245,26 +246,29 @@ const PositionForm = () => {
               </div>
 
               {/* Country Selection */}
-              <div className="relative">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 mb-2 block">
-                  Country
-                </label>
-                <select
-                  value={formik.values.country || ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    formik.setFieldValue("country", val);
-                  }}
-                  className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/40 focus:bg-white rounded-2xl outline-none font-bold text-gray-800 transition-all cursor-pointer appearance-none"
-                >
-                  <option value="">Select Country...</option>
-                  {countriesList.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name} {c.code ? `(${c.code})` : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="space-y-2">
+  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2 block">
+    Country
+  </label>
+  <div className="relative group">
+    <select
+      value={formik.values.country || ""}
+      onChange={(e) => {
+        const val = e.target.value;
+        formik.setFieldValue("country", val);
+      }}
+      className="w-full pl-5 pr-12 py-4 bg-gray-50 border-2 border-transparent focus:border-[#10b981]/40 focus:bg-white rounded-2xl outline-none font-bold text-gray-800 transition-all cursor-pointer appearance-none"
+    >
+      <option value="">Select Country...</option>
+      {countriesList.map((c) => (
+        <option key={c._id} value={c._id}>
+          {c.name} {c.code ? `(${c.code})` : ""}
+        </option>
+      ))}
+    </select>
+    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none group-focus-within:text-[#10b981] transition-colors" />
+  </div>
+</div>
             </div>
           </div>
         </div>

@@ -63,11 +63,24 @@ const ExternalSourcesList = () => {
       };
       
       const res: any = await getExternalSourcesApi(params);
-      const rawPayload = res?.data?.data ?? res?.data ?? res;
-      const listArray = Array.isArray(rawPayload?.data) ? rawPayload.data : (Array.isArray(rawPayload) ? rawPayload : []);
       
+       
+      const payload = res?.data ?? res;
+      const nestedData = payload?.data ?? payload;
+
+      let listArray: ExternalSource[] = [];
+      let total = 0;
+
+      if (Array.isArray(nestedData)) {
+        listArray = nestedData;
+        total = payload?.pagination?.total ?? nestedData.length;
+      } else if (nestedData && typeof nestedData === "object") {
+        listArray = Array.isArray(nestedData.data) ? nestedData.data : [];
+        total = nestedData.pagination?.total ?? payload?.pagination?.total ?? listArray.length;
+      }
+
       setSources(listArray);
-      setTotalCount(rawPayload?.pagination?.total ?? listArray.length);
+      setTotalCount(total);
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Failed to load external sources.");
     } finally {

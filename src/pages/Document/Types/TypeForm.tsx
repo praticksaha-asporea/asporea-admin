@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, FileText, Settings } from "lucide-react";
+import { ArrowLeft, Save, FileText, Settings, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTypeForm } from "./useTypeForm";
 
@@ -105,30 +105,32 @@ const TypeForm = () => {
                 />
               </div>
 
-              {/* Dropdown Section Selection */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
-                  Section <span className="text-red-500">*</span>
-                </label>
-                <select
-                  {...formik.getFieldProps("section")}
-                  className={`w-full px-5 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 appearance-none cursor-pointer transition-all ${
-                    formik.touched.section && formik.errors.section
-                      ? "border-red-400 focus:bg-white"
-                      : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
-                  }`}
-                >
-                  <option value="" disabled>Select section...</option>
-                  <option value="resume">Resume</option>
-                  <option value="document">Document</option>
-                  <option value="experience">Experience</option>
-                  <option value="academic">Academic</option>
-                  <option value="additional">Additional</option>
-                </select>
-                {formik.touched.section && formik.errors.section && (
-                  <p className="text-red-500 text-xs font-bold pl-2">{formik.errors.section}</p>
-                )}
-              </div>
+  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">
+    Section <span className="text-red-500">*</span>
+  </label>
+  <div className="relative group">
+    <select
+      {...formik.getFieldProps("section")}
+      className={`w-full pl-5 pr-12 py-4 bg-gray-50 border-2 rounded-2xl outline-none font-bold text-gray-800 appearance-none cursor-pointer transition-all ${
+        formik.touched.section && formik.errors.section
+          ? "border-red-400 focus:bg-white"
+          : "border-transparent focus:border-[#0054a6]/30 focus:bg-white"
+      }`}
+    >
+      <option value="" disabled>Select section...</option>
+      <option value="resume">Resume</option>
+      <option value="document">Document</option>
+      <option value="experience">Experience</option>
+      <option value="academic">Academic</option>
+      <option value="additional">Additional</option>
+    </select>
+    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none group-focus-within:text-[#0054a6] transition-colors" />
+  </div>
+  {formik.touched.section && formik.errors.section && (
+    <p className="text-red-500 text-xs font-bold pl-2">{formik.errors.section}</p>
+  )}
+</div>
 
               {/* Multiple Tags/Chips Array Extension Selection Control */}
               <div className="space-y-3">
